@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES5",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "lib": ["dom", "es5", "es6", "es7"]
+    }
+}
