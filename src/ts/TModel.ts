@@ -346,14 +346,14 @@ export class TModel {
      * @date 2021/09/17
      * @param {string} text 文字内容
      * @param {string} fontUrl 字体文件
-     * @param {textLineParams} textStyle 描线文字样式 [textStyle={ color: "#f00", size: 100, linewidth: 2, opacity: 1 }]
+     * @param {textLineParams} textStyle 描线文字样式 [textStyle={ color: "#f00", size: 100, lineWidth: 2, opacity: 1 }]
      * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
      * @returns {*}  {Promise<Object3D>}
      */
     public initTextLine(
         text: string,
         fontUrl: string,
-        textStyle: textLineParams = { color: "#f00", size: 100, linewidth: 2, opacity: 1 },
+        textStyle: textLineParams = { color: "#f00", size: 100, lineWidth: 2, opacity: 1 },
         geometryConfigs: geometryConfigs = { position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
     ): Promise<Object3D> {
         const loader = new FontLoader();
@@ -363,6 +363,7 @@ export class TModel {
                     color: textStyle.color,
                     transparent: true,
                     opacity: textStyle.opacity,
+                    linewidth: textStyle.lineWidth,
                 });
 
                 var shapes = font.generateShapes(text, textStyle.size);

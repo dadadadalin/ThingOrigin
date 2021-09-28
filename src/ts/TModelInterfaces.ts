@@ -34,7 +34,7 @@ interface textLineParams {
     color: string;
     size: number;
     opacity?: number;
-    linewidth?: number;
+    lineWidth?: number;
 }
 
 /**

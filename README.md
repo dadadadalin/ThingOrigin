@@ -5,3 +5,5 @@
 文档地址：http://210.72.137.240:50011/ThingOriginDoc/doc/index.html#
 
 ThingOrigin.js 文件: http://210.72.137.240:50011/ThingOriginDoc/main.js
+
+案例 demo http://210.72.137.240:50011/3Deditor/#/ThingOriginDoc
