@@ -22,23 +22,40 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 //     mainScene.add(font);
 // });
 
-window.onclick = () => {};
+//
 
-mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-    CSSDiv.innerHTML = `<div><div>` + Math.random() + `</div> <div>` + Math.random() + `</div>   </div>`;
-    mainScene.removeCSS2D(tagId);
-    tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
-});
+mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
+mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
+mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
 
-var tagId: string;
+window.onclick = () => {
+    mainScene.camera.setCamera(1);
+    console.log(mainScene.camera.camera);
+};
 
-let CSSDiv = document.createElement("div");
-CSSDiv.id = "Test";
-CSSDiv.textContent = "文字测试";
-ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
-    mainScene.add(model);
-    tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
-});
+// mainScene.eDispatcher.addEventListener("CLICK", (e) => {
+//     CSSDiv.innerHTML = `<div><div>` + Math.random() + `</div> <div>` + Math.random() + `</div>   </div>`;
+//     mainScene.removeCSS2D(tagId);
+//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+// });
+
+// var tagId: string;
+
+// let CSSDiv = document.createElement("div");
+// CSSDiv.id = "Test";
+// CSSDiv.textContent = "文字测试";
+// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+//     mainScene.add(model);
+//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+
+//     mainScene.camera.setCamera(1);
+// });
+
+// ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
+//     console.log(model);
+
+//     mainScene.add(model);
+// });
 
 // var models = ThingOrigin.model.initSpriteShape("points", a, { shape: "triangle", color: "#fff", radius: 2 }, { cusType: "777" });
 // ThingOrigin.getScene("ttt").add(models);

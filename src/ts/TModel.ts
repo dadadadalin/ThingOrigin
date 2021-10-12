@@ -405,67 +405,71 @@ export class TModel {
      * @date 2021/09/16
      * @param {string} url 地图数据文件地址
      */
-    public initMap(url: string) {
+    public initMap(url: string): Promise<Object3D> {
         console.log(d3geo);
 
         // 加载json文件
         let loader = new FileLoader();
 
-        loader.load(url, (data) => {
-            let jsonData = JSON.parse(data as string);
-            // 建一个空对象存放对象
-            var map = new Object3D();
+        return new Promise((resolve) => {
+            loader.load(url, (data) => {
+                let jsonData = JSON.parse(data as string);
+                // 建一个空对象存放对象
+                var map = new Object3D();
 
-            // 墨卡托投影转换
-            const projection = d3geo.geoMercator().center([104.0, 37.5]).scale(80).translate([0, 0]);
+                // 墨卡托投影转换
+                const projection = d3geo.geoMercator().center([104.0, 37.5]).scale(80).translate([0, 0]);
 
-            jsonData.features.forEach((elem) => {
-                // 定一个省份3D对象
-                const province = new Object3D();
-                // 每个的 坐标 数组
-                const coordinates = elem.geometry.coordinates;
-                // 循环坐标数组
-                coordinates.forEach((multiPolygon) => {
-                    multiPolygon.forEach((polygon) => {
-                        const shape = new Shape();
-                        const lineMaterial = new LineBasicMaterial({ color: "white" });
-                        const lineGeometry = new Geometry();
+                jsonData.features.forEach((elem) => {
+                    // 定一个省份3D对象
+                    const province = new Object3D();
+                    // 每个的 坐标 数组
+                    const coordinates = elem.geometry.coordinates;
+                    // 循环坐标数组
+                    coordinates.forEach((multiPolygon) => {
+                        multiPolygon.forEach((polygon) => {
+                            const shape = new Shape();
+                            const lineMaterial = new LineBasicMaterial({ color: "white" });
+                            const lineGeometry = new Geometry();
 
-                        for (let i = 0; i < polygon.length; i++) {
-                            const [x, y] = projection(polygon[i]);
-                            if (i === 0) {
-                                shape.moveTo(x, -y);
+                            for (let i = 0; i < polygon.length; i++) {
+                                const [x, y] = projection(polygon[i]);
+                                if (i === 0) {
+                                    shape.moveTo(x, -y);
+                                }
+                                shape.lineTo(x, -y);
+                                lineGeometry.vertices.push(new Vector3(x, -y, 4.01));
                             }
-                            shape.lineTo(x, -y);
-                            lineGeometry.vertices.push(new Vector3(x, -y, 4.01));
-                        }
 
-                        const extrudeSettings = {
-                            depth: 4,
-                            bevelEnabled: false,
-                        };
+                            const extrudeSettings = {
+                                depth: 4,
+                                bevelEnabled: false,
+                            };
 
-                        const geometry = new ExtrudeGeometry(shape, extrudeSettings);
-                        const material = new MeshBasicMaterial({ color: "#02A1E2", transparent: true, opacity: 0.6 });
-                        const material1 = new MeshBasicMaterial({ color: "#3480C4", transparent: true, opacity: 0.5 });
-                        const mesh = new Mesh(geometry, [material, material1]);
-                        const line = new Line(lineGeometry, lineMaterial);
-                        province.add(mesh);
-                        province.add(line);
+                            const geometry = new ExtrudeGeometry(shape, extrudeSettings);
+                            const material = new MeshBasicMaterial({ color: "#02A1E2", transparent: true, opacity: 0.6 });
+                            const material1 = new MeshBasicMaterial({ color: "#3480C4", transparent: true, opacity: 0.5 });
+                            const mesh = new Mesh(geometry, [material, material1]);
+                            const line = new Line(lineGeometry, lineMaterial);
+                            province.add(mesh);
+                            province.add(line);
+                        });
                     });
+
+                    // 将geo的属性放到省份模型中
+                    (province as any).properties = elem.properties;
+                    if (elem.properties.contorid) {
+                        const [x, y] = projection(elem.properties.contorid);
+                        (province as any).properties._centroid = [x, y];
+                    }
+
+                    map.add(province);
                 });
 
-                // 将geo的属性放到省份模型中
-                (province as any).properties = elem.properties;
-                if (elem.properties.contorid) {
-                    const [x, y] = projection(elem.properties.contorid);
-                    (province as any).properties._centroid = [x, y];
-                }
+                console.log(map);
 
-                map.add(province);
+                resolve(map);
             });
-
-            return map;
         });
     }
 

@@ -38,22 +38,17 @@ export class TCamera {
      * @param num
      */
     public setCamera(num: number = TCamera.PerspectiveCamera) {
+        let aspect = this.container.clientWidth / this.container.clientHeight;
         switch (num) {
             case TCamera.PerspectiveCamera:
                 //透视相机
-                this._camera = new PerspectiveCamera(45, this.container.clientWidth / this.container.clientHeight, 0.1, 10000);
+                this._camera = new PerspectiveCamera(45, aspect, 0.1, 10000);
                 this.type = "PerspectiveCamera";
                 break;
             case TCamera.OrthographicCamera:
+                let frustumSize = 1000;
                 //正交相机
-                this._camera = new OrthographicCamera(
-                    this.container.clientLeft,
-                    this.container.clientLeft + this.container.clientWidth,
-                    this.container.clientTop,
-                    this.container.clientTop + this.container.clientHeight,
-                    0.1,
-                    1000
-                );
+                this._camera = new OrthographicCamera((frustumSize * aspect) / -2, (frustumSize * aspect) / 2, (frustumSize * aspect) / 2, (frustumSize * aspect) / -2, 0.1, 1000);
                 this.type = "OrthographicCamera";
                 break;
         }

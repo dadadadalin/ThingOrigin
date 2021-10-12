@@ -66,6 +66,7 @@ export class TScene extends Scene {
         this.initLight(sceneParams);
         this.initEffect(sceneParams);
         this.initControl(sceneParams);
+
         if (sceneParams.models) this.loadModel(sceneParams);
         if (sceneParams.css2d) this.loadCSS2D(sceneParams);
     }

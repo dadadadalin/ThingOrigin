@@ -6,7 +6,7 @@ export default {
         },
         background: {
             alpha: 0.3, //透明度 取值范围0~1
-            color: "#911",
+            color: "#944",
         },
     },
     camera: {
