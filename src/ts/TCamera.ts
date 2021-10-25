@@ -6,13 +6,12 @@ import { TScene } from "./TScene/TScene";
 /** 自定义相机的基类，用于 */
 export class TCamera {
     tScene: TScene;
-    static PerspectiveCamera: number = 0;
-    static OrthographicCamera: number = 1;
-
-    type: string;
-
     /** 当前相机的容器 */
     container: HTMLElement;
+
+    PerspectiveCamera: PerspectiveCamera;
+    OrthographicCamera: OrthographicCamera;
+    type: string;
 
     /** 当前使用的相机 */
     private _camera: PerspectiveCamera | OrthographicCamera;
@@ -23,33 +22,35 @@ export class TCamera {
 
     /** 获取相机位置 */
     public get position(): Vector3 {
-        return this.camera.position;
+        return this._camera.position;
     }
 
     constructor(tScene: TScene, container: HTMLElement) {
         this.tScene = tScene;
         this.container = container;
 
-        this.setCamera();
+        let aspect = this.container.clientWidth / this.container.clientHeight;
+        //透视相机
+        this.PerspectiveCamera = new PerspectiveCamera(45, aspect, 0.1, 10000);
+        //正交相机
+        let frustumSize = 1000;
+        this.OrthographicCamera = new OrthographicCamera((frustumSize * aspect) / -2, (frustumSize * aspect) / 2, (frustumSize * aspect) / 2, (frustumSize * aspect) / -2, 0.1, 1000);
+
+        this.setCamera("PerspectiveCamera");
     }
 
     /**
      * 设置渲染相机
      * @param num
      */
-    public setCamera(num: number = TCamera.PerspectiveCamera) {
-        let aspect = this.container.clientWidth / this.container.clientHeight;
-        switch (num) {
-            case TCamera.PerspectiveCamera:
-                //透视相机
-                this._camera = new PerspectiveCamera(45, aspect, 0.1, 10000);
-                this.type = "PerspectiveCamera";
+    public setCamera(type: string = "PerspectiveCamera") {
+        this.type = type;
+        switch (type) {
+            case "PerspectiveCamera":
+                this._camera = this.PerspectiveCamera;
                 break;
-            case TCamera.OrthographicCamera:
-                let frustumSize = 1000;
-                //正交相机
-                this._camera = new OrthographicCamera((frustumSize * aspect) / -2, (frustumSize * aspect) / 2, (frustumSize * aspect) / 2, (frustumSize * aspect) / -2, 0.1, 1000);
-                this.type = "OrthographicCamera";
+            case "OrthographicCamera":
+                this._camera = this.OrthographicCamera;
                 break;
         }
     }
@@ -62,24 +63,25 @@ export class TCamera {
      */
     public lockCamera(direction: string) {
         let box = ThingOrigin.tool.getObjectSphere(this.tScene);
+        let ratio = 1.1;
         switch (direction) {
             case "top":
-                this.camera.position.set(0, box.radius * 1.1, 0);
+                this.camera.position.set(0, box.radius * ratio, 0);
                 break;
             case "bottom":
-                this.camera.position.set(0, -box.radius * 1.1, 0);
+                this.camera.position.set(0, -box.radius * ratio, 0);
                 break;
             case "left":
-                this.camera.position.set(-box.radius * 1.1, 0, 0);
+                this.camera.position.set(-box.radius * ratio, 0, 0);
                 break;
             case "right":
-                this.camera.position.set(box.radius * 1.1, 0, 0);
+                this.camera.position.set(box.radius * ratio, 0, 0);
                 break;
             case "front":
-                this.camera.position.set(0, 0, box.radius * 1.1);
+                this.camera.position.set(0, 0, box.radius * ratio);
                 break;
             case "back":
-                this.camera.position.set(0, 0, -box.radius * 1.1);
+                this.camera.position.set(0, 0, -box.radius * ratio);
                 break;
         }
         this.camera.lookAt(0, 0, 0);

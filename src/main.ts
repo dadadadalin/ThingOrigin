@@ -24,32 +24,42 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 
 //
 
-mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
-mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
-mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
+// mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
+// mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
+// mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
 
-window.onclick = () => {
-    mainScene.camera.setCamera(1);
-    console.log(mainScene.camera.camera);
-};
+// window.onclick = () => {
+//     var a = mainScene.getObjectByName("ABB_023");
+//     console.log(a);
 
-// mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-//     CSSDiv.innerHTML = `<div><div>` + Math.random() + `</div> <div>` + Math.random() + `</div>   </div>`;
-//     mainScene.removeCSS2D(tagId);
-//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
-// });
+//     mainScene.initBreath(a.uuid);
+// };
 
-// var tagId: string;
+mainScene.eDispatcher.addEventListener("CLICK", (e) => {
+    // CSSDiv.innerHTML = `<div><div>` + Math.random() + `</div> <div>` + Math.random() + `</div>   </div>`;
+    // mainScene.removeCSS2D(tagId);
+    // tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+    // var a = mainScene.getObjectByName("ABB_023");
+    // console.log(a);
 
-// let CSSDiv = document.createElement("div");
-// CSSDiv.id = "Test";
-// CSSDiv.textContent = "文字测试";
-// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
-//     mainScene.add(model);
-//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+    // mainScene.disposeBreath();
+    // var a = new Object3D();
+    // a.add(e.event[0].object);
+    // mainScene.add(a);
+    // console.log(a);
 
-//     mainScene.camera.setCamera(1);
-// });
+    mainScene.initBreath(e.event[0].object.uuid);
+    // console.log(a.object);
+});
+
+var tagId: string;
+let CSSDiv = document.createElement("div");
+CSSDiv.id = "Test";
+CSSDiv.textContent = "文字测试";
+ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+    mainScene.add(model);
+    tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+});
 
 // ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
 //     console.log(model);

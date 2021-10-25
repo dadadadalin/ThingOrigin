@@ -2,7 +2,9 @@ import { Color, Group, Object3D, Scene, TextureLoader, Vector2, WebGLRenderer } 
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
+import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader";
 import TWEEN from "tween.js/src/Tween.js";
 import { TEventDispatcher } from "../controls/TEventDispatcher";
 import { TExporters } from "../exporters/TExporters";
@@ -36,7 +38,8 @@ export class TScene extends Scene {
     /** 效果合成器 */
     public effectComposer: EffectComposer;
 
-    private outlinePass: OutlinePass;
+    public outlinePass: OutlinePass;
+    private effectFXAA: ShaderPass;
 
     public sceneParam: ThingOriginParams;
 
@@ -51,10 +54,11 @@ export class TScene extends Scene {
     }
 
     /**
-     * 创建一个场景
-     * @param container dom容器
-     * @param rendererParameters renderer配置项
-     * @param sceneParams 自定义配置
+     * @description 创建一个场景
+     * @author LL
+     * @date 2021/10/15
+     * @param {HTMLElement} container dom容器
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     public createScene(container: HTMLElement, sceneParams: ThingOriginParams): void {
         this.sceneParam = sceneParams;
@@ -76,8 +80,7 @@ export class TScene extends Scene {
      * @author LL
      * @date 2021/07/26
      * @private
-     * @param {ThingOriginParams} sceneParams
-     * @param {WebGLRendererParameters} [rendererParameters]
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     private initRender(sceneParams: ThingOriginParams) {
         //渲染器
@@ -108,7 +111,7 @@ export class TScene extends Scene {
      * @author LL
      * @date 2021/07/26
      * @private
-     * @param {ThingOriginParams} sceneParams
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     private initLight(sceneParams: ThingOriginParams) {
         for (let i = 0; i < sceneParams.lights.length; i++) {
@@ -122,7 +125,7 @@ export class TScene extends Scene {
      * @author LL
      * @date 2021/07/26
      * @private
-     * @param {ThingOriginParams} sceneParams
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     private initEffect(sceneParams: ThingOriginParams) {
         this.effectComposer = new EffectComposer(this.renderer);
@@ -132,7 +135,6 @@ export class TScene extends Scene {
         this.effectComposer.addPass(renderPass);
 
         this.outlinePass = new OutlinePass(new Vector2(this.container.clientWidth, this.container.clientHeight), this, this.camera.camera);
-
         this.outlinePass.edgeStrength = sceneParams.effectComposer.outlinePass.edgeStrength; //粗
         this.outlinePass.edgeGlow = sceneParams.effectComposer.outlinePass.edgeGlow; //发光
         this.outlinePass.edgeThickness = sceneParams.effectComposer.outlinePass.edgeThickness; //光晕粗
@@ -140,8 +142,12 @@ export class TScene extends Scene {
         this.outlinePass.usePatternTexture = sceneParams.effectComposer.outlinePass.usePatternTexture; //true
         this.outlinePass.visibleEdgeColor.set(sceneParams.effectComposer.outlinePass.visibleEdgeColor);
         this.outlinePass.hiddenEdgeColor.set(sceneParams.effectComposer.outlinePass.hiddenEdgeColor);
-
         this.effectComposer.addPass(this.outlinePass);
+
+        this.effectFXAA = new ShaderPass(FXAAShader);
+        this.effectFXAA.uniforms["resolution"].value.set(1 / this.container.clientWidth, 1 / this.container.clientHeight);
+        this.effectFXAA.renderToScreen = true;
+        this.effectComposer.addPass(this.effectFXAA);
     }
 
     /**
@@ -149,7 +155,7 @@ export class TScene extends Scene {
      * @author LL
      * @date 2021/07/26
      * @private
-     * @param {ThingOriginParams} sceneParams
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     private initControl(sceneParams: ThingOriginParams) {
         this.controls = new TControl(this);
@@ -177,7 +183,7 @@ export class TScene extends Scene {
      * @author LL
      * @date 2021/07/26
      * @private
-     * @param {ThingOriginParams} sceneParams
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     private loadModel(sceneParams: ThingOriginParams) {
         console.log(sceneParams.models);
@@ -200,7 +206,7 @@ export class TScene extends Scene {
      * @author LL
      * @date 2021/08/31
      * @private
-     * @param {ThingOriginParams} sceneParams
+     * @param {ThingOriginParams} sceneParams 场景参数
      */
     private loadCSS2D(sceneParams: ThingOriginParams) {
         if (!sceneParams.css2d) return;
@@ -231,8 +237,8 @@ export class TScene extends Scene {
      * @description 获取模型参数信息
      * @author LL
      * @date 2021/08/19
-     * @param {string} property
-     * @param {string} value
+     * @param {string} property 模型属性
+     * @param {string} value 属性值
      * @returns {*}  {object}
      */
     public getObjectInfo(property: string, value: string): object {
@@ -256,12 +262,12 @@ export class TScene extends Scene {
     }
 
     /**
-     * @description 获取模型的子模型集合
+     * @description
      * @author LL
-     * @static
-     * @param {string} sceneName
-     * @param {string} uuid
-     * @return {*}  {Object3D[]}
+     * @date 2021/10/15 获取模型的子模型集合
+     * @param {string} property 模型属性
+     * @param {string} value 属性值
+     * @returns {*}  {Object3D[]}
      */
     public getChildrenInfo(property: string, value: string): Object3D[] {
         let obj = this.getObjectByProperty(property, value);
@@ -338,6 +344,12 @@ export class TScene extends Scene {
      */
     public initBreath(uuid: string) {
         var breathObj = this.getObjectByProperty("uuid", uuid);
+        console.log(breathObj);
+
+        if (breathObj.parent.type != "Object3D") {
+            var a = new Object3D();
+            a.add();
+        }
         if (!breathObj) {
             console.warn("呼吸效果添加失败，物体不存在");
             return;
