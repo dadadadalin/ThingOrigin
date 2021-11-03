@@ -54,9 +54,12 @@ export class TModel {
      * @returns {*}  {Promise<Object3D>}
      */
     public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1] }): Promise<Object3D> {
+        console.log("uuiuiuiouiou");
+
         return new Promise((resolve) => {
             if (type == "fbx") {
                 this.FBXLoader.load(url, (fbx: Group) => {
+                    console.log(fbx);
                     if (modelConfigs) {
                         fbx.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
                         fbx.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
@@ -87,6 +90,21 @@ export class TModel {
                 });
             }
         });
+    }
+
+    /**
+     * @description 新建group
+     * @author LL
+     * @date 2021/10/26
+     * @param {string} name
+     * @param {geometryConfigs} [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+     * @param {object} [userData]
+     * @returns {*}  {Object3D}
+     */
+    public initGroup(name: string, geometryConfigs: geometryConfigs = { position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }, userData?: object): Object3D {
+        let group = new Group();
+        group.name = name;
+        return this.setObjectConfigs(group, geometryConfigs, userData);
     }
 
     /**

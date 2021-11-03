@@ -41,14 +41,12 @@ mainScene.eDispatcher.addEventListener("CLICK", (e) => {
     // tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
     // var a = mainScene.getObjectByName("ABB_023");
     // console.log(a);
-
     // mainScene.disposeBreath();
     // var a = new Object3D();
     // a.add(e.event[0].object);
     // mainScene.add(a);
     // console.log(a);
-
-    mainScene.initBreath(e.event[0].object.uuid);
+    // mainScene.initBreath(e.event[0].object.uuid);
     // console.log(a.object);
 });
 
@@ -57,6 +55,8 @@ let CSSDiv = document.createElement("div");
 CSSDiv.id = "Test";
 CSSDiv.textContent = "文字测试";
 ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+    console.log(model);
+
     mainScene.add(model);
     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
 });

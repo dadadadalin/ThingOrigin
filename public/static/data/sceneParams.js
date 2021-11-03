@@ -10,7 +10,11 @@ export default {
         },
     },
     camera: {
-        position: [0, 100, 500],
+        position: {
+            x: 0,
+            y: 100,
+            z: 500,
+        },
         near: 0.1,
         far: 2000,
     },
@@ -20,21 +24,44 @@ export default {
             type: "DirectionalLight",
             color: undefined,
             intensity: 1,
-            position: [15, 5, 5],
+            position: {
+                x: 15,
+                y: 5,
+                z: 5,
+            },
         },
         {
             name: "light2",
             type: "DirectionalLight",
             color: undefined,
             intensity: 1,
-            position: [10, 5, -10],
+            position: {
+                x: 10,
+                y: 5,
+                z: -10,
+            },
         },
         {
             name: "light3",
             type: "DirectionalLight",
             color: undefined,
             intensity: 1,
-            position: [10, -5, 5],
+            position: {
+                x: 10,
+                y: -5,
+                z: 5,
+            },
+        },
+        {
+            name: "light4",
+            type: "DirectionalLight",
+            color: undefined,
+            intensity: 1,
+            position: {
+                x: -10,
+                y: -5,
+                z: 5,
+            },
         },
     ],
     controls: {
@@ -55,6 +82,19 @@ export default {
             speed: 1000, //是否启用人工漫游控制器
         },
     },
+    helper: {
+        axes: {
+            active: true,
+            length: 60,
+        },
+        grid: {
+            active: true,
+            size: 150,
+            divisions: 30,
+            centerLineColor: "black",
+            gridColor: "black",
+        },
+    },
     effectComposer: {
         outlinePass: {
             edgeStrength: 3,
@@ -64,17 +104,6 @@ export default {
             usePatternTexture: false, //true
             visibleEdgeColor: "red", //边缘颜色
             hiddenEdgeColor: "#190a05",
-        },
-    },
-    helper: {
-        axes: {
-            active: false,
-            length: 60,
-        },
-        grid: {
-            active: false,
-            size: 150,
-            divisions: 30,
         },
     },
     models: [],

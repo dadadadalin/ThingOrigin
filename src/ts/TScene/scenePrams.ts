@@ -82,6 +82,8 @@ interface gridParams {
     active: boolean;
     size: number;
     divisions: number;
+    centerLineColor: string;
+    gridColor: string;
 }
 
 interface sceneParam {
@@ -98,7 +100,7 @@ interface backgroundParams {
 }
 
 interface cameraParams {
-    position: number[];
+    position: xyz;
     near?: number;
     far?: number;
 }
@@ -107,7 +109,7 @@ interface lightParams {
     name: string;
     color: string;
     intensity: number;
-    position: number[];
+    position: xyz;
 }
 
 interface effectComposerParams {

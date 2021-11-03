@@ -80,8 +80,8 @@ export class THelper {
      * @param {Color} colorCenterLine 中线颜色
      * @param {Color} colorGrid 坐标格网格线颜色
      */
-    public initGrid(size?: number, divisions?: number, colorCenterLine?: Color, colorGrid?: Color) {
-        this.grid = new GridHelper(size, divisions, colorCenterLine, colorGrid);
+    public initGrid(size?: number, divisions?: number, colorCenterLine?: string, colorGrid?: string) {
+        this.grid = new GridHelper(size, divisions, new Color(colorCenterLine), new Color(colorGrid));
         this.grid.name = "gridHelper";
         this.tScene.add(this.grid);
     }

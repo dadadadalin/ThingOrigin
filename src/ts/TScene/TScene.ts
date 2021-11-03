@@ -63,9 +63,8 @@ export class TScene extends Scene {
     public createScene(container: HTMLElement, sceneParams: ThingOriginParams): void {
         this.sceneParam = sceneParams;
         this.container = container;
-        this.camera = new TCamera(this, this.container);
-        this.camera.position.set(sceneParams.camera.position[0], sceneParams.camera.position[1], sceneParams.camera.position[2]);
 
+        this.initCamera(sceneParams);
         this.initRender(sceneParams);
         this.initLight(sceneParams);
         this.initEffect(sceneParams);
@@ -73,6 +72,18 @@ export class TScene extends Scene {
 
         if (sceneParams.models) this.loadModel(sceneParams);
         if (sceneParams.css2d) this.loadCSS2D(sceneParams);
+    }
+
+    /**
+     * @description 初始化相机
+     * @author LL
+     * @date 2021/11/03
+     * @private
+     * @param {ThingOriginParams} sceneParams 场景参数
+     */
+    private initCamera(sceneParams: ThingOriginParams) {
+        this.camera = new TCamera(this, this.container);
+        this.camera.position.set(sceneParams.camera.position.x, sceneParams.camera.position.y, sceneParams.camera.position.z);
     }
 
     /**
@@ -115,8 +126,8 @@ export class TScene extends Scene {
      */
     private initLight(sceneParams: ThingOriginParams) {
         for (let i = 0; i < sceneParams.lights.length; i++) {
-            const light = this.light.addDirectionalLight("light1", undefined, 1);
-            light.position.set(sceneParams.lights[i].position[0], sceneParams.lights[i].position[1], sceneParams.lights[i].position[2]);
+            const light = this.light.addDirectionalLight(sceneParams.lights[i].name, sceneParams.lights[i].color, sceneParams.lights[i].intensity);
+            light.position.set(sceneParams.lights[i].position.x, sceneParams.lights[i].position.y, sceneParams.lights[i].position.z);
         }
     }
 
@@ -165,7 +176,7 @@ export class TScene extends Scene {
             this.helper.initAxes(sceneParams.helper.axes.length);
         }
         if (sceneParams.helper.grid.active) {
-            this.helper.initGrid(sceneParams.helper.grid.size, sceneParams.helper.grid.divisions);
+            this.helper.initGrid(sceneParams.helper.grid.size, sceneParams.helper.grid.divisions, sceneParams.helper.grid.centerLineColor, sceneParams.helper.grid.gridColor);
         }
         if (sceneParams.controls.orbit.active) {
             this.controls.initOrbit();
