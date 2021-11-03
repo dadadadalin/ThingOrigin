@@ -22,8 +22,6 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 //     mainScene.add(font);
 // });
 
-//
-
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
