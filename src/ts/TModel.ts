@@ -54,12 +54,9 @@ export class TModel {
      * @returns {*}  {Promise<Object3D>}
      */
     public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1] }): Promise<Object3D> {
-        console.log("uuiuiuiouiou");
-
         return new Promise((resolve) => {
             if (type == "fbx") {
                 this.FBXLoader.load(url, (fbx: Group) => {
-                    console.log(fbx);
                     if (modelConfigs) {
                         fbx.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
                         fbx.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
