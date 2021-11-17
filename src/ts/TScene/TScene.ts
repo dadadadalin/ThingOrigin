@@ -14,7 +14,6 @@ import { THelper } from "../THelper";
 import { TLight } from "../TLight";
 import { ThingOrigin } from "./../../ThingOrigin";
 
-//to
 //用一个group来放模型
 export class TScene extends Scene {
     /** 光源管理 */
@@ -206,8 +205,19 @@ export class TScene extends Scene {
                     this.add(model);
                 });
             } else if (item["objInfo"].objType == "sphere") {
-                let sphere = ThingOrigin.model.initSphere(item.name, { radius: item["objInfo"].radius });
+                console.log('eeee');
+                let sphere = ThingOrigin.model.initSphere(item.name, { radius: item["objInfo"].radius},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                console.log(sphere);
                 this.add(sphere);
+            } else if (item["objInfo"].objType == "cube") {
+                let cube = ThingOrigin.model.initBox(item.name, { width: item["objInfo"].width,height: item["objInfo"].height,depth: item["objInfo"].depth},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                this.add(cube);
+            } else if (item["objInfo"].objType == "cylinder") {
+                let cylinder = ThingOrigin.model.initCylinder(item.name, { radiusTop: item["objInfo"].radiusTop,height: item["objInfo"].height,radiusBottom: item["objInfo"].radiusBottom},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                this.add(cylinder);
+            }else if (item["objInfo"].objType == "cone") {
+                let cone = ThingOrigin.model.initCone(item.name, { radius: item["objInfo"].radius,height: item["objInfo"].height},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                this.add(cone);
             }
         }
     }

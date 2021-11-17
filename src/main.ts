@@ -48,16 +48,16 @@ mainScene.eDispatcher.addEventListener("CLICK", (e) => {
     // console.log(a.object);
 });
 
-var tagId: string;
-let CSSDiv = document.createElement("div");
-CSSDiv.id = "Test";
-CSSDiv.textContent = "文字测试";
-ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
-    console.log(model);
+// var tagId: string;
+// let CSSDiv = document.createElement("div");
+// CSSDiv.id = "Test";
+// CSSDiv.textContent = "文字测试";
+// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+//     console.log(model);
 
-    mainScene.add(model);
-    tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
-});
+//     mainScene.add(model);
+//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+// });
 
 // ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
 //     console.log(model);
