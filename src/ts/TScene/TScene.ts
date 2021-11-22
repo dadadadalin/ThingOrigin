@@ -431,7 +431,7 @@ export class TScene extends Scene {
      * @param {HTMLElement} html dom元素
      * @returns {*}  {string}
      */
-    public addCSS2D(property: string, value: string, html: HTMLElement): string {
+    public addCSS2D(property: string, value: string, html: HTMLElement,ratio:number = 1.1,offset:number[]=[0,0,0]): string {
         let obj = this.getObjectByProperty(property, value);
         if (!obj) {
             console.warn("标注添加失败，物体不存在");
@@ -440,7 +440,7 @@ export class TScene extends Scene {
 
         let CSSLabel = new CSS2DObject(html);
         let sphere = ThingOrigin.tool.getObjectSphere(obj);
-        CSSLabel.position.set(sphere.center.x, sphere.center.y + sphere.radius * 1.1, sphere.center.z);
+        CSSLabel.position.set(sphere.center.x+offset[0], (sphere.center.y + sphere.radius * ratio)+offset[1], sphere.center.z+offset[2]);
         CSSLabel.element.id = CSSLabel.uuid;
         CSSLabel.userData.modelUUID = value;
         obj.attach(CSSLabel);
