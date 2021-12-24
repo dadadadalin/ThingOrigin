@@ -38,6 +38,7 @@ export class TScene extends Scene {
     public effectComposer: EffectComposer;
 
     public outlinePass: OutlinePass;
+
     private effectFXAA: ShaderPass;
 
     public sceneParam: ThingOriginParams;
@@ -196,8 +197,6 @@ export class TScene extends Scene {
      * @param {ThingOriginParams} sceneParams 场景参数
      */
     private loadModel(sceneParams: ThingOriginParams) {
-        console.log(sceneParams.models);
-
         for (let i = 0; i < sceneParams.models.length; i++) {
             let item = sceneParams.models[i];
             if (item["objInfo"].objType == "modelFile") {
@@ -205,18 +204,34 @@ export class TScene extends Scene {
                     this.add(model);
                 });
             } else if (item["objInfo"].objType == "sphere") {
-                console.log('eeee');
-                let sphere = ThingOrigin.model.initSphere(item.name, { radius: item["objInfo"].radius},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                console.log("eeee");
+                let sphere = ThingOrigin.model.initSphere(
+                    item.name,
+                    { radius: item["objInfo"].radius },
+                    { color: item["objInfo"].color, position: [item.position.x, item.position.y, item.position.z] }
+                );
                 console.log(sphere);
                 this.add(sphere);
             } else if (item["objInfo"].objType == "cube") {
-                let cube = ThingOrigin.model.initBox(item.name, { width: item["objInfo"].width,height: item["objInfo"].height,depth: item["objInfo"].depth},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                let cube = ThingOrigin.model.initBox(
+                    item.name,
+                    { width: item["objInfo"].width, height: item["objInfo"].height, depth: item["objInfo"].depth },
+                    { color: item["objInfo"].color, position: [item.position.x, item.position.y, item.position.z] }
+                );
                 this.add(cube);
             } else if (item["objInfo"].objType == "cylinder") {
-                let cylinder = ThingOrigin.model.initCylinder(item.name, { radiusTop: item["objInfo"].radiusTop,height: item["objInfo"].height,radiusBottom: item["objInfo"].radiusBottom},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+                let cylinder = ThingOrigin.model.initCylinder(
+                    item.name,
+                    { radiusTop: item["objInfo"].radiusTop, height: item["objInfo"].height, radiusBottom: item["objInfo"].radiusBottom },
+                    { color: item["objInfo"].color, position: [item.position.x, item.position.y, item.position.z] }
+                );
                 this.add(cylinder);
-            }else if (item["objInfo"].objType == "cone") {
-                let cone = ThingOrigin.model.initCone(item.name, { radius: item["objInfo"].radius,height: item["objInfo"].height},{color:item["objInfo"].color,position:[item.position.x,item.position.y,item.position.z]});
+            } else if (item["objInfo"].objType == "cone") {
+                let cone = ThingOrigin.model.initCone(
+                    item.name,
+                    { radius: item["objInfo"].radius, height: item["objInfo"].height },
+                    { color: item["objInfo"].color, position: [item.position.x, item.position.y, item.position.z] }
+                );
                 this.add(cone);
             }
         }
@@ -429,9 +444,11 @@ export class TScene extends Scene {
      * @param {string} property 模型属性
      * @param {string} value 属性值
      * @param {HTMLElement} html dom元素
-     * @returns {*}  {string}
+     * @param {number} [ratio=1.1]
+     * @param {number[]} [offset=[0,0,0]]
+     * @return {*}  {string}
      */
-    public addCSS2D(property: string, value: string, html: HTMLElement,ratio:number = 1.1,offset:number[]=[0,0,0]): string {
+    public addCSS2D(property: string, value: string, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
         let obj = this.getObjectByProperty(property, value);
         if (!obj) {
             console.warn("标注添加失败，物体不存在");
@@ -440,7 +457,7 @@ export class TScene extends Scene {
 
         let CSSLabel = new CSS2DObject(html);
         let sphere = ThingOrigin.tool.getObjectSphere(obj);
-        CSSLabel.position.set(sphere.center.x+offset[0], (sphere.center.y + sphere.radius * ratio)+offset[1], sphere.center.z+offset[2]);
+        CSSLabel.position.set(sphere.center.x + offset[0], sphere.center.y + sphere.radius * ratio + offset[1], sphere.center.z + offset[2]);
         CSSLabel.element.id = CSSLabel.uuid;
         CSSLabel.userData.modelUUID = value;
         obj.attach(CSSLabel);

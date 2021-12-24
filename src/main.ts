@@ -14,6 +14,7 @@ import { ThingOrigin } from "./ThingOrigin";
 // ];
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
+mainScene.helper.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 
 // ThingOrigin.model.initText("这是文字", "/static/font/Microsoft YaHei Light_Regular.json", { color: "#ff0", size: 50, height: 100 }).then((font) => {
 //     mainScene.add(font);
