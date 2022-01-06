@@ -1,7 +1,9 @@
 import * as d3geo from "d3-geo";
 import {
+    ArrowHelper,
     BoxBufferGeometry,
     BufferGeometry,
+    Color,
     ConeBufferGeometry,
     CylinderBufferGeometry,
     DoubleSide,
@@ -17,7 +19,9 @@ import {
     MeshLambertMaterial,
     MeshPhongMaterial,
     Object3D,
+    Plane,
     PlaneGeometry,
+    PlaneHelper,
     Points,
     PointsMaterial,
     Shape,
@@ -241,6 +245,45 @@ export class TModel {
         const geometryObject = new Mesh(cylinder, material);
         geometryObject.name = name;
         return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+    }
+
+    /**
+     * @description 生成箭头
+     * @author LL
+     * @date 24/12/2021
+     * @param {number[]} dir 指向方向
+     * @param {number[]} origin 源头位置
+     * @param {number} length 长度
+     * @param {number} hex 颜色
+     * @param {number} [headLength] 箭头长度
+     * @param {number} [headWidth] 箭头宽度
+     * @returns {*}  {ArrowHelper}
+     */
+    public initArrow(name: string, dir: number[], origin: number[], length: number, hex: string, headLength?: number, headWidth?: number): ArrowHelper {
+        const dirVector3 = new Vector3(dir[0], dir[1], dir[2]);
+        dirVector3.normalize();
+        const originVector3 = new Vector3(origin[0], origin[1], origin[2]);
+        const arrowHelper = new ArrowHelper(dirVector3, originVector3, length, new Color(hex).getHex(), headLength, headWidth);
+        arrowHelper.name = name;
+        return arrowHelper;
+    }
+
+    /**
+     * @description 创建面板
+     * @author LL
+     * @date 24/12/2021
+     * @param {string} name
+     * @param {number[]} face
+     * @param {number} distance
+     * @param {number} [size]
+     * @param {string} [color]
+     * @returns {*}  {PlaneHelper}
+     */
+    public initPlane(name: string, face: number[], distance: number, size?: number, color?: string): PlaneHelper {
+        const plane = new Plane(new Vector3(face[0], face[1], face[2]), distance);
+        const helper = new PlaneHelper(plane, size, new Color(color).getHex());
+        helper.name = name;
+        return helper;
     }
 
     /**

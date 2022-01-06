@@ -1,9 +1,3 @@
 # ThingOrigin.js
 
-3D 引擎
-
-文档地址：http://210.72.137.240:50011/ThingOriginDoc/doc/index.html#
-
-ThingOrigin.js 文件: http://210.72.137.240:50011/ThingOriginDoc/main.js
-
-案例 demo http://210.72.137.240:50011/3Deditor/#/ThingOriginDoc
+ThingOrigin.js 是基于 Three.js 的 3D 引擎。用于快速搭建动态 3D 场景的一种解决方案。

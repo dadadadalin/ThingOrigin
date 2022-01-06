@@ -1,3 +1,4 @@
+import { SkeletonHelper } from "three";
 import sd2 from "../public/static/data/sceneParams.js";
 import { ThingOrigin } from "./ThingOrigin";
 
@@ -14,7 +15,14 @@ import { ThingOrigin } from "./ThingOrigin";
 // ];
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
-mainScene.helper.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
+
+let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
+mainScene.add(arrow);
+let plane = ThingOrigin.model.initPlane("initPlane", [0, 1, 0], 0, 200, "#0f0");
+mainScene.add(plane);
+
+const bbb = new SkeletonHelper(arrow);
+mainScene.add(bbb);
 
 // ThingOrigin.model.initText("这是文字", "/static/font/Microsoft YaHei Light_Regular.json", { color: "#ff0", size: 50, height: 100 }).then((font) => {
 //     mainScene.add(font);
