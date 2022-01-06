@@ -1,6 +1,6 @@
 # ThingOrigin.js
 
-![Image](https://github.com/dadadadalin/ThingOrigin/tree/main/public/static/img/sprite1.png)
+![Image](https://github.com/dadadadalin/ThingOrigin/tree/main/public/static/img/logo.png)
 
 ThingOrigin.js 是基于 Three.js 的 3D 引擎。可低门槛、快速搭建动态 3D 场景。
 
