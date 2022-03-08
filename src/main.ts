@@ -1,4 +1,5 @@
 import { SkeletonHelper } from "three";
+import "../public/js/main.js";
 import sd2 from "../public/static/data/sceneParams.js";
 import { ThingOrigin } from "./ThingOrigin";
 
@@ -23,6 +24,15 @@ mainScene.add(plane);
 
 const bbb = new SkeletonHelper(arrow);
 mainScene.add(bbb);
+
+setTimeout(() => {
+    ThingOrigin.model.activeDRACOLoader("https://www.gstatic.com/draco/v1/decoders/");
+    ThingOrigin.model.initFileModel("gltf", "/static/three/factory.glb").then((model) => {
+        console.log(model);
+
+        mainScene.add(model);
+    });
+}, 2000);
 
 // ThingOrigin.model.initText("这是文字", "/static/font/Microsoft YaHei Light_Regular.json", { color: "#ff0", size: 50, height: 100 }).then((font) => {
 //     mainScene.add(font);

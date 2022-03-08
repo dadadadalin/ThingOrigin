@@ -34,6 +34,7 @@ import {
     TextureLoader,
     Vector3,
 } from "three";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
 import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
@@ -45,8 +46,25 @@ export class TModel {
     GLTFLoader: GLTFLoader = new GLTFLoader();
     STLLoader: STLLoader = new STLLoader();
     SVGLoader: SVGLoader = new SVGLoader();
+    // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("/static/utils/draco/").preload();
+    DRACOLoader: DRACOLoader = new DRACOLoader();
+    // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+
+    // DRACOLoader.setDecoderPath("static/utils/draco/"); // use a full url path
+    // dracoLoader.setDecoderConfig({ type: "js" });
+    // dracoLoader.preload();
 
     constructor() {}
+
+    /**
+     * @description 激活DRACOLoader（用于导入压缩的gltf模型）
+     * @author LL
+     * @date 08/03/2022
+     * @param {string} url
+     */
+    public activeDRACOLoader(url: string) {
+        this.DRACOLoader.setDecoderPath(url);
+    }
 
     /**
      * @description 导入模型文件
@@ -81,6 +99,8 @@ export class TModel {
                     resolve(mesh);
                 });
             } else if (type == "gltf") {
+                this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
+
                 this.GLTFLoader.load(url, (gltf: GLTF) => {
                     if (modelConfigs) {
                         if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
