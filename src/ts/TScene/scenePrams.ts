@@ -125,3 +125,16 @@ interface outlinepassParams {
     visibleEdgeColor: string;
     hiddenEdgeColor: string;
 }
+
+interface skyColorsParams {
+    top: string;
+    line: string;
+    bottom: string;
+}
+
+interface skyConfigsParams {
+    radius: number;
+    widthSegments: number;
+    heightSegments: number;
+    skyCenter: number[];
+}

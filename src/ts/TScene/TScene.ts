@@ -1,4 +1,4 @@
-import { Color, Group, Object3D, Scene, TextureLoader, Vector2, WebGLRenderer } from "three";
+import { BackSide, Color, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
@@ -44,16 +44,6 @@ export class TScene extends Scene {
     public sceneParam: ThingOriginParams;
 
     /**
-     * @description 修改背景图片
-     * @author LL
-     * @date 2021/08/26
-     * @param {string} url
-     */
-    public backgroundImg(url: string) {
-        this.background = new TextureLoader().load(url);
-    }
-
-    /**
      * @description 创建一个场景
      * @author LL
      * @date 2021/10/15
@@ -72,6 +62,16 @@ export class TScene extends Scene {
 
         if (sceneParams.models) this.loadModel(sceneParams);
         if (sceneParams.css2d) this.loadCSS2D(sceneParams);
+    }
+
+    /**
+     * @description 修改背景图片
+     * @author LL
+     * @date 2021/08/26
+     * @param {string} url
+     */
+    public setBackgroundImg(url: string) {
+        this.background = new TextureLoader().load(url);
     }
 
     /**
@@ -267,6 +267,63 @@ export class TScene extends Scene {
 
         // this.model.addCSS2D("name", sceneParams.css2d[0].name, document.getElementById("css2d2"));
         // this.model.addCSS2D("name", sceneParams.css2d[1].name, document.getElementById("css2d"));
+    }
+
+    public initSky(
+        colors: skyColorsParams = { top: "#86b6f5", line: "#ffffff", bottom: "#999999" },
+        skyConfigs: skyConfigsParams = {
+            radius: 4000,
+            widthSegments: 32,
+            heightSegments: 15,
+            skyCenter: [0, 0, 0],
+        }
+    ) {
+        // note that the camera's far distance should bigger than the radius,
+        // otherwise, you cannot see the sky
+        const skyGeo = new SphereBufferGeometry(skyConfigs.radius, skyConfigs.widthSegments, skyConfigs.heightSegments);
+        const skyMat = new ShaderMaterial({
+            uniforms: {
+                topColor: { value: new Color(colors.top) },
+                skylineColor: { value: new Color(colors.line) },
+                bottomColor: { value: new Color(colors.bottom) },
+                offset: { value: 400 },
+                exponent: { value: 0.9 },
+                skyCenter: { value: new Vector3(skyConfigs.skyCenter[0], skyConfigs.skyCenter[1], skyConfigs.skyCenter[2]) || new Vector3() },
+            },
+            vertexShader: `
+            varying vec3 vWorldPosition;
+            void main() {
+              vec4 worldPosition = modelMatrix * vec4( position, 1.0 );
+              vWorldPosition = worldPosition.xyz;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+            }`,
+            fragmentShader: `
+            uniform vec3 topColor;
+            uniform vec3 skylineColor;
+            uniform vec3 bottomColor;
+            uniform float offset;
+            uniform float exponent;
+            uniform vec3 skyCenter;
+            varying vec3 vWorldPosition;
+            void main() {
+              vec3 position = vec3(vWorldPosition.x - skyCenter.x, vWorldPosition.y - skyCenter.y, vWorldPosition.z - skyCenter.z);
+              float h = normalize( position + offset ).y;
+              vec3 color;
+              if (h > 0.0) {
+                color = mix( skylineColor, topColor, max( pow( max( h, 0.0 ), exponent ), 0.0 ) );
+              } else {
+                color = mix( skylineColor, bottomColor, max( pow( max( -h, 0.0 ), exponent ), 0.0 ) );
+              }
+              gl_FragColor = vec4(color , 1.0 );
+            }`,
+            side: BackSide,
+        });
+
+        const sky = new Mesh(skyGeo, skyMat);
+        sky.name = "sky";
+        sky.userData.selectable = false;
+
+        this.add(sky);
     }
 
     /**

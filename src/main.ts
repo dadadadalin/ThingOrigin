@@ -16,6 +16,7 @@ import { ThingOrigin } from "./ThingOrigin";
 // ];
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
+mainScene.initSky();
 
 let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 mainScene.add(arrow);
@@ -27,7 +28,7 @@ mainScene.add(bbb);
 
 setTimeout(() => {
     ThingOrigin.model.activeDRACOLoader("https://www.gstatic.com/draco/v1/decoders/");
-    ThingOrigin.model.initFileModel("gltf", "/static/three/factory.glb").then((model) => {
+    ThingOrigin.model.initFileModel("gltf", "/static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
         console.log(model);
 
         mainScene.add(model);
