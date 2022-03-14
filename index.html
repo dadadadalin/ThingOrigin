@@ -1,19 +1,20 @@
 <html>
     <head>
         <title>ThingOrigin.js</title>
-        <link rel="stylesheet" href="./public/website/index.css" />
+        <link rel="stylesheet" href="./public/website/css/index.css" />
     </head>
-    <body>
+    <body style="overflow: hidden">
         <div class="header">
             <img onclick="changePage('index')" src="./public/static/img/logo.png" alt="" />
 
             <ul class="menu">
                 <li onclick="changePage('doc')">API文档</li>
-                <li>案例展示</li>
+                <li onclick="changePage('oc')">案例展示</li>
+                <li onclick="changePage('dc')">案例展示</li>
             </ul>
         </div>
         <div class="content">
-            <iframe id="iframe" src="./public/docs/index.html" ="0"></iframe>
+            <iframe id="iframe" src="./public/website/index.html" ="0"></iframe>
         </div>
 
         <script>
@@ -22,13 +23,13 @@
                 console.dir(frame);
                 switch (page) {
                     case "index":
-                        frame.src = "./public/docs/index.html";
+                        frame.src = "./public/website/index.html";
                         break;
                     case "doc":
                         frame.src = "./public/doc/index.html";
                         break;
-
                     default:
+                        alert("开发中");
                         break;
                 }
             }
