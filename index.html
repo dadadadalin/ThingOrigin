@@ -1,8 +1,37 @@
 <html>
     <head>
         <title>ThingOrigin.js</title>
+        <link rel="stylesheet" href="./public/website/index.css" />
     </head>
     <body>
-        <iframe src="./public/docs/index.html" frameborder="0" style="width: 100%; height: 100%"></iframe>
+        <div class="header">
+            <img onclick="changePage('index')" src="./public/static/img/logo.png" alt="" />
+
+            <ul class="menu">
+                <li onclick="changePage('doc')">API文档</li>
+                <li>案例展示</li>
+            </ul>
+        </div>
+        <div class="content">
+            <iframe id="iframe" src="./public/docs/index.html" ="0"></iframe>
+        </div>
+
+        <script>
+            function changePage(page) {
+                const frame = document.getElementById("iframe");
+                console.dir(frame);
+                switch (page) {
+                    case "index":
+                        frame.src = "./public/docs/index.html";
+                        break;
+                    case "doc":
+                        frame.src = "./public/doc/index.html";
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+        </script>
     </body>
 </html>
