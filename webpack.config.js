@@ -13,7 +13,7 @@ module.exports = function (env, argv) {
         }, //已多次提及的唯一入口文件
         output: {
             path: path.resolve(__dirname, "./public"), //打包后的文件存放的地方
-            filename: "js/[name].js", //打包后输出文件的文件名
+            filename: "js/thingorigin.js", //打包后输出文件的文件名
         },
         resolve: {
             // Add `.ts` and `.tsx` as a resolvable extension

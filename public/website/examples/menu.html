@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <link rel="stylesheet" href="../css/examples.css" />
+    </head>
+    <body>
+        <div class="full-height">
+            <div class="menu-part" id="menu">
+                <div class="level1" v-for="(item,i) in menu">
+                    {{item.title}}
+                    <div class="level2" v-for="(inner,j) in item.children" @click="jump(inner.url)">{{inner.title}}</div>
+                </div>
+            </div>
+            <div class="content-part">
+                <iframe id="iframe" src="./start/install.html" frameborder="0"></iframe>
+            </div>
+        </div>
+
+        <script src="../js/vue.js"></script>
+        <script src="../js/example.js"></script>
+    </body>
+</html>

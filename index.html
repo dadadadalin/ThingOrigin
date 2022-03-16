@@ -1,5 +1,7 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8" />
         <title>ThingOrigin.js</title>
         <link rel="stylesheet" href="./public/website/css/index.css" />
     </head>
@@ -8,13 +10,14 @@
             <img onclick="changePage('index')" src="./public/static/img/logo.png" alt="" />
 
             <ul class="menu">
-                <li onclick="changePage('doc')">API文档</li>
-                <li onclick="changePage('oc')">案例展示</li>
-                <li onclick="changePage('dc')">案例展示</li>
+                <li onclick="changePage('doc')">文档</li>
+                <li onclick="changePage('examples')">案例展示</li>
+                <li onclick="changePage('dc')">关于我们</li>
             </ul>
         </div>
         <div class="content">
-            <iframe id="iframe" src="./public/website/index.html" ="0"></iframe>
+            <!-- <iframe id="iframe" src="./public/website/index.html" ="0"></iframe> -->
+            <iframe id="iframe" src="./public/website/examples/menu.html" ="0"></iframe>
         </div>
 
         <script>
@@ -27,6 +30,9 @@
                         break;
                     case "doc":
                         frame.src = "./public/doc/index.html";
+                        break;
+                    case "examples":
+                        frame.src = "./public/website/examples/menu.html";
                         break;
                     default:
                         alert("开发中");

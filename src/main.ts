@@ -28,12 +28,14 @@ mainScene.add(bbb);
 
 setTimeout(() => {
     ThingOrigin.model.activeDRACOLoader("https://www.gstatic.com/draco/v1/decoders/");
-    ThingOrigin.model.initFileModel("gltf", "/static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
+    ThingOrigin.model.initFileModel("gltf", "/static/three/park_three_draco_mid.glb", { scale: [5, 5, 5] }).then((model) => {
         console.log(model);
 
         mainScene.add(model);
     });
 }, 2000);
+
+// mainScene.overrideMaterial = new MeshBasicMaterial({ color: "green" });
 
 // ThingOrigin.model.initText("这是文字", "/static/font/Microsoft YaHei Light_Regular.json", { color: "#ff0", size: 50, height: 100 }).then((font) => {
 //     mainScene.add(font);

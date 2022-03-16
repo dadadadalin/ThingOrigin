@@ -7,11 +7,13 @@ import { TScene } from "./TScene";
 function animate() {
     ThingOrigin.scenes.scenes.forEach(function (item, key, mapObj) {
         (function (item) {
-            ThingOrigin.getScene(key).helper.updateBox();
-            ThingOrigin.getScene(key).renderer.render(item, item.camera.camera);
-            ThingOrigin.getScene(key).CSS2DRenderer.render(item, item.camera.camera);
-            ThingOrigin.getScene(key).controls.updatePointerLock();
-            if (ThingOrigin.getScene(key).effectComposer) ThingOrigin.getScene(key).effectComposer.render(new Clock().getDelta());
+            // item.camera.camera.updateProjectionMatrix();
+            let cScene = ThingOrigin.getScene(key);
+            cScene.helper.updateBox();
+            cScene.renderer.render(item, item.camera.camera);
+            cScene.CSS2DRenderer.render(item, item.camera.camera);
+            cScene.controls.updatePointerLock();
+            if (cScene.effectComposer) cScene.effectComposer.render(new Clock().getDelta());
         })(item);
     });
     TWEEN.update();
@@ -44,10 +46,11 @@ export class SceneMap {
      * @param {string} sceneName
      */
     delete(sceneName: string) {
-        this.scenes.get(sceneName).traverse((child) => {
+        let cScene = this.scenes.get(sceneName);
+        cScene.traverse((child) => {
             if (child["geometry"]) {
                 child["geometry"].dispose();
-                this.scenes.get(sceneName).remove(child["geometry"]);
+                cScene.remove(child["geometry"]);
             }
             if (child["material"]) {
                 //todo  与模型处的删除模型代码共用
@@ -58,26 +61,33 @@ export class SceneMap {
                 } else {
                     child["material"].dispose();
                 }
-                this.scenes.get(sceneName).remove(child["material"]);
+                cScene.remove(child["material"]);
             }
             if (child["texture"]) {
                 child["texture"].dispose();
-                this.scenes.get(sceneName).remove(child["texture"]);
+                cScene.remove(child["texture"]);
             }
         });
 
-        this.scenes.get(sceneName).controls.disposeOrbit();
-        this.scenes.get(sceneName).controls.disposeDrag();
-        this.scenes.get(sceneName).controls.disposePointerLock();
-        this.scenes.get(sceneName).controls.disposeRaycaster();
-        this.scenes.get(sceneName).controls.disposeTransform();
-        this.scenes.get(sceneName).helper.removeAxes();
-        this.scenes.get(sceneName).helper.removeBox();
-        this.scenes.get(sceneName).helper.removeGrid();
+        cScene.controls.disposeOrbit();
+        cScene.controls.disposeDrag();
+        cScene.controls.disposePointerLock();
+        cScene.controls.disposeRaycaster();
+        cScene.controls.disposeTransform();
+        cScene.helper.removeAxes();
+        cScene.helper.removeBox();
+        cScene.helper.removeGrid();
 
-        while (this.scenes.get(sceneName).container.hasChildNodes()) {
-            this.scenes.get(sceneName).container.removeChild(this.scenes.get(sceneName).container.firstChild);
+        while (cScene.container.hasChildNodes()) {
+            cScene.container.removeChild(cScene.container.firstChild);
         }
+
+        cScene.renderer.dispose();
+        cScene.renderer.forceContextLoss();
+        cScene.renderer.context = null;
+        let gl = cScene.renderer.domElement.getContext("webgl");
+        gl && gl.getExtension("WEBGL_lose_context").loseContext();
+
         this.scenes.delete(sceneName);
     }
 }
