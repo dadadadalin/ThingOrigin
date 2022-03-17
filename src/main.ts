@@ -1,4 +1,3 @@
-import { SkeletonHelper } from "three";
 import "../public/js/main.js";
 import sd2 from "../public/static/data/sceneParams.js";
 import { ThingOrigin } from "./ThingOrigin";
@@ -18,20 +17,22 @@ import { ThingOrigin } from "./ThingOrigin";
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 mainScene.initSky();
 
-let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
-mainScene.add(arrow);
-let plane = ThingOrigin.model.initPlane("initPlane", [0, 1, 0], 0, 200, "#0f0");
-mainScene.add(plane);
+// let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
+// mainScene.add(arrow);
+// let plane = ThingOrigin.model.initPlane("initPlane", [0, 1, 0], 0, 200, "#0f0");
+// mainScene.add(plane);
 
-const bbb = new SkeletonHelper(arrow);
-mainScene.add(bbb);
+// const bbb = new SkeletonHelper(arrow);
+// mainScene.add(bbb);
 
 setTimeout(() => {
     ThingOrigin.model.activeDRACOLoader("https://www.gstatic.com/draco/v1/decoders/");
-    ThingOrigin.model.initFileModel("gltf", "/static/three/park_three_draco_mid.glb", { scale: [5, 5, 5] }).then((model) => {
+    ThingOrigin.model.initFileModel("gltf", "/static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
         console.log(model);
 
         mainScene.add(model);
+
+        mainScene.helper.initBox(model.uuid);
     });
 }, 2000);
 
@@ -170,7 +171,6 @@ mainScene.eDispatcher.addEventListener("CLICK", (e) => {
 //     // var a = ThingOrigin.getScene("ttt").getObjectByProperty("name", "car");
 //     // var b = ThingOrigin.getScene("ttt").cloneObject("ttt", a.uuid, [100, 10, 100]);
 //     // ThingOrigin.getScene("ttt").add(b);
-//     // ThingOrigin.getScene("ttt").model.setVisible("hulan", false);
 //     // console.log(e);
 //     // wallPoints.push([e.position.x, e.position.y, e.position.z]);
 //     // console.log(wallPoints);

@@ -89,14 +89,45 @@ interface gridParams {
 interface sceneParam {
     webglrenderer: webglrendererParams;
     background: backgroundParams;
+    stats: statsParams;
 }
 interface webglrendererParams {
     gammaFactor: number;
     alpha: boolean;
 }
 interface backgroundParams {
+    type: string;
+    sky: skyParams;
+    color: colorParams;
+    img: imgParams;
+}
+interface skyParams {
+    color: skyColorParams;
+    params: skyParams;
+}
+interface skyColorParams {
+    top: string;
+    line: string;
+    bottom: string;
+}
+interface skyParams {
+    radius: number;
+    widthSegments: number;
+    heightSegments: number;
+    skyCenter: number[];
+}
+interface colorParams {
+    alpha: number; //透明度 取值范围0~1
     color: string;
-    alpha: number;
+}
+
+interface imgParams {
+    url: string;
+}
+
+interface statsParams {
+    show: true;
+    mode: number;
 }
 
 interface cameraParams {

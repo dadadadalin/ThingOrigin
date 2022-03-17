@@ -4,9 +4,28 @@ export default {
         webglrenderer: {
             alpha: true, //是否支持透明
         },
+        stats: {
+            show: true,
+            mode: 0,
+        },
         background: {
-            alpha: 0.3, //透明度 取值范围0~1
-            color: "#944",
+            type: "sky",
+            color: {
+                alpha: 0.3, //透明度 取值范围0~1
+                color: "#944",
+            },
+            img: {
+                url: "",
+            },
+            sky: {
+                color: { top: "#86b6f5", line: "#ffffff", bottom: "#999999" },
+                params: {
+                    radius: 4000,
+                    widthSegments: 32,
+                    heightSegments: 15,
+                    skyCenter: [0, 0, 0],
+                },
+            },
         },
     },
     camera: {
@@ -110,9 +129,9 @@ export default {
         {
             name: "sphere",
             position: { x: 0, y: 0, z: 0 },
-            rotation: { x: 0, y: 0, z: 0},
+            rotation: { x: 0, y: 0, z: 0 },
             scale: { x: 1, y: 1, z: 1 },
-            objInfo: { objType: "sphere", color:'#f00'},
+            objInfo: { objType: "sphere", color: "#f00" },
         },
     ],
 };

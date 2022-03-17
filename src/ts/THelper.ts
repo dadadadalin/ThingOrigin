@@ -66,10 +66,11 @@ export class THelper {
      */
     public updateBox() {
         if (this.box) {
-            let box = this.tScene.getObjectByProperty("type", "BoxHelper");
-            if (box) {
-                (box as BoxHelper).update();
-            }
+            this.box.update();
+            // let box = this.tScene.getObjectByProperty("type", "BoxHelper");
+            // if (box) {
+            //     (box as BoxHelper).update();
+            // }
         }
     }
 

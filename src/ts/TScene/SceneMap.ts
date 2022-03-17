@@ -1,21 +1,27 @@
-import { Clock } from "three";
 import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../../ThingOrigin";
 import { TScene } from "./TScene";
 
+// var i = 0;
 /** 帧循环 */
 function animate() {
     ThingOrigin.scenes.scenes.forEach(function (item, key, mapObj) {
         (function (item) {
             // item.camera.camera.updateProjectionMatrix();
             let cScene = ThingOrigin.getScene(key);
-            cScene.helper.updateBox();
             cScene.renderer.render(item, item.camera.camera);
             cScene.CSS2DRenderer.render(item, item.camera.camera);
-            cScene.controls.updatePointerLock();
-            if (cScene.effectComposer) cScene.effectComposer.render(new Clock().getDelta());
+            if (cScene.effectComposer) cScene.effectComposer.render();
+
+            // if (i % 20 == 0) {
+            if (cScene.helper.box) cScene.helper.updateBox();
+            if (cScene.controls.pointerLock) cScene.controls.updatePointerLock();
+            cScene.stats.update();
+            // }
+            // i++;
         })(item);
     });
+
     TWEEN.update();
     requestAnimationFrame(animate);
 }

@@ -1,4 +1,5 @@
 import { BackSide, Color, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
+import Stats from "three/examples/jsm/libs/stats.module";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
@@ -43,6 +44,8 @@ export class TScene extends Scene {
 
     public sceneParam: ThingOriginParams;
 
+    public stats: Stats;
+
     /**
      * @description 创建一个场景
      * @author LL
@@ -59,6 +62,7 @@ export class TScene extends Scene {
         this.initLight(sceneParams);
         this.initEffect(sceneParams);
         this.initControl(sceneParams);
+        if (sceneParams.scene.stats.show) this.showStats(sceneParams);
 
         if (sceneParams.models) this.loadModel(sceneParams);
         if (sceneParams.css2d) this.loadCSS2D(sceneParams);
@@ -97,10 +101,14 @@ export class TScene extends Scene {
         //渲染器
         this.renderer = new WebGLRenderer(sceneParams.scene.webglrenderer);
 
-        if (sceneParams.scene.webglrenderer.alpha) {
-            this.renderer.setClearColor(sceneParams.scene.background.color, sceneParams.scene.background.alpha); //default
-        } else {
-            this.background = new Color(sceneParams.scene.background.color);
+        if (sceneParams.scene.background.type == "sky") {
+            this.initSky();
+        } else if (sceneParams.scene.background.type == "color") {
+            if (sceneParams.scene.webglrenderer.alpha) {
+                this.renderer.setClearColor(sceneParams.scene.background.color.color, sceneParams.scene.background.color.alpha); //default
+            } else {
+                this.background = new Color(sceneParams.scene.background.color.color);
+            }
         }
 
         this.renderer.setSize(this.container.clientWidth, this.container.clientHeight);
@@ -187,6 +195,16 @@ export class TScene extends Scene {
         if (sceneParams.controls.transform.active) {
             this.controls.initTransform();
         }
+    }
+
+    private showStats(sceneParams: ThingOriginParams) {
+        // @ts-ignore：
+        this.stats = new Stats();
+        this.stats.domElement.style.position = "absolute"; // 样式， 坐标
+        this.stats.domElement.style.left = "0px";
+        this.stats.domElement.style.top = "0px";
+        this.container.appendChild(this.stats.domElement); // 添加到canvas-frame
+        this.stats.setMode(sceneParams.scene.stats.mode);
     }
 
     /**
