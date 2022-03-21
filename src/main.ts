@@ -24,143 +24,143 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
-// setTimeout(() => {
-// ThingOrigin.model.initFileModel("gltf", "/static/three/CP03.gltf", { scale: [5, 5, 5] }).then((model) => {
-//     console.log(model);
-
-//     mainScene.add(model);
-
-//     mainScene.helper.initBox(model.uuid);
-// });
-// }, 2000);
-
-var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
-request.onerror = function (event) {
-    console.log("数据库打开报错");
-};
-var db;
-
-request.onsuccess = function (event) {
-    db = request.result;
-    //db = event.target.result; 也能拿到
-    console.log("数据库打开成功");
-
-    // read();
-};
-
-var db;
-request.onupgradeneeded = function (event) {
-    //@ts-ignore
-    db = event.target.result;
-
-    console.log(db);
-
-    var objectStore;
-    if (!db.objectStoreNames.contains("book")) {
-        objectStore = db.createObjectStore("book", {
-            keyPath: "id",
-        });
-
-        // 定义存储对象的数据项
-        objectStore.createIndex("id", "id", {
-            unique: true,
-        });
-        objectStore.createIndex("name", "name");
-        objectStore.createIndex("model", "model");
-    }
-    console.log("数据库升级成功");
-};
-
-function add(book) {
-    console.log(db);
-
-    var request1 = db
-        .transaction(["book"], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
-        .objectStore("book") //拿到IDBObjectStore 对象
-        .add({
-            // 插入记录
-            id: book.id,
-            name: book.name,
-            model: book.model,
-        });
-    request1.onsuccess = function (event) {
-        console.log("数据写入成功");
-    };
-    request1.onerror = function (event) {
-        console.log("数据写入失败");
-    };
-    request1.onabort = function (event) {
-        console.log("事务回滚");
-    };
-}
-
-function read() {
-    var transaction = db.transaction("book", "readwrite");
-    var store = transaction.objectStore("book");
-    console.log(store);
-
-    var dataRequest = store.get("id");
-    console.log(dataRequest);
-
-    dataRequest.onsuccess = function (e) {
-        console.log(e);
-
-        //异步的
-        // var student = e.target.result;
-        // console.log(student.name);
-    };
-}
-
-//步骤一:创建异步对象
-var ajax = new XMLHttpRequest();
-//步骤二:设置请求的url参数,参数一是请求的类型,参数二是请求的url,可以带参数,动态的传递参数starName到服务端
-ajax.open("get", "/static/three/xi.gltf");
-//步骤三:发送请求
-ajax.send();
-//步骤四:注册事件 onreadystatechange 状态改变就会调用
-ajax.onreadystatechange = function () {
-    if (ajax.readyState == 4 && ajax.status == 200) {
-        //步骤五 如果能够进到这个判断 说明 数据 完美的回来了,并且请求的页面是存在的
-        // console.log(ajax.responseText); //输入相应的内容
-        // let ab = new ArrayBuffer(ajax.responseText);
-        // console.log(new Blob([ab], { type: "gltf" }));
-        // console.log(ajax.response);
-
-        let blob = new Blob([ajax.responseText]);
-        console.log(blob);
-
-        // add({ id: 10, name: "书名", model: blob });
-        add({ id: 80, name: "xi", model: blob });
-
-        // var reader = new FileReader();
-        // let m1 = reader.readAsBinaryString(ajax.responseText);
-
-        // reader.onload = function (e) {
-        //     console.log(e, reader);
-        // };
-    }
-};
-
 setTimeout(() => {
-    var transaction = db.transaction("book", "readwrite");
-    var store = transaction.objectStore("book");
+    ThingOrigin.model.initFileModel("gltf", "static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
+        console.log(model);
 
-    var dataRequest = store.index("id").get(80);
-    console.log(dataRequest);
+        mainScene.add(model);
 
-    dataRequest.onsuccess = function (e) {
-        console.log(e.target.result.model);
+        mainScene.helper.initBox(model.uuid);
+    });
+}, 2000);
 
-        //异步的
-        // var student = e.target.result;
-        // console.log(student.name);
-        ThingOrigin.model.initFileModel("gltf", e.target.result.model, undefined, true).then((model) => {
-            mainScene.add(model);
+// var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
+// request.onerror = function (event) {
+//     console.log("数据库打开报错");
+// };
+// var db;
 
-            mainScene.helper.initBox(model.uuid);
-        });
-    };
-}, 1000);
+// request.onsuccess = function (event) {
+//     db = request.result;
+//     //db = event.target.result; 也能拿到
+//     console.log("数据库打开成功");
+
+//     // read();
+// };
+
+// var db;
+// request.onupgradeneeded = function (event) {
+//     //@ts-ignore
+//     db = event.target.result;
+
+//     console.log(db);
+
+//     var objectStore;
+//     if (!db.objectStoreNames.contains("book")) {
+//         objectStore = db.createObjectStore("book", {
+//             keyPath: "id",
+//         });
+
+//         // 定义存储对象的数据项
+//         objectStore.createIndex("id", "id", {
+//             unique: true,
+//         });
+//         objectStore.createIndex("name", "name");
+//         objectStore.createIndex("model", "model");
+//     }
+//     console.log("数据库升级成功");
+// };
+
+// function add(book) {
+//     console.log(db);
+
+//     var request1 = db
+//         .transaction(["book"], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
+//         .objectStore("book") //拿到IDBObjectStore 对象
+//         .add({
+//             // 插入记录
+//             id: book.id,
+//             name: book.name,
+//             model: book.model,
+//         });
+//     request1.onsuccess = function (event) {
+//         console.log("数据写入成功");
+//     };
+//     request1.onerror = function (event) {
+//         console.log("数据写入失败");
+//     };
+//     request1.onabort = function (event) {
+//         console.log("事务回滚");
+//     };
+// }
+
+// function read() {
+//     var transaction = db.transaction("book", "readwrite");
+//     var store = transaction.objectStore("book");
+//     console.log(store);
+
+//     var dataRequest = store.get("id");
+//     console.log(dataRequest);
+
+//     dataRequest.onsuccess = function (e) {
+//         console.log(e);
+
+//         //异步的
+//         // var student = e.target.result;
+//         // console.log(student.name);
+//     };
+// }
+
+// //步骤一:创建异步对象
+// var ajax = new XMLHttpRequest();
+// //步骤二:设置请求的url参数,参数一是请求的类型,参数二是请求的url,可以带参数,动态的传递参数starName到服务端
+// ajax.open("get", "/static/three/xi.gltf");
+// //步骤三:发送请求
+// ajax.send();
+// //步骤四:注册事件 onreadystatechange 状态改变就会调用
+// ajax.onreadystatechange = function () {
+//     if (ajax.readyState == 4 && ajax.status == 200) {
+//         //步骤五 如果能够进到这个判断 说明 数据 完美的回来了,并且请求的页面是存在的
+//         // console.log(ajax.responseText); //输入相应的内容
+//         // let ab = new ArrayBuffer(ajax.responseText);
+//         // console.log(new Blob([ab], { type: "gltf" }));
+//         // console.log(ajax.response);
+
+//         let blob = new Blob([ajax.responseText]);
+//         console.log(blob);
+
+//         // add({ id: 10, name: "书名", model: blob });
+//         add({ id: 80, name: "xi", model: blob });
+
+//         // var reader = new FileReader();
+//         // let m1 = reader.readAsBinaryString(ajax.responseText);
+
+//         // reader.onload = function (e) {
+//         //     console.log(e, reader);
+//         // };
+//     }
+// };
+
+// setTimeout(() => {
+//     var transaction = db.transaction("book", "readwrite");
+//     var store = transaction.objectStore("book");
+
+//     var dataRequest = store.index("id").get(80);
+//     console.log(dataRequest);
+
+//     dataRequest.onsuccess = function (e) {
+//         console.log(e.target.result.model);
+
+//         //异步的
+//         // var student = e.target.result;
+//         // console.log(student.name);
+//         ThingOrigin.model.initFileModel("gltf", e.target.result.model, undefined, true).then((model) => {
+//             mainScene.add(model);
+
+//             mainScene.helper.initBox(model.uuid);
+//         });
+//     };
+// }, 1000);
 
 // mainScene.overrideMaterial = new MeshBasicMaterial({ color: "green" });
 

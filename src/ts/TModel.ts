@@ -109,11 +109,13 @@ export class TModel {
                 //如果是本地缓存文件要处理下路径
                 if (cached) {
                     //@ts-ignore
-                    var url2 = URL.createObjectURL(url);
+                    url = URL.createObjectURL(url);
                 }
 
                 this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
-                this.GLTFLoader.load(url2, (gltf) => {
+                console.log(this.GLTFLoader);
+
+                this.GLTFLoader.load(url, (gltf) => {
                     console.log(gltf);
                     if (modelConfigs) {
                         if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
