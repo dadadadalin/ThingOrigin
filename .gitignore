@@ -69,3 +69,8 @@ typings/
 
 *.zip
 
+public/static/three/CP03.gltf
+public/static/three/智能抓取.gltf
+public/static/three/jiance2.gltf
+public/static/three/siarobot.gltf
+public/static/three/xi.gltf

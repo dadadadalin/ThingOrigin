@@ -36,7 +36,7 @@ import {
 } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import { ThingOrigin } from "../ThingOrigin";
@@ -46,8 +46,8 @@ export class TModel {
     GLTFLoader: GLTFLoader = new GLTFLoader();
     STLLoader: STLLoader = new STLLoader();
     SVGLoader: SVGLoader = new SVGLoader();
-    // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("/static/utils/draco/").preload();
-    DRACOLoader: DRACOLoader = new DRACOLoader();
+    DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("static/draco/").preload();
+    // DRACOLoader: DRACOLoader = new DRACOLoader();
     // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
 
     // DRACOLoader.setDecoderPath("static/utils/draco/"); // use a full url path
@@ -55,16 +55,6 @@ export class TModel {
     // dracoLoader.preload();
 
     constructor() {}
-
-    /**
-     * @description 激活DRACOLoader（用于导入压缩的gltf模型）
-     * @author LL
-     * @date 08/03/2022
-     * @param {string} url
-     */
-    public activeDRACOLoader(url: string) {
-        this.DRACOLoader.setDecoderPath(url);
-    }
 
     /**
      * @description 导入模型文件
@@ -75,7 +65,7 @@ export class TModel {
      * @param {modelConfigs} modelConfigs 模型配置参数，位置和放大倍数  例：{position: [0, 0, 0], scale: [1, 1, 1] }
      * @returns {*}  {Promise<Object3D>}
      */
-    public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1] }): Promise<Object3D> {
+    public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1] }, cached: boolean = false): Promise<Object3D> {
         return new Promise((resolve) => {
             if (type == "fbx") {
                 this.FBXLoader.load(url, (fbx: Group) => {
@@ -99,16 +89,45 @@ export class TModel {
                     resolve(mesh);
                 });
             } else if (type == "gltf") {
-                this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
+                // var manager = new LoadingManager();
+                // console.log(url.model);
 
-                this.GLTFLoader.load(url, (gltf: GLTF) => {
-                    if (modelConfigs) {
-                        if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
-                        if (modelConfigs.position) gltf.scene.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
-                    }
-                    gltf.scene.updateMatrixWorld(true);
+                // var blobs = { "fish.gltf": url.model };
+
+                // const objectURLs = [];
+                // manager.setURLModifier((url1) => {
+                //     url1 = URL.createObjectURL(blobs);
+
+                //     objectURLs.push(url1);
+
+                //     return url1;
+                // });
+
+                // this.GLTFLoader = new GLTFLoader(manager);
+
+                //如果是本地缓存文件要处理下路径
+                if (cached) {
+                    //@ts-ignore
+                    var url2 = URL.createObjectURL(url);
+                }
+
+                this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
+                this.GLTFLoader.load(url2, (gltf) => {
+                    console.log(gltf);
+
                     resolve(gltf.scene);
                 });
+
+                // this.GLTFLoader = new GLTFLoader();
+
+                // this.GLTFLoader.load(url, (gltf: GLTF) => {
+                //     if (modelConfigs) {
+                //         if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
+                //         if (modelConfigs.position) gltf.scene.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
+                //     }
+                //     gltf.scene.updateMatrixWorld(true);
+                //     resolve(gltf.scene);
+                // });
             }
         });
     }
