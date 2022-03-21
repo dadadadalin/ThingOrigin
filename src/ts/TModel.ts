@@ -63,6 +63,7 @@ export class TModel {
      * @param {string} type 模型文件类型 例：'fbx'||'gltf'||'stl'
      * @param {string} url  文件读取地址
      * @param {modelConfigs} modelConfigs 模型配置参数，位置和放大倍数  例：{position: [0, 0, 0], scale: [1, 1, 1] }
+     * @param {boolean} [cached=false] 是否是本地缓存模型
      * @returns {*}  {Promise<Object3D>}
      */
     public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1] }, cached: boolean = false): Promise<Object3D> {
@@ -114,20 +115,14 @@ export class TModel {
                 this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
                 this.GLTFLoader.load(url2, (gltf) => {
                     console.log(gltf);
+                    if (modelConfigs) {
+                        if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
+                        if (modelConfigs.position) gltf.scene.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
+                    }
+                    gltf.scene.updateMatrixWorld(true);
 
                     resolve(gltf.scene);
                 });
-
-                // this.GLTFLoader = new GLTFLoader();
-
-                // this.GLTFLoader.load(url, (gltf: GLTF) => {
-                //     if (modelConfigs) {
-                //         if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
-                //         if (modelConfigs.position) gltf.scene.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
-                //     }
-                //     gltf.scene.updateMatrixWorld(true);
-                //     resolve(gltf.scene);
-                // });
             }
         });
     }
