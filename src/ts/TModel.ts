@@ -43,10 +43,10 @@ import { ThingOrigin } from "../ThingOrigin";
 
 export class TModel {
     FBXLoader: FBXLoader = new FBXLoader();
-    GLTFLoader: GLTFLoader = new GLTFLoader();
     STLLoader: STLLoader = new STLLoader();
     SVGLoader: SVGLoader = new SVGLoader();
-    DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("static/draco/").preload();
+    DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("/static/draco/").preload();
+    GLTFLoader: GLTFLoader = new GLTFLoader().setDRACOLoader(this.DRACOLoader);
     // DRACOLoader: DRACOLoader = new DRACOLoader();
     // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
 
@@ -112,7 +112,6 @@ export class TModel {
                     url = URL.createObjectURL(url);
                 }
 
-                this.GLTFLoader.setDRACOLoader(this.DRACOLoader);
                 console.log(this.GLTFLoader);
 
                 this.GLTFLoader.load(url, (gltf) => {

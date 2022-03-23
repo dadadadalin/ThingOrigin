@@ -24,15 +24,15 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
-setTimeout(() => {
-    ThingOrigin.model.initFileModel("gltf", "static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
-        console.log(model);
+// setTimeout(() => {
+//     ThingOrigin.model.initFileModel("gltf", "static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
+//         console.log(model);
 
-        mainScene.add(model);
+//         mainScene.add(model);
 
-        mainScene.helper.initBox(model.uuid);
-    });
-}, 2000);
+//         mainScene.helper.initBox(model.uuid);
+//     });
+// }, 2000);
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {

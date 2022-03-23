@@ -203,6 +203,7 @@ export class TScene extends Scene {
         this.stats.domElement.style.position = "absolute"; // 样式， 坐标
         this.stats.domElement.style.left = "0px";
         this.stats.domElement.style.top = "0px";
+        this.stats.domElement.style.zIndex = "100";
         this.container.appendChild(this.stats.domElement); // 添加到canvas-frame
         this.stats.setMode(sceneParams.scene.stats.mode);
     }
