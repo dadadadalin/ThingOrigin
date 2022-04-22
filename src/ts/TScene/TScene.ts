@@ -1,4 +1,4 @@
-import { BackSide, Color, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
+import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
@@ -62,8 +62,15 @@ export class TScene extends Scene {
         this.initLight(sceneParams);
         this.initEffect(sceneParams);
         this.initControl(sceneParams);
-        if (sceneParams.scene.stats.show) this.showStats(sceneParams);
 
+        if (sceneParams.scene.fog && sceneParams.scene.fog.show) {
+            if (sceneParams.scene.fog.cameraView) {
+                this.fog = new FogExp2(sceneParams.scene.fog.color);
+            } else {
+                this.fog = new Fog(sceneParams.scene.fog.color);
+            }
+        }
+        if (sceneParams.scene.stats.show) this.showStats(sceneParams);
         if (sceneParams.models) this.loadModel(sceneParams);
         if (sceneParams.css2d) this.loadCSS2D(sceneParams);
     }
@@ -571,15 +578,25 @@ export class TScene extends Scene {
     /**
      * @description 间补旋转动画(旋转角度)
      * @author LL
-     * @param {string} property 模型属性名
-     * @param {string} value 模型属性值
+     * @param {string} parent 需要模型所属的位置，直接在场景内查找可传'scene'
+     * @param {string} value 模型名称
      * @param {string} axis 方向 可传入字符串 'x'/'y'/'z'
      * @param {number} from 从哪个角度开始
      * @param {number} to 到哪个角度停止
      * @param {number} time 完成时间（毫秒）
      */
-    public tweenRotate(property: string, value: string, axis: string, from: number, to: number, time: number) {
-        let obj = this.getObjectByProperty(property, value);
+    public tweenRotate(parent: Object3D | string, value: string, axis: string, from: number, to: number, time: number) {
+        let obj;
+        if (typeof parent == "string") {
+            if (parent == "scene") {
+                obj = this.getObjectByName(value);
+            } else {
+                obj = this.getObjectByName(parent).getObjectByName(value);
+            }
+        } else {
+            obj = (parent as Object3D).getObjectByName(value);
+        }
+
         if (!obj) {
             console.warn("旋转动画播放失败，物体不存在");
             return;

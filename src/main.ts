@@ -24,15 +24,17 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
-// setTimeout(() => {
-//     ThingOrigin.model.initFileModel("gltf", "static/three/factory.glb", { scale: [5, 5, 5] }).then((model) => {
-//         console.log(model);
+setTimeout(() => {
+    ThingOrigin.model.initFileModel("gltf", "http://114.115.165.12:8870/shell/loadFileAsResource/0/190_AGV.gltf", { scale: [1, 1, 1] }).then((model) => {
+        console.log(model);
+        mainScene.add(model);
+    });
+}, 2000);
 
-//         mainScene.add(model);
-
-//         mainScene.helper.initBox(model.uuid);
-//     });
-// }, 2000);
+mainScene.eDispatcher.addEventListener("CLICK", (e) => {
+    mainScene.tweenRotate("scene", "AGV1", "y", 0, 90, 1000);
+    mainScene.tweenMove("name", "AGV1", "x", 0, 90, 1000);
+});
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {
@@ -130,7 +132,7 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 //         console.log(blob);
 
 //         // add({ id: 10, name: "书名", model: blob });
-//         add({ id: 80, name: "xi", model: blob });
+//         add({ id: 100, name: "xi", model: blob });
 
 //         // var reader = new FileReader();
 //         // let m1 = reader.readAsBinaryString(ajax.responseText);
@@ -145,11 +147,11 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 //     var transaction = db.transaction("book", "readwrite");
 //     var store = transaction.objectStore("book");
 
-//     var dataRequest = store.index("id").get(80);
+//     var dataRequest = store.index("id").get(100);
 //     console.log(dataRequest);
 
 //     dataRequest.onsuccess = function (e) {
-//         console.log(e.target.result.model);
+//         // console.log(e.target.result.model);
 
 //         //异步的
 //         // var student = e.target.result;
@@ -158,6 +160,8 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 //             mainScene.add(model);
 
 //             mainScene.helper.initBox(model.uuid);
+
+//             mainScene.tweenMove("name", "xi", "x", 0, 90, 20000);
 //         });
 //     };
 // }, 1000);

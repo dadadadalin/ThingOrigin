@@ -45,14 +45,9 @@ export class TModel {
     FBXLoader: FBXLoader = new FBXLoader();
     STLLoader: STLLoader = new STLLoader();
     SVGLoader: SVGLoader = new SVGLoader();
-    DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("/static/draco/").preload();
+    // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("/static/draco/").preload();
+    DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/").preload();
     GLTFLoader: GLTFLoader = new GLTFLoader().setDRACOLoader(this.DRACOLoader);
-    // DRACOLoader: DRACOLoader = new DRACOLoader();
-    // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
-
-    // DRACOLoader.setDecoderPath("static/utils/draco/"); // use a full url path
-    // dracoLoader.setDecoderConfig({ type: "js" });
-    // dracoLoader.preload();
 
     constructor() {}
 
@@ -111,8 +106,6 @@ export class TModel {
                     //@ts-ignore
                     url = URL.createObjectURL(url);
                 }
-
-                console.log(this.GLTFLoader);
 
                 this.GLTFLoader.load(url, (gltf) => {
                     console.log(gltf);

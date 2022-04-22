@@ -90,6 +90,7 @@ interface sceneParam {
     webglrenderer: webglrendererParams;
     background: backgroundParams;
     stats: statsParams;
+    fog: fogParams;
 }
 interface webglrendererParams {
     gammaFactor: number;
@@ -128,6 +129,12 @@ interface imgParams {
 interface statsParams {
     show: true;
     mode: number;
+}
+
+interface fogParams {
+    show: boolean;
+    color: string;
+    cameraView: boolean;
 }
 
 interface cameraParams {
