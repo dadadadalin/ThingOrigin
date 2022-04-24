@@ -1,6 +1,8 @@
+import { Plane, Vector3 } from "three";
 import "../public/js/main.js";
 import sd2 from "../public/static/data/sceneParams.js";
 import { ThingOrigin } from "./ThingOrigin";
+// import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 
 // sd2.models = [
 //     {
@@ -24,17 +26,128 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
+const localPlane = new Plane(new Vector3(0, -1, 0), 0.8);
+const globalPlane = new Plane(new Vector3(-1, 0, 0), 0.1);
+
 setTimeout(() => {
-    ThingOrigin.model.initFileModel("gltf", "http://114.115.165.12:8870/shell/loadFileAsResource/0/190_AGV.gltf", { scale: [1, 1, 1] }).then((model) => {
+    ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb", { scale: [0.1, 0.1, 0.1] }).then((model) => {
         console.log(model);
         mainScene.add(model);
+
+        mainScene.initSceneClip("x", 10);
+
+        var ii = 1;
+        setInterval(() => {
+            console.log(ii);
+
+            mainScene.updateSceneClip(ii);
+            ii += 0.5;
+        }, 1000);
+
+        // ***** Clipping planes: *****
+
+        // model.traverse((child) => {
+        //     if (child.material) {
+        //         console.log(child);
+        //         child.clippingPlanes = [localPlane];
+        //         child.clipShadows = true;
+
+        //         child.material = new MeshStandardMaterial({
+        //             color: child.material.color,
+        //             clippingPlanes: [localPlane],
+        //             clipShadows: true,
+        //             shadowSide: DoubleSide,
+        //         });
+        //         child.castShadow = true;
+        //         child.renderOrder = 6;
+        //     }
+        // });
+
+        // const material = new MeshPhongMaterial({
+        //     color: 0x80ee10,
+        //     shininess: 100,
+        //     side: DoubleSide,
+
+        //     // ***** Clipping setup (material): *****
+        //     clippingPlanes: [localPlane],
+        //     clipShadows: true,
+        // });
+
+        // const geometry = new TorusKnotGeometry(0.4, 0.08, 95, 20);
+
+        // let object = new Mesh(geometry, material);
+        // object.castShadow = true;
+        // mainScene.add(object);
+
+        // const ground = new Mesh(new PlaneGeometry(9, 9, 1, 1), new MeshPhongMaterial({ color: 0xa0adaf, shininess: 150 }));
+
+        // ground.rotation.x = -Math.PI / 2; // rotates X/Y to X/Z
+        // ground.receiveShadow = true;
+        // mainScene.add(ground);
+
+        // ***** Clipping setup (renderer): *****
+        // const globalPlanes = [globalPlane],
+        //     Empty = Object.freeze([]);
+        // mainScene.renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+        // mainScene.renderer.localClippingEnabled = true;
+
+        // const gui = new GUI(),
+        //     folderLocal = gui.addFolder("Local Clipping"),
+        //     propsLocal = {
+        //         get Enabled() {
+        //             return mainScene.renderer.localClippingEnabled;
+        //         },
+        //         set Enabled(v) {
+        //             mainScene.renderer.localClippingEnabled = v;
+        //         },
+
+        //         // get Shadows() {
+        //         //     return material.clipShadows;
+        //         // },
+        //         // set Shadows(v) {
+        //         //     material.clipShadows = v;
+        //         // },
+
+        //         get Plane() {
+        //             return localPlane.constant;
+        //         },
+        //         set Plane(v) {
+        //             localPlane.constant = v;
+        //         },
+        //     },
+        //     folderGlobal = gui.addFolder("Global Clipping"),
+        //     propsGlobal = {
+        //         get Enabled() {
+        //             return mainScene.renderer.clippingPlanes !== Empty;
+        //         },
+        //         set Enabled(v) {
+        //             console.log(v);
+
+        //             mainScene.renderer.clippingPlanes = v ? globalPlanes : Empty;
+        //         },
+
+        //         get Plane() {
+        //             return globalPlane.constant;
+        //         },
+        //         set Plane(v) {
+        //             globalPlane.constant = v;
+        //         },
+        //     };
+
+        // folderLocal.add(propsLocal, "Enabled");
+        // // folderLocal.add(propsLocal, "Shadows");
+        // folderLocal.add(propsLocal, "Plane", -0.3, 1.25);
+
+        // folderGlobal.add(propsGlobal, "Enabled");
+        // folderGlobal.add(propsGlobal, "Plane", -0.4, 3);
     });
 }, 2000);
 
-mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-    mainScene.tweenRotate("scene", "AGV1", "y", 0, 90, 1000);
-    mainScene.tweenMove("name", "AGV1", "x", 0, 90, 1000);
-});
+window.onclick = () => {
+    globalPlane.constant = Math.random() * 2;
+
+    console.log(globalPlane.constant);
+};
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {
@@ -178,13 +291,6 @@ mainScene.eDispatcher.addEventListener("CLICK", (e) => {
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
-
-// window.onclick = () => {
-//     var a = mainScene.getObjectByName("ABB_023");
-//     console.log(a);
-
-//     mainScene.initBreath(a.uuid);
-// };
 
 mainScene.eDispatcher.addEventListener("CLICK", (e) => {
     // CSSDiv.innerHTML = `<div><div>` + Math.random() + `</div> <div>` + Math.random() + `</div>   </div>`;

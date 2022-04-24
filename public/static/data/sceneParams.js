@@ -28,7 +28,7 @@ export default {
             },
         },
         fog: {
-            show: true,
+            show: false,
             cameraView: false, //相机附近视野清晰
             color: "#fff",
         },

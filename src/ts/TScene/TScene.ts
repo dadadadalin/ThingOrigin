@@ -1,4 +1,4 @@
-import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
+import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Plane, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
@@ -46,6 +46,8 @@ export class TScene extends Scene {
 
     public stats: Stats;
 
+    public sceneClipPlane: Plane;
+
     /**
      * @description 创建一个场景
      * @author LL
@@ -73,16 +75,6 @@ export class TScene extends Scene {
         if (sceneParams.scene.stats.show) this.showStats(sceneParams);
         if (sceneParams.models) this.loadModel(sceneParams);
         if (sceneParams.css2d) this.loadCSS2D(sceneParams);
-    }
-
-    /**
-     * @description 修改背景图片
-     * @author LL
-     * @date 2021/08/26
-     * @param {string} url
-     */
-    public setBackgroundImg(url: string) {
-        this.background = new TextureLoader().load(url);
     }
 
     /**
@@ -213,6 +205,47 @@ export class TScene extends Scene {
         this.stats.domElement.style.zIndex = "100";
         this.container.appendChild(this.stats.domElement); // 添加到canvas-frame
         this.stats.setMode(sceneParams.scene.stats.mode);
+    }
+
+    /**
+     * @description 修改背景图片
+     * @author LL
+     * @date 2021/08/26
+     * @param {string} url
+     */
+    public setBackgroundImg(url: string) {
+        this.background = new TextureLoader().load(url);
+    }
+
+    public initSceneClip(axis: string, constant: number) {
+        console.log(axis);
+
+        let vec3: Vector3;
+        if (axis == "x") {
+            vec3 = new Vector3(1, 0, 0);
+        } else if (axis == "y") {
+            vec3 = new Vector3(0, 1, 0);
+        } else if (axis == "z") {
+            vec3 = new Vector3(0, 0, 1);
+        }
+
+        this.sceneClipPlane = new Plane(vec3, constant);
+        // this.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
+        this.renderer.clippingPlanes = [this.sceneClipPlane];
+        // this.renderer.localClippingEnabled = true;
+    }
+
+    public deleteSceneClip(axis: string, constant: number) {
+        this.sceneClipPlane = null;
+        let Empty = Object.freeze([]);
+        //@ts-ignore
+        this.renderer.clippingPlanes = Empty;
+    }
+
+    public updateSceneClip(constant: number) {
+        console.log(constant);
+
+        this.sceneClipPlane.constant = constant;
     }
 
     /**
