@@ -11,14 +11,11 @@ function animate() {
             let cScene = ThingOrigin.getScene(key);
             cScene.renderer.render(item, item.camera.camera);
             cScene.CSS2DRenderer.render(item, item.camera.camera);
-            if (cScene.effectComposer) cScene.effectComposer.render();
+            if (cScene.effect.effectComposer) cScene.effect.effectComposer.render();
 
-            // if (i % 20 == 0) {
             if (cScene.helper.box) cScene.helper.updateBox();
             if (cScene.controls.pointerLock) cScene.controls.updatePointerLock();
             cScene.stats.update();
-            // }
-            // i++;
         })(item);
     });
 

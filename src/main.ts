@@ -34,13 +34,13 @@ setTimeout(() => {
         console.log(model);
         mainScene.add(model);
 
-        // mainScene.initModelClip(model, "x", 10);
+        // mainScene.effect.initModelClip(model, "x", 10);
 
         // var ii = 1;
         // setInterval(() => {
         //     console.log(ii);
 
-        //     mainScene.updateModelClip(ii);
+        //     mainScene.effect.updateModelClip(ii);
         //     ii += 0.5;
         // }, 1000);
 

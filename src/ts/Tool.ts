@@ -26,6 +26,27 @@ export class Tool {
     }
 
     /**
+     * @description 获取轴向量
+     * @author LL
+     * @date 25/04/2022
+     * @private
+     * @param {string} axis
+     * @returns {*}  {Vector3}
+     */
+    public getAxisVector3(axis: string): Vector3 {
+        let vec3: Vector3;
+        if (axis == "x") {
+            vec3 = new Vector3(1, 0, 0);
+        } else if (axis == "y") {
+            vec3 = new Vector3(0, 1, 0);
+        } else if (axis == "z") {
+            vec3 = new Vector3(0, 0, 1);
+        }
+
+        return vec3;
+    }
+
+    /**
      * @description 获取模型中心点位置
      * @author LL
      * @param {Object3D} obj

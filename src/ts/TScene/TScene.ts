@@ -1,37 +1,15 @@
-import {
-    BackSide,
-    Color,
-    DoubleSide,
-    Fog,
-    FogExp2,
-    Group,
-    Mesh,
-    MeshStandardMaterial,
-    Object3D,
-    Plane,
-    Scene,
-    ShaderMaterial,
-    SphereBufferGeometry,
-    TextureLoader,
-    Vector2,
-    Vector3,
-    WebGLRenderer,
-} from "three";
+import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
-import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
-import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
-import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
-import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
-import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader";
-import TWEEN from "tween.js/src/Tween.js";
 import { TEventDispatcher } from "../controls/TEventDispatcher";
 import { TExporters } from "../exporters/TExporters";
+import { TAnimate } from "../TAnimate";
 import { TCamera } from "../TCamera";
 import { TControl } from "../TControl";
 import { THelper } from "../THelper";
 import { TLight } from "../TLight";
 import { ThingOrigin } from "./../../ThingOrigin";
+import { TEffect } from "./../TEffect";
 
 //用一个group来放模型
 export class TScene extends Scene {
@@ -49,23 +27,19 @@ export class TScene extends Scene {
     public renderer: WebGLRenderer;
     /** 当前渲染2D的渲染器 */
     public CSS2DRenderer: CSS2DRenderer;
+    /** 效果 */
+    public effect: TEffect = new TEffect(this);
+    /** 动画 */
+    public animate: TAnimate = new TAnimate(this);
+
     /** 事件捕捉器 */
     public eDispatcher: TEventDispatcher = new TEventDispatcher();
     /** 导出 */
     public exporters: TExporters = new TExporters();
-    /** 效果合成器 */
-    public effectComposer: EffectComposer;
-
-    public outlinePass: OutlinePass;
-
-    private effectFXAA: ShaderPass;
 
     public sceneParam: ThingOriginParams;
 
     public stats: Stats;
-
-    public sceneClipPlane: Plane;
-    public localClipPlane: Plane;
 
     /**
      * @description 创建一个场景
@@ -81,7 +55,7 @@ export class TScene extends Scene {
         this.initCamera(sceneParams);
         this.initRender(sceneParams);
         this.initLight(sceneParams);
-        this.initEffect(sceneParams);
+        this.effect.initEffect(sceneParams);
         this.initControl(sceneParams);
 
         if (sceneParams.scene.fog && sceneParams.scene.fog.show) {
@@ -158,36 +132,6 @@ export class TScene extends Scene {
     }
 
     /**
-     * @description 初始化场景效果合成器
-     * @author LL
-     * @date 2021/07/26
-     * @private
-     * @param {ThingOriginParams} sceneParams 场景参数
-     */
-    private initEffect(sceneParams: ThingOriginParams) {
-        this.effectComposer = new EffectComposer(this.renderer);
-        this.effectComposer.setSize(this.container.clientWidth, this.container.clientHeight);
-
-        var renderPass = new RenderPass(this, this.camera.camera);
-        this.effectComposer.addPass(renderPass);
-
-        this.outlinePass = new OutlinePass(new Vector2(this.container.clientWidth, this.container.clientHeight), this, this.camera.camera);
-        this.outlinePass.edgeStrength = sceneParams.effectComposer.outlinePass.edgeStrength; //粗
-        this.outlinePass.edgeGlow = sceneParams.effectComposer.outlinePass.edgeGlow; //发光
-        this.outlinePass.edgeThickness = sceneParams.effectComposer.outlinePass.edgeThickness; //光晕粗
-        this.outlinePass.pulsePeriod = sceneParams.effectComposer.outlinePass.pulsePeriod; //闪烁
-        this.outlinePass.usePatternTexture = sceneParams.effectComposer.outlinePass.usePatternTexture; //true
-        this.outlinePass.visibleEdgeColor.set(sceneParams.effectComposer.outlinePass.visibleEdgeColor);
-        this.outlinePass.hiddenEdgeColor.set(sceneParams.effectComposer.outlinePass.hiddenEdgeColor);
-        this.effectComposer.addPass(this.outlinePass);
-
-        this.effectFXAA = new ShaderPass(FXAAShader);
-        this.effectFXAA.uniforms["resolution"].value.set(1 / this.container.clientWidth, 1 / this.container.clientHeight);
-        this.effectFXAA.renderToScreen = true;
-        this.effectComposer.addPass(this.effectFXAA);
-    }
-
-    /**
      * @description 渲染控制器
      * @author LL
      * @date 2021/07/26
@@ -227,101 +171,6 @@ export class TScene extends Scene {
     }
 
     /**
-     * @description 修改背景图片
-     * @author LL
-     * @date 2021/08/26
-     * @param {string} url
-     */
-    public setBackgroundImg(url: string) {
-        this.background = new TextureLoader().load(url);
-    }
-
-    /**
-     * @description 创建场景的剖切
-     * @author LL
-     * @date 25/04/2022
-     * @param {string} axis 剖切轴
-     * @param {number} constant 初始剖切位置
-     */
-    public initSceneClip(axis: string, constant: number) {
-        console.log(axis);
-
-        let vec3: Vector3 = this.getAxisVector3(axis);
-
-        this.sceneClipPlane = new Plane(vec3, constant);
-        // this.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
-        this.renderer.clippingPlanes = [this.sceneClipPlane];
-        // this.renderer.localClippingEnabled = true;
-    }
-
-    /**
-     * @description 删除场景剖切面
-     * @author LL
-     * @date 25/04/2022
-     */
-    public deleteSceneClip() {
-        this.sceneClipPlane = null;
-        let Empty = Object.freeze([]);
-        //@ts-ignore
-        this.renderer.clippingPlanes = Empty;
-    }
-
-    /**
-     * @description 更新场景剖切面的位置
-     * @author LL
-     * @date 25/04/2022
-     * @param {number} constant
-     */
-    public updateSceneClip(constant: number) {
-        this.sceneClipPlane.constant = constant;
-    }
-
-    public initModelClip(model: Object3D, axis: string, constant: number) {
-        let vec3: Vector3 = this.getAxisVector3(axis);
-
-        this.localClipPlane = new Plane(vec3, constant);
-        // this.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
-        // this.renderer.clippingPlanes = [this.sceneClipPlane];
-        this.renderer.localClippingEnabled = true;
-
-        model.traverse((child) => {
-            if (child instanceof Mesh) {
-                console.log(child);
-
-                (child as Mesh).material = new MeshStandardMaterial({
-                    color: child.material.color,
-                    clippingPlanes: [this.localClipPlane],
-                    clipShadows: true,
-                    shadowSide: DoubleSide,
-                });
-                (child as Mesh).castShadow = true;
-                (child as Mesh).renderOrder = 6;
-            }
-            //@ts-ignore
-            child.clippingPlanes = [this.localClipPlane];
-            //@ts-ignore
-            child.clipShadows = true;
-        });
-    }
-
-    public updateModelClip(constant: number) {
-        this.localClipPlane.constant = constant;
-    }
-
-    private getAxisVector3(axis: string): Vector3 {
-        let vec3: Vector3;
-        if (axis == "x") {
-            vec3 = new Vector3(1, 0, 0);
-        } else if (axis == "y") {
-            vec3 = new Vector3(0, 1, 0);
-        } else if (axis == "z") {
-            vec3 = new Vector3(0, 0, 1);
-        }
-
-        return vec3;
-    }
-
-    /**
      * @description 加载渲染模型
      * @author LL
      * @date 2021/07/26
@@ -336,13 +185,11 @@ export class TScene extends Scene {
                     this.add(model);
                 });
             } else if (item["objInfo"].objType == "sphere") {
-                console.log("eeee");
                 let sphere = ThingOrigin.model.initSphere(
                     item.name,
                     { radius: item["objInfo"].radius },
                     { color: item["objInfo"].color, position: [item.position.x, item.position.y, item.position.z] }
                 );
-                console.log(sphere);
                 this.add(sphere);
             } else if (item["objInfo"].objType == "cube") {
                 let cube = ThingOrigin.model.initBox(
@@ -367,6 +214,16 @@ export class TScene extends Scene {
                 this.add(cone);
             }
         }
+    }
+
+    /**
+     * @description 修改背景图片
+     * @author LL
+     * @date 2021/08/26
+     * @param {string} url
+     */
+    public setBackgroundImg(url: string) {
+        this.background = new TextureLoader().load(url);
     }
 
     /**
@@ -401,6 +258,13 @@ export class TScene extends Scene {
         // this.model.addCSS2D("name", sceneParams.css2d[1].name, document.getElementById("css2d"));
     }
 
+    /**
+     * @description 创建天空盒
+     * @author LL
+     * @date 25/04/2022
+     * @param {skyColorsParams} [colors={ top: "#86b6f5", line: "#ffffff", bottom: "#999999" }]
+     * @param {skyConfigsParams} [skyConfigs={radius: 4000,widthSegments: 32,heightSegments: 15,skyCenter: [0, 0, 0] }]
+     */
     public initSky(
         colors: skyColorsParams = { top: "#86b6f5", line: "#ffffff", bottom: "#999999" },
         skyConfigs: skyConfigsParams = {
@@ -563,34 +427,6 @@ export class TScene extends Scene {
     }
 
     /**
-     * @description 给模型添加呼吸效果
-     * @author LL
-     * @param {string} uuid
-     */
-    public initBreath(uuid: string) {
-        var breathObj = this.getObjectByProperty("uuid", uuid);
-        console.log(breathObj);
-
-        if (breathObj.parent.type != "Object3D") {
-            var a = new Object3D();
-            a.add();
-        }
-        if (!breathObj) {
-            console.warn("呼吸效果添加失败，物体不存在");
-            return;
-        }
-        this.outlinePass.selectedObjects.push(breathObj);
-    }
-
-    /**
-     * @description 取消呼吸效果
-     * @author LL
-     */
-    public disposeBreath() {
-        this.outlinePass.selectedObjects = [];
-    }
-
-    /**
      * @description 删除模型
      * @author gj
      * @param {string} uuid
@@ -679,144 +515,5 @@ export class TScene extends Scene {
             return;
         }
         model.visible = visible;
-    }
-
-    /**
-     * @description 间补旋转动画(旋转角度)
-     * @author LL
-     * @param {string} parent 需要模型所属的位置，直接在场景内查找可传'scene'
-     * @param {string} value 模型名称
-     * @param {string} axis 方向 可传入字符串 'x'/'y'/'z'
-     * @param {number} from 从哪个角度开始
-     * @param {number} to 到哪个角度停止
-     * @param {number} time 完成时间（毫秒）
-     */
-    public tweenRotate(parent: Object3D | string, value: string, axis: string, from: number, to: number, time: number) {
-        let obj;
-        if (typeof parent == "string") {
-            if (parent == "scene") {
-                obj = this.getObjectByName(value);
-            } else {
-                obj = this.getObjectByName(parent).getObjectByName(value);
-            }
-        } else {
-            obj = (parent as Object3D).getObjectByName(value);
-        }
-
-        if (!obj) {
-            console.warn("旋转动画播放失败，物体不存在");
-            return;
-        }
-        obj.updateWorldMatrix(true, true);
-        let coords = { t: from };
-
-        new TWEEN.Tween(coords)
-            .to({ t: to }, time)
-            .easing(TWEEN.Easing.Linear.None)
-            .onUpdate(function () {
-                if (axis == "x") {
-                    obj.rotation.x = (coords.t / 180) * Math.PI;
-                } else if (axis == "y") {
-                    obj.rotation.y = (coords.t / 180) * Math.PI;
-                } else if (axis == "z") {
-                    obj.rotation.z = (coords.t / 180) * Math.PI;
-                }
-            })
-            .start();
-    }
-
-    /**
-     * @description 间补旋转动画(旋转数)
-     * @author LL
-     * @param {string} property 模型属性名
-     * @param {string} value 模型属性值
-     * @param {string} axis 方向 可传入字符串 'x'/'y'/'z'
-     * @param {number} from 从哪个弧度开始
-     * @param {number} to 到哪个弧度停止
-     * @param {number} time 完成时间（毫秒）
-     */
-    public tweenRotation(property: string, value: string, axis: string, from: number, to: number, time: number) {
-        let obj = this.getObjectByProperty(property, value);
-        if (!obj) {
-            console.warn("旋转动画播放失败，物体不存在");
-            return;
-        }
-        obj.updateWorldMatrix(true, true);
-        let coords = { t: from };
-
-        new TWEEN.Tween(coords)
-            .to({ t: to }, time)
-            .easing(TWEEN.Easing.Linear.None)
-            .onUpdate(function () {
-                if (axis == "x") {
-                    obj.rotation.x = coords.t;
-                } else if (axis == "y") {
-                    obj.rotation.y = coords.t;
-                } else if (axis == "z") {
-                    obj.rotation.z = coords.t;
-                }
-            })
-            .start();
-    }
-
-    /**
-     * @description 间补平移动画
-     * @author LL
-     * @param {string} property 模型属性名
-     * @param {string} value 模型属性值
-     * @param {string} axis 方向 可传入字符串 'x'/'y'/'z'
-     * @param {number} from 从哪个位置开始
-     * @param {number} to 到哪个位置停止
-     * @param {number} time 完成时间（毫秒）
-     */
-    public tweenMove(property: string, value: string, axis: string, from: number, to: number, time: number) {
-        let obj = this.getObjectByProperty(property, value);
-        if (!obj) {
-            console.warn("平移动画播放失败，物体不存在");
-            return;
-        }
-        obj.updateWorldMatrix(true, true);
-
-        let coords = { t: from };
-
-        new TWEEN.Tween(coords)
-            .to({ t: to }, time)
-            .easing(TWEEN.Easing.Linear.None)
-            .onUpdate(function () {
-                if (axis == "x") {
-                    obj.position.x = coords.t;
-                } else if (axis == "y") {
-                    obj.position.y = coords.t;
-                } else if (axis == "z") {
-                    obj.position.z = coords.t;
-                }
-            })
-            .start();
-    }
-
-    /**
-     * @description 展示爆炸图
-     * @author LL
-     * @date 2021/09/01
-     * @param {string} property 模型属性名
-     * @param {string} value 模型属性值
-     * @param {number} ratio 爆炸图偏移系数
-     * @param {number} time 完成时间（毫秒）
-     * @returns {*}
-     */
-    public showExploded(property: string, value: string, ratio: number, time: number) {
-        var obj = this.getObjectByProperty(property, value);
-
-        if (!obj) {
-            console.warn("爆炸图展示失败，物体不存在");
-            return;
-        }
-
-        var a = this.getChildrenInfo(property, value);
-        for (var i = 0; i < a.length; i++) {
-            this.tweenMove("uuid", a[i].uuid, "x", a[i].position.x, a[i].position.x * ratio, time);
-            this.tweenMove("uuid", a[i].uuid, "y", a[i].position.y, a[i].position.y * ratio, time);
-            this.tweenMove("uuid", a[i].uuid, "z", a[i].position.z, a[i].position.z * ratio, time);
-        }
     }
 }
