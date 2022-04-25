@@ -31,7 +31,7 @@ export class TEffect {
     public initSceneClip(axis: string, constant: number) {
         console.log(axis);
 
-        let vec3: Vector3 = ThingOrigin.tool.getAxisVector3(axis);
+        let vec3: Vector3 = ThingOrigin.tool.getAxisVector3(axis, 1);
 
         this.sceneClipPlane = new Plane(vec3, constant);
         // this.tScene.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
@@ -70,7 +70,7 @@ export class TEffect {
      * @param {number} constant 剖切面位置
      */
     public initModelClip(model: Object3D, axis: string, constant: number) {
-        let vec3: Vector3 = ThingOrigin.tool.getAxisVector3(axis);
+        let vec3: Vector3 = ThingOrigin.tool.getAxisVector3(axis, 1);
 
         this.localClipPlane = new Plane(vec3, constant);
         this.tScene.renderer.localClippingEnabled = true;

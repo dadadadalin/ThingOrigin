@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>skyParams | thingorigin</title>
+	<title>fogParams | thingorigin</title>
 	<meta name="description" content="Documentation for thingorigin">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,10 +58,10 @@
 					<a href="../modules/ts_tscene_sceneprams.html">ts/TScene/scenePrams</a>
 				</li>
 				<li>
-					<a href="ts_tscene_sceneprams.skyparams.html">skyParams</a>
+					<a href="ts_tscene_sceneprams.fogparams.html">fogParams</a>
 				</li>
 			</ul>
-			<h1>Interface skyParams</h1>
+			<h1>Interface fogParams</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">skyParams</span>
+						<span class="target">fogParams</span>
 					</li>
 				</ul>
 			</section>
@@ -83,12 +83,9 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.skyparams.html#color" class="tsd-kind-icon">color</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.skyparams.html#heightsegments" class="tsd-kind-icon">height<wbr>Segments</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.skyparams.html#params" class="tsd-kind-icon">params</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.skyparams.html#radius" class="tsd-kind-icon">radius</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.skyparams.html#skycenter" class="tsd-kind-icon">sky<wbr>Center</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.skyparams.html#widthsegments" class="tsd-kind-icon">width<wbr>Segments</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.fogparams.html#cameraview" class="tsd-kind-icon">camera<wbr>View</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.fogparams.html#color" class="tsd-kind-icon">color</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_tscene_sceneprams.fogparams.html#show" class="tsd-kind-icon">show</a></li>
 							</ul>
 						</section>
 					</div>
@@ -97,62 +94,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="cameraview" class="tsd-anchor"></a>
+					<h3>camera<wbr>View</h3>
+					<div class="tsd-signature tsd-kind-icon">camera<wbr>View<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L137">src/ts/TScene/scenePrams.ts:137</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="color" class="tsd-anchor"></a>
 					<h3>color</h3>
-					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <a href="ts_tscene_sceneprams.skycolorparams.html" class="tsd-signature-type" data-tsd-kind="Interface">skyColorParams</a></div>
+					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L106">src/ts/TScene/scenePrams.ts:106</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L136">src/ts/TScene/scenePrams.ts:136</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="heightsegments" class="tsd-anchor"></a>
-					<h3>height<wbr>Segments</h3>
-					<div class="tsd-signature tsd-kind-icon">height<wbr>Segments<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="show" class="tsd-anchor"></a>
+					<h3>show</h3>
+					<div class="tsd-signature tsd-kind-icon">show<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L117">src/ts/TScene/scenePrams.ts:117</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="params" class="tsd-anchor"></a>
-					<h3>params</h3>
-					<div class="tsd-signature tsd-kind-icon">params<span class="tsd-signature-symbol">:</span> <a href="ts_tscene_sceneprams.skyparams.html" class="tsd-signature-type" data-tsd-kind="Interface">skyParams</a></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L107">src/ts/TScene/scenePrams.ts:107</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="radius" class="tsd-anchor"></a>
-					<h3>radius</h3>
-					<div class="tsd-signature tsd-kind-icon">radius<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L115">src/ts/TScene/scenePrams.ts:115</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="skycenter" class="tsd-anchor"></a>
-					<h3>sky<wbr>Center</h3>
-					<div class="tsd-signature tsd-kind-icon">sky<wbr>Center<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L118">src/ts/TScene/scenePrams.ts:118</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="widthsegments" class="tsd-anchor"></a>
-					<h3>width<wbr>Segments</h3>
-					<div class="tsd-signature tsd-kind-icon">width<wbr>Segments<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L116">src/ts/TScene/scenePrams.ts:116</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TScene/scenePrams.ts#L135">src/ts/TScene/scenePrams.ts:135</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -252,9 +219,24 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_tscene_sceneprams.effectcomposerparams.html" class="tsd-kind-icon">effect<wbr>Composer<wbr>Params</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_tscene_sceneprams.fogparams.html" class="tsd-kind-icon">fog<wbr>Params</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_tscene_sceneprams.fogparams.html#cameraview" class="tsd-kind-icon">camera<wbr>View</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_tscene_sceneprams.fogparams.html#color" class="tsd-kind-icon">color</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_tscene_sceneprams.fogparams.html#show" class="tsd-kind-icon">show</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_tscene_sceneprams.gridparams.html" class="tsd-kind-icon">grid<wbr>Params</a>
 					</li>
@@ -294,33 +276,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_tscene_sceneprams.skyconfigsparams.html" class="tsd-kind-icon">sky<wbr>Configs<wbr>Params</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_tscene_sceneprams.skyparams.html" class="tsd-kind-icon">sky<wbr>Params</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_tscene_sceneprams.skyparams.html#color" class="tsd-kind-icon">color</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_tscene_sceneprams.skyparams.html#heightsegments" class="tsd-kind-icon">height<wbr>Segments</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_tscene_sceneprams.skyparams.html#params" class="tsd-kind-icon">params</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_tscene_sceneprams.skyparams.html#radius" class="tsd-kind-icon">radius</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_tscene_sceneprams.skyparams.html#skycenter" class="tsd-kind-icon">sky<wbr>Center</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_tscene_sceneprams.skyparams.html#widthsegments" class="tsd-kind-icon">width<wbr>Segments</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_tscene_sceneprams.statsparams.html" class="tsd-kind-icon">stats<wbr>Params</a>
 					</li>

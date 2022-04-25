@@ -33,14 +33,14 @@ export class Tool {
      * @param {string} axis
      * @returns {*}  {Vector3}
      */
-    public getAxisVector3(axis: string): Vector3 {
+    public getAxisVector3(axis: string, value: number): Vector3 {
         let vec3: Vector3;
         if (axis == "x") {
-            vec3 = new Vector3(1, 0, 0);
+            vec3 = new Vector3(value, 0, 0);
         } else if (axis == "y") {
-            vec3 = new Vector3(0, 1, 0);
+            vec3 = new Vector3(0, value, 0);
         } else if (axis == "z") {
-            vec3 = new Vector3(0, 0, 1);
+            vec3 = new Vector3(0, 0, value);
         }
 
         return vec3;
