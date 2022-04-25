@@ -1,4 +1,22 @@
-import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Plane, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector2, Vector3, WebGLRenderer } from "three";
+import {
+    BackSide,
+    Color,
+    DoubleSide,
+    Fog,
+    FogExp2,
+    Group,
+    Mesh,
+    MeshStandardMaterial,
+    Object3D,
+    Plane,
+    Scene,
+    ShaderMaterial,
+    SphereBufferGeometry,
+    TextureLoader,
+    Vector2,
+    Vector3,
+    WebGLRenderer,
+} from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
@@ -47,6 +65,7 @@ export class TScene extends Scene {
     public stats: Stats;
 
     public sceneClipPlane: Plane;
+    public localClipPlane: Plane;
 
     /**
      * @description 创建一个场景
@@ -217,9 +236,79 @@ export class TScene extends Scene {
         this.background = new TextureLoader().load(url);
     }
 
+    /**
+     * @description 创建场景的剖切
+     * @author LL
+     * @date 25/04/2022
+     * @param {string} axis 剖切轴
+     * @param {number} constant 初始剖切位置
+     */
     public initSceneClip(axis: string, constant: number) {
         console.log(axis);
 
+        let vec3: Vector3 = this.getAxisVector3(axis);
+
+        this.sceneClipPlane = new Plane(vec3, constant);
+        // this.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
+        this.renderer.clippingPlanes = [this.sceneClipPlane];
+        // this.renderer.localClippingEnabled = true;
+    }
+
+    /**
+     * @description 删除场景剖切面
+     * @author LL
+     * @date 25/04/2022
+     */
+    public deleteSceneClip() {
+        this.sceneClipPlane = null;
+        let Empty = Object.freeze([]);
+        //@ts-ignore
+        this.renderer.clippingPlanes = Empty;
+    }
+
+    /**
+     * @description 更新场景剖切面的位置
+     * @author LL
+     * @date 25/04/2022
+     * @param {number} constant
+     */
+    public updateSceneClip(constant: number) {
+        this.sceneClipPlane.constant = constant;
+    }
+
+    public initModelClip(model: Object3D, axis: string, constant: number) {
+        let vec3: Vector3 = this.getAxisVector3(axis);
+
+        this.localClipPlane = new Plane(vec3, constant);
+        // this.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
+        // this.renderer.clippingPlanes = [this.sceneClipPlane];
+        this.renderer.localClippingEnabled = true;
+
+        model.traverse((child) => {
+            if (child instanceof Mesh) {
+                console.log(child);
+
+                (child as Mesh).material = new MeshStandardMaterial({
+                    color: child.material.color,
+                    clippingPlanes: [this.localClipPlane],
+                    clipShadows: true,
+                    shadowSide: DoubleSide,
+                });
+                (child as Mesh).castShadow = true;
+                (child as Mesh).renderOrder = 6;
+            }
+            //@ts-ignore
+            child.clippingPlanes = [this.localClipPlane];
+            //@ts-ignore
+            child.clipShadows = true;
+        });
+    }
+
+    public updateModelClip(constant: number) {
+        this.localClipPlane.constant = constant;
+    }
+
+    private getAxisVector3(axis: string): Vector3 {
         let vec3: Vector3;
         if (axis == "x") {
             vec3 = new Vector3(1, 0, 0);
@@ -229,23 +318,7 @@ export class TScene extends Scene {
             vec3 = new Vector3(0, 0, 1);
         }
 
-        this.sceneClipPlane = new Plane(vec3, constant);
-        // this.renderer.clippingPlanes = Object.freeze([]); // GUI sets it to globalPlanes
-        this.renderer.clippingPlanes = [this.sceneClipPlane];
-        // this.renderer.localClippingEnabled = true;
-    }
-
-    public deleteSceneClip(axis: string, constant: number) {
-        this.sceneClipPlane = null;
-        let Empty = Object.freeze([]);
-        //@ts-ignore
-        this.renderer.clippingPlanes = Empty;
-    }
-
-    public updateSceneClip(constant: number) {
-        console.log(constant);
-
-        this.sceneClipPlane.constant = constant;
+        return vec3;
     }
 
     /**

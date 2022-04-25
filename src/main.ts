@@ -34,15 +34,15 @@ setTimeout(() => {
         console.log(model);
         mainScene.add(model);
 
-        mainScene.initSceneClip("x", 10);
+        // mainScene.initModelClip(model, "x", 10);
 
-        var ii = 1;
-        setInterval(() => {
-            console.log(ii);
+        // var ii = 1;
+        // setInterval(() => {
+        //     console.log(ii);
 
-            mainScene.updateSceneClip(ii);
-            ii += 0.5;
-        }, 1000);
+        //     mainScene.updateModelClip(ii);
+        //     ii += 0.5;
+        // }, 1000);
 
         // ***** Clipping planes: *****
 
