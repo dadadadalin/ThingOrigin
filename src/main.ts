@@ -30,9 +30,11 @@ const localPlane = new Plane(new Vector3(0, -1, 0), 0.8);
 const globalPlane = new Plane(new Vector3(-1, 0, 0), 0.1);
 
 setTimeout(() => {
-    ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb", { scale: [0.1, 0.1, 0.1] }).then((model) => {
+    ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb", { scale: [1, 1, 1] }).then((model) => {
         console.log(model);
         mainScene.add(model);
+
+        ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
 
         // mainScene.effect.initModelClip(model, "x", 10);
 

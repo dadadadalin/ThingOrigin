@@ -1,13 +1,13 @@
-import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
+import { BackSide, Color, Fog, FogExp2, Group, Mesh, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 import { TEventDispatcher } from "../controls/TEventDispatcher";
 import { TExporters } from "../exporters/TExporters";
-import { TAnimate } from "../TAnimate";
 import { TCamera } from "../TCamera";
 import { TControl } from "../TControl";
 import { THelper } from "../THelper";
 import { TLight } from "../TLight";
+import { TTool } from "../TTool";
 import { ThingOrigin } from "./../../ThingOrigin";
 import { TEffect } from "./../TEffect";
 
@@ -29,8 +29,8 @@ export class TScene extends Scene {
     public CSS2DRenderer: CSS2DRenderer;
     /** 效果 */
     public effect: TEffect = new TEffect(this);
-    /** 动画 */
-    public animate: TAnimate = new TAnimate(this);
+
+    public tool: TTool = new TTool(this);
 
     /** 事件捕捉器 */
     public eDispatcher: TEventDispatcher = new TEventDispatcher();
@@ -320,83 +320,6 @@ export class TScene extends Scene {
         sky.userData.selectable = false;
 
         this.add(sky);
-    }
-
-    /**
-     * @description 获取模型参数信息
-     * @author LL
-     * @date 2021/08/19
-     * @param {string} property 模型属性
-     * @param {string} value 属性值
-     * @returns {*}  {object}
-     */
-    public getObjectInfo(property: string, value: string): object {
-        let obj = this.getObjectByProperty(property, value);
-        let info = new Object();
-        if (!obj) {
-            console.warn("获取信息失败，物体不存在");
-            return;
-        }
-        info["name"] = obj.name;
-        info["position"] = obj.position;
-        info["rotation"] = obj.rotation;
-        info["scale"] = obj.scale;
-        info["type"] = obj.type;
-        info["uuid"] = obj.uuid;
-        info["objInfo"] = {
-            ownCSS2D: this.ifOwnCSS2D(obj),
-        };
-
-        return info;
-    }
-
-    /**
-     * @description
-     * @author LL
-     * @date 2021/10/15 获取模型的子模型集合
-     * @param {string} property 模型属性
-     * @param {string} value 属性值
-     * @returns {*}  {Object3D[]}
-     */
-    public getChildrenInfo(property: string, value: string): Object3D[] {
-        let obj = this.getObjectByProperty(property, value);
-
-        if (!obj) {
-            console.warn("获取子模型失败，物体不存在");
-            return;
-        }
-
-        let info = [];
-        obj.traverse((child) => {
-            let infoData = {
-                name: child.name,
-                uuid: child.uuid,
-                type: child.type,
-                position: child.position,
-                rotation: child.rotation,
-                scale: child.scale,
-                ownCSS2D: this.ifOwnCSS2D(child),
-            };
-            info.push(infoData);
-        });
-
-        info.splice(0, 1);
-        return info;
-    }
-
-    /**
-     * @description 判断模型是否有2D元素
-     * @author LL
-     * @param {Object3D} obj
-     * @return {*}  {boolean}
-     */
-    public ifOwnCSS2D(obj: Object3D): boolean {
-        for (let i = 0; i < obj.children.length; i++) {
-            if (obj.children[i] instanceof CSS2DObject) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**

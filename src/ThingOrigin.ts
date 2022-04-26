@@ -1,4 +1,5 @@
 import { Object3D, OrthographicCamera, PerspectiveCamera } from "three";
+import { TAnimate } from "./ts/TAnimate";
 import { TMaterial } from "./ts/TMaterial";
 import { TModel } from "./ts/TModel";
 import { Tool } from "./ts/Tool";
@@ -10,6 +11,8 @@ export class ThingOrigin {
     public static scenes: SceneMap = new SceneMap();
     /** 工具函数 */
     public static tool: Tool = new Tool();
+    /** 动画 */
+    public static animate: TAnimate = new TAnimate();
     public static material: TMaterial = new TMaterial();
     public static model: TModel = new TModel();
 

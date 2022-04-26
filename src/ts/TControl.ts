@@ -175,6 +175,9 @@ export class TControl {
         }
     }
 
+    public measureing;
+    public measureLength() {}
+
     moveForward: boolean = false;
     moveBackward: boolean = false;
     moveLeft: boolean = false;

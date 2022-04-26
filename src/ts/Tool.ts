@@ -1,4 +1,5 @@
 import { Box3, Color, Object3D, Sphere, Vector3 } from "three";
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
 /**
  * 自定义工具方法
@@ -90,6 +91,78 @@ export class Tool {
         let radius = center.distanceTo(new Vector3(box.max.x, box.max.y, box.max.z));
 
         return new Sphere(center, radius);
+    }
+
+    /**
+     * @description
+     * @author LL
+     * @date 2021/10/15 获取模型的子模型集合
+     * @param {Object3D} model 模型
+     * @returns {*}  {Object3D[]}
+     */
+    public getChildrenInfo(model: Object3D): Object3D[] {
+        if (!model) {
+            console.warn("获取子模型失败，物体不存在");
+            return;
+        }
+
+        let info = [];
+        model.traverse((child) => {
+            let infoData = {
+                name: child.name,
+                uuid: child.uuid,
+                type: child.type,
+                position: child.position,
+                rotation: child.rotation,
+                scale: child.scale,
+                ownCSS2D: this.ifOwnCSS2D(child),
+            };
+            info.push(infoData);
+        });
+
+        info.splice(0, 1);
+        return info;
+    }
+
+    /**
+     * @description 获取模型参数信息
+     * @author LL
+     * @date 2021/08/19
+     * @param {Object3D} model 模型
+     * @returns {*}  {object}
+     */
+    public getObjectInfo(model: Object3D): object {
+        let info = new Object();
+        if (!model) {
+            console.warn("获取信息失败，物体不存在");
+            return;
+        }
+        info["name"] = model.name;
+        info["position"] = model.position;
+        info["rotation"] = model.rotation;
+        info["scale"] = model.scale;
+        info["type"] = model.type;
+        info["uuid"] = model.uuid;
+        info["objInfo"] = {
+            ownCSS2D: this.ifOwnCSS2D(model),
+        };
+
+        return info;
+    }
+
+    /**
+     * @description 判断模型是否有2D元素
+     * @author LL
+     * @param {Object3D} obj
+     * @return {*}  {boolean}
+     */
+    public ifOwnCSS2D(obj: Object3D): boolean {
+        for (let i = 0; i < obj.children.length; i++) {
+            if (obj.children[i] instanceof CSS2DObject) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
