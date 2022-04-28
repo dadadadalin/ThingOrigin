@@ -26,6 +26,10 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
+var a = ThingOrigin.model.initLine([0, 0, 0], [10, 10, 10]);
+
+mainScene.add(a);
+
 const localPlane = new Plane(new Vector3(0, -1, 0), 0.8);
 const globalPlane = new Plane(new Vector3(-1, 0, 0), 0.1);
 
@@ -34,7 +38,9 @@ setTimeout(() => {
         console.log(model);
         mainScene.add(model);
 
-        ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
+        // ThingOrigin.animate.showExploded(model, 10, 2000);
+
+        // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
 
         // mainScene.effect.initModelClip(model, "x", 10);
 

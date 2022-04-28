@@ -276,6 +276,24 @@ export class TModel {
     }
 
     /**
+     * @description
+     * @author LL
+     * @date 2022-04-28
+     * @param {number[]} p1
+     * @param {number[]} p2
+     * @param {LineParams} [params={ color: "#f00" }]
+     * @returns {*}
+     */
+    public initLine(p1: number[], p2: number[], params: LineParams = { color: "#f00" }) {
+        let lineGeometry = new Geometry();
+        let lineMaterial = new LineBasicMaterial({ color: params.color });
+        lineGeometry.vertices.push(new Vector3(p1[0], p1[1], p1[2]), new Vector3(p2[0], p2[1], p2[2]));
+
+        let line = new Line(lineGeometry, lineMaterial);
+        return line;
+    }
+
+    /**
      * @description 生成箭头
      * @author LL
      * @date 24/12/2021
@@ -616,7 +634,7 @@ export class TModel {
         for (var i = 0; i < positions.length; i++) {
             var sprite = new Sprite(material1.clone());
             if (positions[i].name) sprite.name = positions[i].name;
-            sprite.position.set(positions[i].X, positions[i].Y, positions[i].Z);
+            sprite.position.set(positions[i].x, positions[i].y, positions[i].z);
             sprite.scale.set(spriteShape.radius, spriteShape.radius, 1);
             if (userData) sprite.userData = userData;
             spriteGroup.add(sprite);
@@ -646,7 +664,7 @@ export class TModel {
         for (var i = 0; i < positions.length; i++) {
             var sprite = new Sprite(material.clone());
             if (positions[i].name) sprite.name = positions[i].name;
-            sprite.position.set(positions[i].X, positions[i].Y, positions[i].Z);
+            sprite.position.set(positions[i].x, positions[i].y, positions[i].z);
             sprite.scale.set(spritePic.size, spritePic.size, 1);
             if (userData) sprite.userData = userData;
             spriteGroup.add(sprite);

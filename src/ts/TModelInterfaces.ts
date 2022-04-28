@@ -195,15 +195,12 @@ interface spritePicParams {
  * @description 精灵数据格式
  * @author LL
  * @date 2021/09/16
- * @X number
- * @Y number
- * @Z number
+ * @x number
+ * @y number
+ * @z number
  * @name string
  */
-interface spriteData {
-    X: number;
-    Y: number;
-    Z: number;
+interface spriteData extends xyz {
     name: string;
 }
 
@@ -211,12 +208,25 @@ interface spriteData {
  * @description 点云数据格式
  * @author LL
  * @date 2021/09/16
- * @X number
- * @Y number
- * @Z number
+ * @x number
+ * @y number
+ * @z number
  */
-interface pointsData {
-    X: number;
-    Y: number;
-    Z: number;
+interface pointsData extends xyz {}
+
+/**
+ * @description Line参数
+ * @author LL
+ * @date 2022-04-28
+ * @interface LineParams
+ * @color 颜色
+ * @lineWidth 线直径长度
+ * @linecap 线两端的样式 例:'butt'||'round'||'square'
+ * @linejoin 接节点的样式 例:'round'||'bevel'||'miter'
+ */
+interface LineParams {
+    color?: string;
+    lineWidth?: number;
+    linecap?: string;
+    linejoin?: string;
 }

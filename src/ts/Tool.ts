@@ -30,11 +30,11 @@ export class Tool {
      * @description 获取轴向量
      * @author LL
      * @date 25/04/2022
-     * @private
-     * @param {string} axis
+     * @param {string} axis 轴
+     * @param {number} [value=1]
      * @returns {*}  {Vector3}
      */
-    public getAxisVector3(axis: string, value: number): Vector3 {
+    public getAxisVector3(axis: string, value: number = 1): Vector3 {
         let vec3: Vector3;
         if (axis == "x") {
             vec3 = new Vector3(value, 0, 0);
@@ -50,7 +50,7 @@ export class Tool {
     /**
      * @description 获取模型中心点位置
      * @author LL
-     * @param {Object3D} obj
+     * @param {Object3D} obj 模型
      * @return {*}  {Vector3}
      */
     public getObjectCenter(obj: Object3D): Vector3 {
@@ -62,7 +62,7 @@ export class Tool {
     /**
      * @description 返回模型的包圍盒
      * @author LL
-     * @param {Object3D} obj
+     * @param {Object3D} obj 模型
      * @return {*}  {Box3}
      */
     public getObjectBox(obj: Object3D): Box3 {
