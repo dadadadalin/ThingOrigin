@@ -152,6 +152,7 @@ interface lightParams {
 
 interface effectComposerParams {
     outlinePass: outlinepassParams;
+    bloomPass: bloomPassParams;
 }
 
 interface outlinepassParams {
@@ -162,6 +163,11 @@ interface outlinepassParams {
     usePatternTexture: boolean; //true
     visibleEdgeColor: string;
     hiddenEdgeColor: string;
+}
+interface bloomPassParams {
+    strength: number; //泛光的强度
+    radius: number; //泛光散发的半径
+    threshold: number; //泛光的光照强度阈值
 }
 
 interface skyColorsParams {

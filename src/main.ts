@@ -38,10 +38,12 @@ setTimeout(() => {
         console.log(model);
         mainScene.add(model);
 
+        window.onclick = () => {
+            model.layers.toggle(1);
+        };
+
         // ThingOrigin.animate.showExploded(model, 10, 2000);
-
         // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-
         // mainScene.effect.initModelClip(model, "x", 10);
 
         // var ii = 1;
@@ -51,111 +53,8 @@ setTimeout(() => {
         //     mainScene.effect.updateModelClip(ii);
         //     ii += 0.5;
         // }, 1000);
-
-        // ***** Clipping planes: *****
-
-        // model.traverse((child) => {
-        //     if (child.material) {
-        //         console.log(child);
-        //         child.clippingPlanes = [localPlane];
-        //         child.clipShadows = true;
-
-        //         child.material = new MeshStandardMaterial({
-        //             color: child.material.color,
-        //             clippingPlanes: [localPlane],
-        //             clipShadows: true,
-        //             shadowSide: DoubleSide,
-        //         });
-        //         child.castShadow = true;
-        //         child.renderOrder = 6;
-        //     }
-        // });
-
-        // const material = new MeshPhongMaterial({
-        //     color: 0x80ee10,
-        //     shininess: 100,
-        //     side: DoubleSide,
-
-        //     // ***** Clipping setup (material): *****
-        //     clippingPlanes: [localPlane],
-        //     clipShadows: true,
-        // });
-
-        // const geometry = new TorusKnotGeometry(0.4, 0.08, 95, 20);
-
-        // let object = new Mesh(geometry, material);
-        // object.castShadow = true;
-        // mainScene.add(object);
-
-        // const ground = new Mesh(new PlaneGeometry(9, 9, 1, 1), new MeshPhongMaterial({ color: 0xa0adaf, shininess: 150 }));
-
-        // ground.rotation.x = -Math.PI / 2; // rotates X/Y to X/Z
-        // ground.receiveShadow = true;
-        // mainScene.add(ground);
-
-        // ***** Clipping setup (renderer): *****
-        // const globalPlanes = [globalPlane],
-        //     Empty = Object.freeze([]);
-        // mainScene.renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
-        // mainScene.renderer.localClippingEnabled = true;
-
-        // const gui = new GUI(),
-        //     folderLocal = gui.addFolder("Local Clipping"),
-        //     propsLocal = {
-        //         get Enabled() {
-        //             return mainScene.renderer.localClippingEnabled;
-        //         },
-        //         set Enabled(v) {
-        //             mainScene.renderer.localClippingEnabled = v;
-        //         },
-
-        //         // get Shadows() {
-        //         //     return material.clipShadows;
-        //         // },
-        //         // set Shadows(v) {
-        //         //     material.clipShadows = v;
-        //         // },
-
-        //         get Plane() {
-        //             return localPlane.constant;
-        //         },
-        //         set Plane(v) {
-        //             localPlane.constant = v;
-        //         },
-        //     },
-        //     folderGlobal = gui.addFolder("Global Clipping"),
-        //     propsGlobal = {
-        //         get Enabled() {
-        //             return mainScene.renderer.clippingPlanes !== Empty;
-        //         },
-        //         set Enabled(v) {
-        //             console.log(v);
-
-        //             mainScene.renderer.clippingPlanes = v ? globalPlanes : Empty;
-        //         },
-
-        //         get Plane() {
-        //             return globalPlane.constant;
-        //         },
-        //         set Plane(v) {
-        //             globalPlane.constant = v;
-        //         },
-        //     };
-
-        // folderLocal.add(propsLocal, "Enabled");
-        // // folderLocal.add(propsLocal, "Shadows");
-        // folderLocal.add(propsLocal, "Plane", -0.3, 1.25);
-
-        // folderGlobal.add(propsGlobal, "Enabled");
-        // folderGlobal.add(propsGlobal, "Plane", -0.4, 3);
     });
 }, 2000);
-
-window.onclick = () => {
-    globalPlane.constant = Math.random() * 2;
-
-    console.log(globalPlane.constant);
-};
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {

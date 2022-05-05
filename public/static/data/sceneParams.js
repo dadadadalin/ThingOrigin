@@ -129,6 +129,11 @@ export default {
             visibleEdgeColor: "red", //边缘颜色
             hiddenEdgeColor: "#190a05",
         },
+        bloomPass: {
+            strength: 1.5, //泛光的强度
+            radius: 1, //泛光散发的半径
+            threshold: 1, //泛光的光照强度阈值
+        },
     },
     models: [
         // {

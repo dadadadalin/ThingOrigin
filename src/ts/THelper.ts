@@ -36,6 +36,8 @@ export class THelper {
     /**
      * @description 给模型加上包围盒
      * @author LL
+     * @param {string} uuid
+     * @returns {*}
      */
     public initBox(uuid: string) {
         let obj = this.tScene.getObjectByProperty("uuid", uuid);
@@ -78,9 +80,9 @@ export class THelper {
      * @description 创建grid
      * @author LL
      * @param {number} size 坐标格尺寸. 默认为 10
-     * @param {Number} divisions 坐标格细分次数. 默认为 10.
-     * @param {Color} colorCenterLine 中线颜色
-     * @param {Color} colorGrid 坐标格网格线颜色
+     * @param {number} divisions 坐标格细分次数. 默认为 10.
+     * @param {string} colorCenterLine 中线颜色
+     * @param {string} colorGrid 坐标格网格线颜色
      */
     public initGrid(size?: number, divisions?: number, colorCenterLine?: string, colorGrid?: string) {
         this.grid = new GridHelper(size, divisions, new Color(colorCenterLine), new Color(colorGrid));

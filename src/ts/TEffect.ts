@@ -1,24 +1,70 @@
-import { DoubleSide, Mesh, MeshStandardMaterial, Object3D, Plane, Vector2, Vector3 } from "three";
+import { DoubleSide, Layers, Mesh, MeshStandardMaterial, Object3D, Plane, Vector2, Vector3 } from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
 import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 import { FXAAShader } from "three/examples/jsm/shaders/FXAAShader";
 import { ThingOrigin } from "../ThingOrigin";
 import { TScene } from "./TScene/TScene";
 
 export class TEffect {
     public tScene: TScene;
-    public sceneClipPlane: Plane;
-    public localClipPlane: Plane;
+
+    public renderPass: RenderPass;
 
     /** 效果合成器 */
     public effectComposer: EffectComposer;
     public outlinePass: OutlinePass;
     private effectFXAA: ShaderPass;
 
+    public bloomPass: UnrealBloomPass;
+    public bloomLayer: Layers;
+
+    public sceneClipPlane: Plane;
+    public localClipPlane: Plane;
+
     constructor(tScene: TScene) {
         this.tScene = tScene;
+    }
+
+    /**
+     * @description 初始化场景效果合成器
+     * @author LL
+     * @date 2021/07/26
+     * @private
+     * @param {ThingOriginParams} sceneParams 场景参数
+     */
+    public initEffect(sceneParams: ThingOriginParams) {
+        this.effectComposer = new EffectComposer(this.tScene.renderer);
+        this.effectComposer.setSize(this.tScene.container.clientWidth, this.tScene.container.clientHeight);
+        this.renderPass = new RenderPass(this.tScene, this.tScene.camera.camera);
+        this.effectComposer.addPass(this.renderPass);
+
+        this.outlinePass = new OutlinePass(new Vector2(this.tScene.container.clientWidth, this.tScene.container.clientHeight), this.tScene, this.tScene.camera.camera);
+        this.outlinePass.edgeStrength = sceneParams.effectComposer.outlinePass.edgeStrength; //粗
+        this.outlinePass.edgeGlow = sceneParams.effectComposer.outlinePass.edgeGlow; //发光
+        this.outlinePass.edgeThickness = sceneParams.effectComposer.outlinePass.edgeThickness; //光晕粗
+        this.outlinePass.pulsePeriod = sceneParams.effectComposer.outlinePass.pulsePeriod; //闪烁
+        this.outlinePass.usePatternTexture = sceneParams.effectComposer.outlinePass.usePatternTexture; //true
+        this.outlinePass.visibleEdgeColor.set(sceneParams.effectComposer.outlinePass.visibleEdgeColor);
+        this.outlinePass.hiddenEdgeColor.set(sceneParams.effectComposer.outlinePass.hiddenEdgeColor);
+        this.effectComposer.addPass(this.outlinePass);
+
+        this.bloomPass = new UnrealBloomPass(new Vector2(this.tScene.container.clientWidth, this.tScene.container.clientHeight), 1.5, 0.4, 0.85);
+        this.bloomPass.threshold = sceneParams.effectComposer.bloomPass.threshold;
+        this.bloomPass.strength = sceneParams.effectComposer.bloomPass.strength;
+        this.bloomPass.radius = sceneParams.effectComposer.bloomPass.radius;
+
+        const bloomLayer = new Layers();
+        bloomLayer.set(1);
+        this.effectComposer.addPass(this.bloomPass);
+
+        this.effectFXAA = new ShaderPass(FXAAShader);
+        this.effectFXAA.uniforms["resolution"].value.set(1 / this.tScene.container.clientWidth, 1 / this.tScene.container.clientHeight);
+        this.effectFXAA.renderToScreen = true;
+        this.effectFXAA.needsSwap = true;
+        this.effectComposer.addPass(this.effectFXAA);
     }
 
     /**
@@ -118,36 +164,6 @@ export class TEffect {
     }
 
     /**
-     * @description 初始化场景效果合成器
-     * @author LL
-     * @date 2021/07/26
-     * @private
-     * @param {ThingOriginParams} sceneParams 场景参数
-     */
-    public initEffect(sceneParams: ThingOriginParams) {
-        this.effectComposer = new EffectComposer(this.tScene.renderer);
-        this.effectComposer.setSize(this.tScene.container.clientWidth, this.tScene.container.clientHeight);
-
-        var renderPass = new RenderPass(this.tScene, this.tScene.camera.camera);
-        this.effectComposer.addPass(renderPass);
-
-        this.outlinePass = new OutlinePass(new Vector2(this.tScene.container.clientWidth, this.tScene.container.clientHeight), this.tScene, this.tScene.camera.camera);
-        this.outlinePass.edgeStrength = sceneParams.effectComposer.outlinePass.edgeStrength; //粗
-        this.outlinePass.edgeGlow = sceneParams.effectComposer.outlinePass.edgeGlow; //发光
-        this.outlinePass.edgeThickness = sceneParams.effectComposer.outlinePass.edgeThickness; //光晕粗
-        this.outlinePass.pulsePeriod = sceneParams.effectComposer.outlinePass.pulsePeriod; //闪烁
-        this.outlinePass.usePatternTexture = sceneParams.effectComposer.outlinePass.usePatternTexture; //true
-        this.outlinePass.visibleEdgeColor.set(sceneParams.effectComposer.outlinePass.visibleEdgeColor);
-        this.outlinePass.hiddenEdgeColor.set(sceneParams.effectComposer.outlinePass.hiddenEdgeColor);
-        this.effectComposer.addPass(this.outlinePass);
-
-        this.effectFXAA = new ShaderPass(FXAAShader);
-        this.effectFXAA.uniforms["resolution"].value.set(1 / this.tScene.container.clientWidth, 1 / this.tScene.container.clientHeight);
-        this.effectFXAA.renderToScreen = true;
-        this.effectComposer.addPass(this.effectFXAA);
-    }
-
-    /**
      * @description 给模型添加呼吸效果
      * @author LL
      * @param {string} uuid
@@ -174,4 +190,6 @@ export class TEffect {
     public disposeBreath() {
         this.outlinePass.selectedObjects = [];
     }
+
+    initBloom(model: Object3D) {}
 }
