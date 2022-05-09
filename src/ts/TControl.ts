@@ -15,8 +15,6 @@ export class TControl {
 
     constructor(tScene: TScene) {
         this.tScene = tScene;
-        console.log(tScene.sceneParam);
-
         this.speed = tScene.sceneParam.controls.pointerLock.speed; //控制器移动速度
     }
 

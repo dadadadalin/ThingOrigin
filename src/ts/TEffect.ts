@@ -24,6 +24,8 @@ export class TEffect {
     public sceneClipPlane: Plane;
     public localClipPlane: Plane;
 
+    static BLOOM_SCENE = 1;
+
     constructor(tScene: TScene) {
         this.tScene = tScene;
     }
@@ -37,6 +39,7 @@ export class TEffect {
      */
     public initEffect(sceneParams: ThingOriginParams) {
         this.effectComposer = new EffectComposer(this.tScene.renderer);
+        this.effectComposer.renderToScreen = false;
         this.effectComposer.setSize(this.tScene.container.clientWidth, this.tScene.container.clientHeight);
         this.renderPass = new RenderPass(this.tScene, this.tScene.camera.camera);
         this.effectComposer.addPass(this.renderPass);
@@ -55,10 +58,10 @@ export class TEffect {
         this.bloomPass.threshold = sceneParams.effectComposer.bloomPass.threshold;
         this.bloomPass.strength = sceneParams.effectComposer.bloomPass.strength;
         this.bloomPass.radius = sceneParams.effectComposer.bloomPass.radius;
+        this.effectComposer.addPass(this.bloomPass);
 
         const bloomLayer = new Layers();
-        bloomLayer.set(1);
-        this.effectComposer.addPass(this.bloomPass);
+        bloomLayer.set(TEffect.BLOOM_SCENE);
 
         this.effectFXAA = new ShaderPass(FXAAShader);
         this.effectFXAA.uniforms["resolution"].value.set(1 / this.tScene.container.clientWidth, 1 / this.tScene.container.clientHeight);
@@ -168,19 +171,16 @@ export class TEffect {
      * @author LL
      * @param {string} uuid
      */
-    public initBreath(uuid: string) {
-        var breathObj = this.tScene.getObjectByProperty("uuid", uuid);
-        console.log(breathObj);
-
-        if (breathObj.parent.type != "Object3D") {
+    public initBreath(model: Object3D) {
+        if (model.parent.type != "Object3D") {
             var a = new Object3D();
             a.add();
         }
-        if (!breathObj) {
+        if (!model) {
             console.warn("呼吸效果添加失败，物体不存在");
             return;
         }
-        this.outlinePass.selectedObjects.push(breathObj);
+        this.outlinePass.selectedObjects.push(model);
     }
 
     /**
@@ -191,5 +191,7 @@ export class TEffect {
         this.outlinePass.selectedObjects = [];
     }
 
-    initBloom(model: Object3D) {}
+    public initBloom(model: Object3D) {
+        model.layers.toggle(TEffect.BLOOM_SCENE);
+    }
 }

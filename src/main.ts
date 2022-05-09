@@ -2,6 +2,7 @@ import { Plane, Vector3 } from "three";
 import "../public/js/main.js";
 import sd2 from "../public/static/data/sceneParams.js";
 import { ThingOrigin } from "./ThingOrigin";
+
 // import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 
 // sd2.models = [
@@ -17,6 +18,13 @@ import { ThingOrigin } from "./ThingOrigin";
 // ];
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
+
+var s1 = ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] });
+mainScene.add(s1);
+
+window.onclick = () => {
+    mainScene.effect.initBloom(s1);
+};
 
 // let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 // mainScene.add(arrow);
@@ -38,9 +46,13 @@ setTimeout(() => {
         console.log(model);
         mainScene.add(model);
 
-        window.onclick = () => {
-            model.layers.toggle(1);
-        };
+        // ThingOrigin.animate.showExploded(model, 2, 3000);
+
+        // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+
+        // window.onclick = () => {
+        //     model.children[0].children[1].layers.toggle(1);
+        // };
 
         // ThingOrigin.animate.showExploded(model, 10, 2000);
         // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);

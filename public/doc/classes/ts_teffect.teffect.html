@@ -89,12 +89,16 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#bloomlayer" class="tsd-kind-icon">bloom<wbr>Layer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#bloompass" class="tsd-kind-icon">bloom<wbr>Pass</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#effectcomposer" class="tsd-kind-icon">effect<wbr>Composer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="ts_teffect.teffect.html#effectfxaa" class="tsd-kind-icon">effectFXAA</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#localclipplane" class="tsd-kind-icon">local<wbr>Clip<wbr>Plane</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#outlinepass" class="tsd-kind-icon">outline<wbr>Pass</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#renderpass" class="tsd-kind-icon">render<wbr>Pass</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#sceneclipplane" class="tsd-kind-icon">scene<wbr>Clip<wbr>Plane</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_teffect.teffect.html#tscene" class="tsd-kind-icon">t<wbr>Scene</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><a href="ts_teffect.teffect.html#bloom_scene" class="tsd-kind-icon">BLOOM_<wbr>SCENE</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -103,6 +107,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_teffect.teffect.html#deletemodelclip" class="tsd-kind-icon">delete<wbr>Model<wbr>Clip</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_teffect.teffect.html#deletesceneclip" class="tsd-kind-icon">delete<wbr>Scene<wbr>Clip</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_teffect.teffect.html#disposebreath" class="tsd-kind-icon">dispose<wbr>Breath</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_teffect.teffect.html#initbloom" class="tsd-kind-icon">init<wbr>Bloom</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_teffect.teffect.html#initbreath" class="tsd-kind-icon">init<wbr>Breath</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="ts_teffect.teffect.html#initeffect" class="tsd-kind-icon">init<wbr>Effect</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_teffect.teffect.html#initmodelclip" class="tsd-kind-icon">init<wbr>Model<wbr>Clip</a></li>
@@ -126,7 +131,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L18">src/ts/TEffect.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L27">src/ts/TEffect.ts:27</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -143,12 +148,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="bloomlayer" class="tsd-anchor"></a>
+					<h3>bloom<wbr>Layer</h3>
+					<div class="tsd-signature tsd-kind-icon">bloom<wbr>Layer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Layers</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L22">src/ts/TEffect.ts:22</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="bloompass" class="tsd-anchor"></a>
+					<h3>bloom<wbr>Pass</h3>
+					<div class="tsd-signature tsd-kind-icon">bloom<wbr>Pass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">UnrealBloomPass</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L21">src/ts/TEffect.ts:21</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="effectcomposer" class="tsd-anchor"></a>
 					<h3>effect<wbr>Composer</h3>
 					<div class="tsd-signature tsd-kind-icon">effect<wbr>Composer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EffectComposer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L16">src/ts/TEffect.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L17">src/ts/TEffect.ts:17</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -163,7 +188,7 @@
 					<div class="tsd-signature tsd-kind-icon">effectFXAA<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ShaderPass</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L18">src/ts/TEffect.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L19">src/ts/TEffect.ts:19</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -173,7 +198,7 @@
 					<div class="tsd-signature tsd-kind-icon">local<wbr>Clip<wbr>Plane<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Plane</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L13">src/ts/TEffect.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L25">src/ts/TEffect.ts:25</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -183,7 +208,17 @@
 					<div class="tsd-signature tsd-kind-icon">outline<wbr>Pass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">OutlinePass</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L17">src/ts/TEffect.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L18">src/ts/TEffect.ts:18</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="renderpass" class="tsd-anchor"></a>
+					<h3>render<wbr>Pass</h3>
+					<div class="tsd-signature tsd-kind-icon">render<wbr>Pass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RenderPass</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L14">src/ts/TEffect.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -193,7 +228,7 @@
 					<div class="tsd-signature tsd-kind-icon">scene<wbr>Clip<wbr>Plane<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Plane</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L12">src/ts/TEffect.ts:12</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L24">src/ts/TEffect.ts:24</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -203,7 +238,17 @@
 					<div class="tsd-signature tsd-kind-icon">t<wbr>Scene<span class="tsd-signature-symbol">:</span> <a href="ts_tscene_tscene.tscene.html" class="tsd-signature-type" data-tsd-kind="Class">TScene</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L11">src/ts/TEffect.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L12">src/ts/TEffect.ts:12</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-static">
+					<a name="bloom_scene" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagStatic">Static</span> BLOOM_<wbr>SCENE</h3>
+					<div class="tsd-signature tsd-kind-icon">BLOOM_<wbr>SCENE<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L27">src/ts/TEffect.ts:27</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -220,7 +265,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L113">src/ts/TEffect.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L162">src/ts/TEffect.ts:162</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -250,7 +295,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L47">src/ts/TEffect.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L96">src/ts/TEffect.ts:96</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -280,7 +325,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L174">src/ts/TEffect.ts:174</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L190">src/ts/TEffect.ts:190</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -298,16 +343,39 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="initbreath" class="tsd-anchor"></a>
-					<h3>init<wbr>Breath</h3>
+					<a name="initbloom" class="tsd-anchor"></a>
+					<h3>init<wbr>Bloom</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">init<wbr>Breath<span class="tsd-signature-symbol">(</span>uuid<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">init<wbr>Bloom<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L155">src/ts/TEffect.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L194">src/ts/TEffect.ts:194</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>model: <span class="tsd-signature-type">Object3D</span></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="initbreath" class="tsd-anchor"></a>
+					<h3>init<wbr>Breath</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">init<wbr>Breath<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L174">src/ts/TEffect.ts:174</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -323,9 +391,7 @@
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>uuid: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-									</div>
+									<h5>model: <span class="tsd-signature-type">Object3D</span></h5>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -342,7 +408,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L127">src/ts/TEffect.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L40">src/ts/TEffect.ts:40</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -381,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L72">src/ts/TEffect.ts:72</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L121">src/ts/TEffect.ts:121</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -432,7 +498,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L31">src/ts/TEffect.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L80">src/ts/TEffect.ts:80</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -477,7 +543,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L104">src/ts/TEffect.ts:104</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L153">src/ts/TEffect.ts:153</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -515,7 +581,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/39e99ec/src/ts/TEffect.ts#L60">src/ts/TEffect.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TEffect.ts#L109">src/ts/TEffect.ts:109</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -576,6 +642,12 @@
 						<a href="../modules/ts_tlight.html">ts/TLight</a>
 					</li>
 					<li class=" tsd-kind-module">
+						<a href="../modules/ts_tmachine.html">ts/TMachine</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/ts_tmachinesinterfaces.html">ts/TMachines<wbr>Interfaces</a>
+					</li>
+					<li class=" tsd-kind-module">
 						<a href="../modules/ts_tmaterial.html">ts/TMaterial</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -595,6 +667,9 @@
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_tscene_sceneprams.html">ts/TScene/scene<wbr>Prams</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/ts_ttool.html">ts/TTool</a>
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_tool.html">ts/<wbr>Tool</a>
@@ -618,6 +693,12 @@
 								<a href="ts_teffect.teffect.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_teffect.teffect.html#bloomlayer" class="tsd-kind-icon">bloom<wbr>Layer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_teffect.teffect.html#bloompass" class="tsd-kind-icon">bloom<wbr>Pass</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="ts_teffect.teffect.html#effectcomposer" class="tsd-kind-icon">effect<wbr>Composer</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
@@ -630,10 +711,16 @@
 								<a href="ts_teffect.teffect.html#outlinepass" class="tsd-kind-icon">outline<wbr>Pass</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_teffect.teffect.html#renderpass" class="tsd-kind-icon">render<wbr>Pass</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="ts_teffect.teffect.html#sceneclipplane" class="tsd-kind-icon">scene<wbr>Clip<wbr>Plane</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="ts_teffect.teffect.html#tscene" class="tsd-kind-icon">t<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-static">
+								<a href="ts_teffect.teffect.html#bloom_scene" class="tsd-kind-icon">BLOOM_<wbr>SCENE</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ts_teffect.teffect.html#deletemodelclip" class="tsd-kind-icon">delete<wbr>Model<wbr>Clip</a>
@@ -643,6 +730,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ts_teffect.teffect.html#disposebreath" class="tsd-kind-icon">dispose<wbr>Breath</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ts_teffect.teffect.html#initbloom" class="tsd-kind-icon">init<wbr>Bloom</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ts_teffect.teffect.html#initbreath" class="tsd-kind-icon">init<wbr>Breath</a>
@@ -687,6 +777,9 @@
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
 			</ul>
 		</div>
 	</div>

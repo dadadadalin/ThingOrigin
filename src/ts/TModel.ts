@@ -108,7 +108,6 @@ export class TModel {
                 }
 
                 this.GLTFLoader.load(url, (gltf) => {
-                    console.log(gltf);
                     if (modelConfigs) {
                         if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
                         if (modelConfigs.position) gltf.scene.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
@@ -510,8 +509,6 @@ export class TModel {
      * @param {string} url 地图数据文件地址
      */
     public initMap(url: string): Promise<Object3D> {
-        console.log(d3geo);
-
         // 加载json文件
         let loader = new FileLoader();
 
@@ -569,8 +566,6 @@ export class TModel {
 
                     map.add(province);
                 });
-
-                console.log(map);
 
                 resolve(map);
             });
@@ -683,8 +678,6 @@ export class TModel {
      * @returns {*}  {Object3D}
      */
     private setObjectConfigs(object: Object3D, geometryConfigs: geometryConfigs, userData?: object): Object3D {
-        console.log(geometryConfigs);
-
         if (geometryConfigs && geometryConfigs.scale) {
             object.scale.set(geometryConfigs.scale[0], geometryConfigs.scale[1], geometryConfigs.scale[2]);
         } else {
