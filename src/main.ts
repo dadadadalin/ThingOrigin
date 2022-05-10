@@ -19,12 +19,7 @@ import { ThingOrigin } from "./ThingOrigin";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), sd2);
 
-var s1 = ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] });
-mainScene.add(s1);
-
-window.onclick = () => {
-    mainScene.effect.initBloom(s1);
-};
+window.onclick = () => {};
 
 // let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 // mainScene.add(arrow);
@@ -42,30 +37,57 @@ const localPlane = new Plane(new Vector3(0, -1, 0), 0.8);
 const globalPlane = new Plane(new Vector3(-1, 0, 0), 0.1);
 
 setTimeout(() => {
-    ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb", { scale: [1, 1, 1] }).then((model) => {
-        console.log(model);
-        mainScene.add(model);
+    var request = window.indexedDB.open("webDB", 1);
+    request.onerror = function (event) {
+        console.log("数据库打开报错");
+    };
+    request.onsuccess = function (event) {
+        let db = request.result;
+        //db = event.target.result; 也能拿到
+        console.log("数据库打开成功");
 
-        // ThingOrigin.animate.showExploded(model, 2, 3000);
+        console.log(db);
 
-        // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+        var transaction = db.transaction("book", "readwrite");
+        let store = transaction.objectStore("book");
 
-        // window.onclick = () => {
-        //     model.children[0].children[1].layers.toggle(1);
-        // };
+        var dataRequest1 = store.index("id").get(40);
+        dataRequest1.onsuccess = function (e) {
+            console.log(e);
 
-        // ThingOrigin.animate.showExploded(model, 10, 2000);
-        // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-        // mainScene.effect.initModelClip(model, "x", 10);
+            //创建blob对象路径。​
+            var url2 = URL.createObjectURL(e.target.result.model);
+            console.log(url2);
 
-        // var ii = 1;
-        // setInterval(() => {
-        //     console.log(ii);
+            ThingOrigin.model.initFileModel("gltf", url2).then((model) => {
+                mainScene.add(model);
+            });
+        };
+    };
+    // ThingOrigin.model.initFileModel("gltf", "http://114.115.165.12:8870/shell/loadFileAsResource/0/190_agv1.gltf", { scale: [1, 1, 1] }).then((model) => {
+    //     console.log(model);
+    //     mainScene.add(model);
 
-        //     mainScene.effect.updateModelClip(ii);
-        //     ii += 0.5;
-        // }, 1000);
-    });
+    //     // ThingOrigin.animate.showExploded(model, 2, 3000);
+
+    //     // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+
+    //     // window.onclick = () => {
+    //     //     model.children[0].children[1].layers.toggle(1);
+    //     // };
+
+    //     // ThingOrigin.animate.showExploded(model, 10, 2000);
+    //     // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
+    //     // mainScene.effect.initModelClip(model, "x", 10);
+
+    //     // var ii = 1;
+    //     // setInterval(() => {
+    //     //     console.log(ii);
+
+    //     //     mainScene.effect.updateModelClip(ii);
+    //     //     ii += 0.5;
+    //     // }, 1000);
+    // });
 }, 2000);
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同

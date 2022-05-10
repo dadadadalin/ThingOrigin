@@ -12,9 +12,3 @@ interface jointDataParams {
     joint5: number;
     joint6: number;
 }
-
-interface twinJointsParams extends jointsParams {
-    time: number;
-    preData: number;
-    curData: number;
-}
