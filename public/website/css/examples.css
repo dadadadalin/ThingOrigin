@@ -27,9 +27,14 @@ body {
   font-weight: normal;
   padding-top: 20px;
   padding-left: 16px;
+}
+.full-height .menu-part .level1 .level3 {
+  font-weight: normal;
+  padding-top: 8px;
+  padding-left: 16px;
   cursor: pointer;
 }
-.full-height .menu-part .level1 .level2:hover {
+.full-height .menu-part .level1 .level3:hover {
   color: #5baa59;
 }
 .full-height .content-part {
@@ -50,6 +55,22 @@ body {
   font-weight: 600;
   font-size: 1.2rem;
   margin: 90px 0 20px 0;
+}
+.instruct {
+  margin-left: 20px;
+}
+.instruct .instruct-title {
+  margin-bottom: 5px;
+}
+.instruct div:not(.instruct-title) {
+  line-height: 30px;
+  margin-left: 10px;
+}
+.demo-btns {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  z-index: 999;
 }
 pre {
   display: block;

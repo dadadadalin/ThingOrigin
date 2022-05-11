@@ -114,6 +114,8 @@ export class TControl {
 
         if (params.click) {
             this.raycasterClick = (event) => {
+                console.log(event);
+
                 let mouse = new Vector2();
                 let boundingSpace = this.tScene.container.getBoundingClientRect();
 
@@ -137,7 +139,7 @@ export class TControl {
                 }
                 console.log("鼠标选中物体", intersects);
 
-                this.tScene.eDispatcher.dispatchEvent({ type: "CLICK", event: intersects, position: vector });
+                this.tScene.eDispatcher.dispatchEvent({ type: "CLICK", mouse: event.button == 0 ? "left" : "right", event: intersects, position: vector });
             };
 
             this.tScene.container.addEventListener("pointerdown", this.raycasterClick);

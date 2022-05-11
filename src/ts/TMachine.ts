@@ -43,7 +43,7 @@ export class TMachine {
     }
 
     /**
-     * @description aobo机器人的关节
+     * @description aubo机器人的关节
      * @author LL
      * @date 2022-05-10
      * @private
@@ -59,7 +59,7 @@ export class TMachine {
     ];
 
     /**
-     * @description aobo机器人的孪生动画
+     * @description aubo机器人的孪生动画
      * @author LL
      * @date 2022-05-09
      * @param {Object3D} aubo aobo机器人

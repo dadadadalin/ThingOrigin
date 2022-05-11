@@ -29,65 +29,69 @@ window.onclick = () => {};
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
-var a = ThingOrigin.model.initLine([0, 0, 0], [10, 10, 10]);
+let mouseGroup;
+let flag = true;
 
-mainScene.add(a);
+let lineArr = [];
+mainScene.eDispatcher.addEventListener("CLICK", (e) => {
+    if (e.mouse == "left" && flag) {
+        console.log(e);
+
+        mainScene.remove(mouseGroup);
+
+        mouseGroup = ThingOrigin.tool.initGroup();
+        mouseGroup.name = "mouseGroup";
+
+        let pos = e.event[0].point;
+        lineArr.push([pos.x, pos.y, pos.z]);
+
+        for (var i = 1; i < lineArr.length; i++) {
+            var a = ThingOrigin.model.initLine([lineArr[i - 1][0], lineArr[i - 1][1], lineArr[i - 1][2]], [lineArr[i][0], lineArr[i][1], lineArr[i][2]]);
+            mouseGroup.add(a);
+        }
+
+        mainScene.add(mouseGroup);
+    } else {
+        flag = false;
+    }
+});
+
+let aaGroup;
+mainScene.eDispatcher.addEventListener("MOUSEOVER", (e) => {
+    if (lineArr.length > 0 && flag) {
+        mainScene.remove(aaGroup);
+        aaGroup = ThingOrigin.tool.initGroup();
+        aaGroup.name = "aaGroup";
+        var len = lineArr.length;
+        let pos = e.event[0].point;
+
+        aaGroup.add(ThingOrigin.model.initLine([lineArr[len - 1][0], lineArr[len - 1][1], lineArr[len - 1][2]], [pos.x, pos.y, pos.z]));
+        mainScene.add(aaGroup);
+    }
+});
 
 const localPlane = new Plane(new Vector3(0, -1, 0), 0.8);
 const globalPlane = new Plane(new Vector3(-1, 0, 0), 0.1);
 
 setTimeout(() => {
-    var request = window.indexedDB.open("webDB", 1);
-    request.onerror = function (event) {
-        console.log("数据库打开报错");
-    };
-    request.onsuccess = function (event) {
-        let db = request.result;
-        //db = event.target.result; 也能拿到
-        console.log("数据库打开成功");
-
-        console.log(db);
-
-        var transaction = db.transaction("book", "readwrite");
-        let store = transaction.objectStore("book");
-
-        var dataRequest1 = store.index("id").get(40);
-        dataRequest1.onsuccess = function (e) {
-            console.log(e);
-
-            //创建blob对象路径。​
-            var url2 = URL.createObjectURL(e.target.result.model);
-            console.log(url2);
-
-            ThingOrigin.model.initFileModel("gltf", url2).then((model) => {
-                mainScene.add(model);
-            });
-        };
-    };
-    // ThingOrigin.model.initFileModel("gltf", "http://114.115.165.12:8870/shell/loadFileAsResource/0/190_agv1.gltf", { scale: [1, 1, 1] }).then((model) => {
-    //     console.log(model);
-    //     mainScene.add(model);
-
-    //     // ThingOrigin.animate.showExploded(model, 2, 3000);
-
-    //     // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
-
-    //     // window.onclick = () => {
-    //     //     model.children[0].children[1].layers.toggle(1);
-    //     // };
-
-    //     // ThingOrigin.animate.showExploded(model, 10, 2000);
-    //     // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-    //     // mainScene.effect.initModelClip(model, "x", 10);
-
-    //     // var ii = 1;
-    //     // setInterval(() => {
-    //     //     console.log(ii);
-
-    //     //     mainScene.effect.updateModelClip(ii);
-    //     //     ii += 0.5;
-    //     // }, 1000);
-    // });
+    ThingOrigin.model.initFileModel("gltf", "/static/three/xi.gltf", { scale: [1, 1, 1] }).then((model) => {
+        console.log(model);
+        mainScene.add(model);
+        // ThingOrigin.animate.showExploded(model, 2, 3000);
+        // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+        // window.onclick = () => {
+        //     model.children[0].children[1].layers.toggle(1);
+        // };
+        // ThingOrigin.animate.showExploded(model, 10, 2000);
+        // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
+        // mainScene.effect.initModelClip(model, "x", 10);
+        // var ii = 1;
+        // setInterval(() => {
+        //     console.log(ii);
+        //     mainScene.effect.updateModelClip(ii);
+        //     ii += 0.5;
+        // }, 1000);
+    });
 }, 2000);
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
@@ -232,21 +236,6 @@ setTimeout(() => {
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
-
-mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-    // CSSDiv.innerHTML = `<div><div>` + Math.random() + `</div> <div>` + Math.random() + `</div>   </div>`;
-    // mainScene.removeCSS2D(tagId);
-    // tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
-    // var a = mainScene.getObjectByName("ABB_023");
-    // console.log(a);
-    // mainScene.disposeBreath();
-    // var a = new Object3D();
-    // a.add(e.event[0].object);
-    // mainScene.add(a);
-    // console.log(a);
-    // mainScene.initBreath(e.event[0].object.uuid);
-    // console.log(a.object);
-});
 
 // var tagId: string;
 // let CSSDiv = document.createElement("div");

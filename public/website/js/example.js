@@ -13,6 +13,20 @@ var data = {
                 },
             ],
         },
+        {
+            title: "Examples",
+            children: [
+                {
+                    title: "control",
+                    children: [
+                        {
+                            title: "鼠标点击连线",
+                            url: "./controls/mouseLine.html",
+                        },
+                    ],
+                },
+            ],
+        },
     ],
 };
 
@@ -20,7 +34,8 @@ var vm = new Vue({
     el: "#menu",
     data: data,
     methods: {
-        jump(url) {
+        jump(title, url) {
+            document.title = "TO - " + title;
             const frame = document.getElementById("iframe");
             frame.src = url;
         },

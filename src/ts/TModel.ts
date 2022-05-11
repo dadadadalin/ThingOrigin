@@ -147,7 +147,7 @@ export class TModel {
      */
     public initSphere(
         name: string,
-        sphereParams: sphereParams = { radius: 10, widthSegments: 10, heightSegments: 10 },
+        sphereParams: sphereParams = { radius: 10, widthSegments: 15, heightSegments: 15 },
         geometryConfigs: geometryConfigs = { color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] },
         userData?: object
     ): Object3D {

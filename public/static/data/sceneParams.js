@@ -36,8 +36,8 @@ export default {
     camera: {
         position: {
             x: 0,
-            y: 100,
-            z: 500,
+            y: 80,
+            z: 200,
         },
         near: 0.1,
         far: 2000,
