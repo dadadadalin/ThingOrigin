@@ -1,6 +1,6 @@
 {
     "name": "thingorigin",
-    "version": "1.32.0",
+    "version": "1.33.15",
     "description": "web端3D引擎",
     "scripts": {
         "dev": "webpack-dev-server --open --config webpack.config.js --env.development=1",

@@ -35,6 +35,7 @@ var vm = new Vue({
     data: data,
     methods: {
         jump(title, url) {
+            console.log(title, url);
             document.title = "TO - " + title;
             const frame = document.getElementById("iframe");
             frame.src = url;

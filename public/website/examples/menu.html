@@ -10,15 +10,15 @@
             <div class="menu-part" id="menu">
                 <div class="level1" v-for="(item,i) in menu">
                     {{item.title}}
-                    <div class="level2" v-for="(inner,j) in item.children">
+                    <div class="level2" v-for="(inner,j) in item.children" @click="inner.children?'':jump(inner.title,inner.url)">
                         {{inner.title}}
                         <div class="level3" v-for="(l3,m) in inner.children" @click="jump(l3.title,l3.url)">{{l3.title}}</div>
                     </div>
                 </div>
             </div>
             <div class="content-part">
-                <!-- <iframe id="iframe" src="./start/install.html" frameborder="0"></iframe> -->
-                <iframe id="iframe" src="./controls/mouseLine.html" frameborder="0"></iframe>
+                <iframe id="iframe" src="./start/install.html" frameborder="0"></iframe>
+                <!-- <iframe id="iframe" src="./controls/mouseLine.html" frameborder="0"></iframe> -->
             </div>
         </div>
 
