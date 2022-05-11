@@ -29,49 +29,10 @@ window.onclick = () => {};
 // const bbb = new SkeletonHelper(arrow);
 // mainScene.add(bbb);
 
-let mouseGroup;
-let flag = true;
-
-let lineArr = [];
-mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-    if (e.mouse == "left" && flag) {
-        console.log(e);
-
-        mainScene.remove(mouseGroup);
-
-        mouseGroup = ThingOrigin.tool.initGroup();
-        mouseGroup.name = "mouseGroup";
-
-        let pos = e.event[0].point;
-        lineArr.push([pos.x, pos.y, pos.z]);
-
-        for (var i = 1; i < lineArr.length; i++) {
-            var a = ThingOrigin.model.initLine([lineArr[i - 1][0], lineArr[i - 1][1], lineArr[i - 1][2]], [lineArr[i][0], lineArr[i][1], lineArr[i][2]]);
-            mouseGroup.add(a);
-        }
-
-        mainScene.add(mouseGroup);
-    } else {
-        flag = false;
-    }
-});
-
-let aaGroup;
-mainScene.eDispatcher.addEventListener("MOUSEOVER", (e) => {
-    if (lineArr.length > 0 && flag) {
-        mainScene.remove(aaGroup);
-        aaGroup = ThingOrigin.tool.initGroup();
-        aaGroup.name = "aaGroup";
-        var len = lineArr.length;
-        let pos = e.event[0].point;
-
-        aaGroup.add(ThingOrigin.model.initLine([lineArr[len - 1][0], lineArr[len - 1][1], lineArr[len - 1][2]], [pos.x, pos.y, pos.z]));
-        mainScene.add(aaGroup);
-    }
-});
-
 const localPlane = new Plane(new Vector3(0, -1, 0), 0.8);
 const globalPlane = new Plane(new Vector3(-1, 0, 0), 0.1);
+
+mainScene.effect.initSceneClip("x", 0.1);
 
 setTimeout(() => {
     ThingOrigin.model.initFileModel("gltf", "/static/three/xi.gltf", { scale: [1, 1, 1] }).then((model) => {
@@ -85,12 +46,12 @@ setTimeout(() => {
         // ThingOrigin.animate.showExploded(model, 10, 2000);
         // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
         // mainScene.effect.initModelClip(model, "x", 10);
-        // var ii = 1;
-        // setInterval(() => {
-        //     console.log(ii);
-        //     mainScene.effect.updateModelClip(ii);
-        //     ii += 0.5;
-        // }, 1000);
+        var ii = 1;
+        setInterval(() => {
+            console.log(ii);
+            mainScene.effect.updateSceneClip(ii);
+            ii += 0.5;
+        }, 1000);
     });
 }, 2000);
 

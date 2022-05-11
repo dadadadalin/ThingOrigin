@@ -1,4 +1,4 @@
-import { Box3, Color, Group, Object3D, Sphere, Vector3 } from "three";
+import { Box3, Color, Object3D, Sphere, Vector3 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
 /**
@@ -24,16 +24,6 @@ export class Tool {
      */
     public vector3(x: number, y: number, z: number): Vector3 {
         return new Vector3(x, y, x);
-    }
-
-    /**
-     * @description 生成组
-     * @author LL
-     * @date 2022-05-11
-     * @returns {*}  {Group}
-     */
-    public initGroup(): Group {
-        return new Group();
     }
 
     /**

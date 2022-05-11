@@ -25,6 +25,19 @@ var data = {
                         },
                     ],
                 },
+                {
+                    title: "effect",
+                    children: [
+                        {
+                            title: "剖切面_全局",
+                            url: "./effect/clipGlobal.html",
+                        },
+                        {
+                            title: "剖切面_单模型",
+                            url: "./effect/clipGlobal.html",
+                        },
+                    ],
+                },
             ],
         },
     ],

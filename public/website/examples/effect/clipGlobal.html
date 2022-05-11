@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <link rel="stylesheet" href="../../css/examples.css" />
+        <style>
+            #mouseLine {
+                width: 85%;
+                height: 500px;
+                position: relative;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-title">全局剖切面</div>
+
+        <div class="content-title">效果展示</div>
+
+        <div id="mouseLine">
+            <div class="demo-btns">
+                <button id="line" onclick="updateClip()">更新剖切面</button>
+            </div>
+        </div>
+        <div class="content-title">案例代码</div>
+        <pre id="codeShow"></pre>
+
+        <script src="../../../js/thingorigin.js"></script>
+        <!--场景参数 -->
+        <script>
+            let sceneParams = {
+                fileRoot: "/static/three/",
+                scene: {
+                    webglrenderer: {
+                        alpha: true, //是否支持透明
+                    },
+                    stats: {
+                        show: true,
+                        mode: 0,
+                    },
+                    background: {
+                        type: "sky",
+                        color: {
+                            alpha: 0.3, //透明度 取值范围0~1
+                            color: "#944",
+                        },
+                        img: {
+                            url: "",
+                        },
+                        sky: {
+                            color: { top: "#86b6f5", line: "#ffffff", bottom: "#999999" },
+                            params: {
+                                radius: 4000,
+                                widthSegments: 32,
+                                heightSegments: 15,
+                                skyCenter: [0, 0, 0],
+                            },
+                        },
+                    },
+                    fog: {
+                        show: false,
+                        cameraView: false, //相机附近视野清晰
+                        color: "#fff",
+                    },
+                },
+                camera: {
+                    position: {
+                        x: 0,
+                        y: 120,
+                        z: 250,
+                    },
+                    near: 0.1,
+                    far: 2000,
+                },
+                lights: [
+                    {
+                        name: "light1",
+                        type: "DirectionalLight",
+                        color: undefined,
+                        intensity: 1,
+                        position: {
+                            x: 15,
+                            y: 5,
+                            z: 5,
+                        },
+                    },
+                    {
+                        name: "light2",
+                        type: "DirectionalLight",
+                        color: undefined,
+                        intensity: 1,
+                        position: {
+                            x: 10,
+                            y: 5,
+                            z: -10,
+                        },
+                    },
+                    {
+                        name: "light3",
+                        type: "DirectionalLight",
+                        color: undefined,
+                        intensity: 1,
+                        position: {
+                            x: 10,
+                            y: -5,
+                            z: 5,
+                        },
+                    },
+                    {
+                        name: "light4",
+                        type: "DirectionalLight",
+                        color: undefined,
+                        intensity: 1,
+                        position: {
+                            x: -10,
+                            y: -5,
+                            z: 5,
+                        },
+                    },
+                ],
+                controls: {
+                    orbit: {
+                        active: true, //是否启用智能相机控制器
+                    },
+                    raycaster: {
+                        active: true, //是否启用鼠标点击控制器
+                        events: {
+                            click: true,
+                            mousemove: true,
+                        },
+                    },
+                    transform: {
+                        active: false, //是否启用模型变换控制器
+                    },
+                    pointerLock: {
+                        speed: 1000, //是否启用人工漫游控制器
+                    },
+                },
+                helper: {
+                    axes: {
+                        active: true,
+                        length: 60,
+                    },
+                    grid: {
+                        active: true,
+                        size: 150,
+                        divisions: 30,
+                        centerLineColor: "black",
+                        gridColor: "black",
+                    },
+                },
+                effectComposer: {
+                    outlinePass: {
+                        edgeStrength: 3,
+                        edgeGlow: 1, //发光
+                        edgeThickness: 1, //光晕粗
+                        pulsePeriod: 1, //闪烁
+                        usePatternTexture: false, //true
+                        visibleEdgeColor: "red", //边缘颜色
+                        hiddenEdgeColor: "#190a05",
+                    },
+                    bloomPass: {
+                        strength: 1.5, //泛光的强度
+                        radius: 1, //泛光散发的半径
+                        threshold: 1, //泛光的光照强度阈值
+                    },
+                },
+                models: [],
+            };
+        </script>
+        <!-- 案例代码 -->
+        <script id="code">
+            let scene = ThingOrigin.addScene("mouseLineScene", document.getElementById("mouseLine"), sceneParams);
+
+            let cone = ThingOrigin.model.initCone("cone");
+            scene.add(cone);
+
+            scene.effect.initSceneClip("x", 0.1);
+            function updateClip() {
+                scene.effect.updateSceneClip(Math.random() * 50);
+            }
+        </script>
+        <!-- 其他 -->
+        <script>
+            document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+        </script>
+    </body>
+</html>

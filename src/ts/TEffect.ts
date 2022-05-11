@@ -89,6 +89,17 @@ export class TEffect {
     }
 
     /**
+     * @description 更新场景剖切面的位置
+     * @author LL
+     * @date 25/04/2022
+     * @param {number} constant
+     */
+    public updateSceneClip(constant: number) {
+        // console.log(this.sceneClipPlane);
+        this.sceneClipPlane.constant = constant;
+    }
+
+    /**
      * @description 删除场景剖切面
      * @author LL
      * @date 25/04/2022
@@ -98,16 +109,6 @@ export class TEffect {
         let Empty = Object.freeze([]);
         //@ts-ignore
         this.tScene.renderer.clippingPlanes = Empty;
-    }
-
-    /**
-     * @description 更新场景剖切面的位置
-     * @author LL
-     * @date 25/04/2022
-     * @param {number} constant
-     */
-    public updateSceneClip(constant: number) {
-        this.sceneClipPlane.constant = constant;
     }
 
     /**
