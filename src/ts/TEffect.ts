@@ -78,8 +78,6 @@ export class TEffect {
      * @param {number} constant 初始剖切位置
      */
     public initSceneClip(axis: string, constant: number) {
-        console.log(axis);
-
         let vec3: Vector3 = ThingOrigin.tool.getAxisVector3(axis, 1);
 
         this.sceneClipPlane = new Plane(vec3, constant);

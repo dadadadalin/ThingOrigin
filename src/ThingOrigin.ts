@@ -29,7 +29,7 @@ export class ThingOrigin {
      * @param {HTMLElement} container
      * @param {ThingOriginParams} sceneParams
      */
-    public static addScene(sceneName: string, container: HTMLElement, sceneParams: ThingOriginParams): TScene {
+    public static addScene(sceneName: string, container: HTMLElement, sceneParams?: ThingOriginParams): TScene {
         this.scenes.add(sceneName, container, sceneParams);
         return this.getScene(sceneName);
     }

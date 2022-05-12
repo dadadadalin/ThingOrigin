@@ -2,6 +2,7 @@ import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../../ThingOrigin";
 import { TScene } from "./TScene";
 
+// import sceneParams from "../../../public/static/data/sceneParams.js";
 // var i = 0;
 /** 帧循环 */
 function animate() {
@@ -34,7 +35,7 @@ export class SceneMap {
      * @param {HTMLElement} container
      * @param {ThingOriginParams} sceneParams
      */
-    add(sceneName: string, container: HTMLElement, sceneParams: ThingOriginParams) {
+    add(sceneName: string, container: HTMLElement, sceneParams?: ThingOriginParams) {
         this.scenes.set(sceneName, new TScene());
         this.scenes.get(sceneName).createScene(container, sceneParams);
 

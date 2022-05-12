@@ -203,8 +203,7 @@
 
                     scene.remove(mouseGroup);
 
-                    mouseGroup = ThingOrigin.tool.initGroup();
-                    mouseGroup.name = "mouseGroup";
+                    mouseGroup = ThingOrigin.model.initGroup("mouseGroup");
 
                     let pos = e.event[0].point;
                     lineArr.push([pos.x, pos.y, pos.z]);
@@ -225,8 +224,7 @@
             scene.eDispatcher.addEventListener("MOUSEOVER", (e) => {
                 if (lineArr.length > 0 && flag) {
                     scene.remove(aaGroup);
-                    aaGroup = ThingOrigin.tool.initGroup();
-                    aaGroup.name = "aaGroup";
+                    aaGroup = ThingOrigin.model.initGroup("aaGroup");
                     var len = lineArr.length;
                     let pos = e.event[0].point;
 

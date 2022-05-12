@@ -23,16 +23,12 @@ body {
   padding-top: 30px;
   cursor: default;
 }
-.full-height .menu-part .level1 .level2 {
-  font-weight: normal;
-  padding-top: 20px;
-  padding-left: 16px;
-}
+.full-height .menu-part .level1 .level2,
 .full-height .menu-part .level1 .level3 {
+  cursor: pointer;
   font-weight: normal;
   padding-top: 8px;
   padding-left: 16px;
-  cursor: pointer;
 }
 .full-height .menu-part .level1 .level3:hover {
   color: #5baa59;

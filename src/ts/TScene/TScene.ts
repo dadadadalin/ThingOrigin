@@ -1,6 +1,7 @@
 import { BackSide, Color, Fog, FogExp2, Group, Mesh, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
+import sceneData from "../../../public/static/data/sceneParams.js";
 import { TEventDispatcher } from "../controls/TEventDispatcher";
 import { TExporters } from "../exporters/TExporters";
 import { TCamera } from "../TCamera";
@@ -37,37 +38,90 @@ export class TScene extends Scene {
     /** 导出 */
     public exporters: TExporters = new TExporters();
 
-    public sceneParam: ThingOriginParams;
+    public sceneParam: ThingOriginParams = sceneData;
 
     public stats: Stats;
+
+    private alterArr = [];
 
     /**
      * @description 创建一个场景
      * @author LL
      * @date 2021/10/15
      * @param {HTMLElement} container dom容器
-     * @param {ThingOriginParams} sceneParams 场景参数
+     * @param {ThingOriginParams} userSceneParam 场景参数
      */
-    public createScene(container: HTMLElement, sceneParams: ThingOriginParams): void {
-        this.sceneParam = sceneParams;
+    public createScene(container: HTMLElement, userSceneParam?: ThingOriginParams): void {
+        this.handleAlter(userSceneParam);
+        console.log(this.alterArr);
+
+        for (var i = 0; i < this.alterArr.length; i++) {
+            let property = Object.getOwnPropertyNames(this.alterArr[i])[0];
+            this.setSceneParam(this.sceneParam, this.alterArr[i], property);
+        }
+
+        console.log(this.sceneParam);
+
         this.container = container;
 
-        this.initCamera(sceneParams);
-        this.initRender(sceneParams);
-        this.initLight(sceneParams);
-        this.effect.initEffect(sceneParams);
-        this.initControl(sceneParams);
+        this.initCamera(this.sceneParam);
+        this.initRender(this.sceneParam);
+        this.initLight(this.sceneParam);
+        this.effect.initEffect(this.sceneParam);
+        this.initControl(this.sceneParam);
 
-        if (sceneParams.scene.fog && sceneParams.scene.fog.show) {
-            if (sceneParams.scene.fog.cameraView) {
-                this.fog = new FogExp2(sceneParams.scene.fog.color);
+        if (this.sceneParam.scene.fog && this.sceneParam.scene.fog.show) {
+            if (this.sceneParam.scene.fog.cameraView) {
+                this.fog = new FogExp2(this.sceneParam.scene.fog.color);
             } else {
-                this.fog = new Fog(sceneParams.scene.fog.color);
+                this.fog = new Fog(this.sceneParam.scene.fog.color);
             }
         }
-        if (sceneParams.scene.stats.show) this.showStats(sceneParams);
-        if (sceneParams.models) this.loadModel(sceneParams);
-        if (sceneParams.css2d) this.loadCSS2D(sceneParams);
+        if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
+        if (this.sceneParam.models) this.loadModel(this.sceneParam);
+        if (this.sceneParam.css2d) this.loadCSS2D(this.sceneParam);
+    }
+
+    /**
+     * @description 处理用户传入的场景参数
+     * @author LL
+     * @date 2022-05-12
+     * @private
+     * @param {ThingOriginParams} sceneParams
+     */
+    private handleAlter(sceneParams: ThingOriginParams) {
+        var temp = {};
+        for (var key in sceneParams) {
+            console.log(key, sceneParams[key].length, typeof sceneParams[key] == "object" && sceneParams[key].length);
+
+            if (typeof sceneParams[key] == "object" && sceneParams[key].length) {
+                this.handleAlter(sceneParams[key]);
+            } else {
+                temp[key] = sceneParams[key];
+                this.alterArr.push(temp);
+            }
+        }
+    }
+
+    /**
+     * @description 将用户传入的场景参数覆盖原有不一样的地方
+     * @author LL
+     * @date 2022-05-12
+     * @private
+     * @param {object} obj
+     * @param {object} alter
+     * @param {string} property
+     */
+    private setSceneParam(obj: object, alter: object, property: string) {
+        for (var key in obj) {
+            if (key == property) {
+                obj[key] = alter[key];
+            } else {
+                if (typeof obj[key] == "object") {
+                    this.setSceneParam(obj[key], alter, property);
+                }
+            }
+        }
     }
 
     /**
