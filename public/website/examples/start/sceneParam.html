@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <link rel="stylesheet" href="../../css/examples.css" />
+    </head>
+    <body>
+        <div class="page-title">场景参数</div>
+
+        <div id="sceneParam">
+            <div class="content-title">scene默认参数</div>
+            <pre>
+scene: {
+    webglrenderer: {
+        alpha: true, //是否支持背景透明
+    },
+    stats: {
+        show: true,
+        mode: 0, //监控模式 0:画面每秒传输帧数（fps）  1：画面渲染的时间
+    },
+    background: {
+        type: "sky",
+        color: {
+            alpha: 0.3, //透明度 取值范围0~1
+            color: "#944",
+        },
+        img: {
+            url: "",
+        },
+        sky: {
+            color: { top: "#86b6f5", line: "#ffffff", bottom: "#999999" },
+            params: {
+                radius: 4000,
+                widthSegments: 32,
+                heightSegments: 15,
+                skyCenter: [0, 0, 0],
+            },
+        },
+    },
+    fog: {
+        show: false,
+        cameraView: false, //相机附近视野清晰
+        color: "#fff",
+    },
+}
+            </pre>
+
+            <div class="content-title">camera默认参数</div>
+            <pre>
+camera: {
+    position: {
+        x: 0,
+        y: 80,
+        z: 200,
+    },
+    near: 0.1,
+    far: 2000,
+}
+            </pre>
+
+            <div class="content-title">lights默认参数</div>
+            <pre>
+[
+    {
+        name: "light1",
+        type: "DirectionalLight",
+        color: undefined,
+        intensity: 1,
+        position: {
+            x: 15,
+            y: 5,
+            z: 5,
+        },
+    },
+    {
+        name: "light2",
+        type: "DirectionalLight",
+        color: undefined,
+        intensity: 1,
+        position: {
+            x: 10,
+            y: 5,
+            z: -10,
+        },
+    }
+]
+            </pre>
+        </div>
+
+        <script src="../../js/vue.js"></script>
+        <script type="module">
+            import sceneData from "../../../static/data/sceneParams.js";
+            console.log(sceneData);
+        </script>
+        <script>
+            var vm = new Vue({
+                el: "#sceneParam",
+                data: {
+                    scene: [
+                        { title: "数据类型", content: "Object" },
+                        {
+                            title: "参数内容",
+                            content: [
+                                { title: "webglrenderer", content: "渲染器" },
+                                { title: "stats", content: "性能监控" },
+                                { title: "background", content: "背景" },
+                                { title: "fog", content: "雾" },
+                            ],
+                        },
+                    ],
+                    camera: [
+                        { title: "数据类型", content: "Object" },
+                        {
+                            title: "参数内容",
+                            content: [
+                                { title: "position", content: "位置" },
+                                { title: "near", content: "摄像机视锥体近端面" },
+                                { title: "far", content: "摄像机视锥体远端面" },
+                            ],
+                        },
+                    ],
+                },
+            });
+        </script>
+    </body>
+</html>

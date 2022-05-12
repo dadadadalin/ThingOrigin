@@ -11,6 +11,10 @@ var data = {
                     title: "快速上手",
                     url: "./start/start.html",
                 },
+                {
+                    title: "场景参数",
+                    url: "./start/sceneParam.html",
+                },
             ],
         },
         {

@@ -2,11 +2,11 @@ export default {
     fileRoot: "/static/three/",
     scene: {
         webglrenderer: {
-            alpha: true, //是否支持透明
+            alpha: true, //是否支持背景透明
         },
         stats: {
             show: true,
-            mode: 0,
+            mode: 0, //监控模式 0:画面每秒传输帧数（fps）  1：画面渲染的时间
         },
         background: {
             type: "sky",

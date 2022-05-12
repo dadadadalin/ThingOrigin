@@ -8,10 +8,19 @@
     <body>
         <div class="page-title">安装</div>
         <div class="content-title">npm安装</div>
-        <code> npm install thingorigin --save </code>
+        <pre> npm install thingorigin --save </pre>
+        <div class="content-title">全局配置</div>
+        <pre>
+import Vue from 'vue'; 
+import ThingOrigin from 'thingorigin'; 
+import App from './App.vue'; 
+
+new Vue({
+    el: '#app', 
+    render: h => h(App) 
+}); 
+        </pre>
         <div class="content-title">CDN</div>
-        <code>
-            &ltscript src="thingorigin.js"></script>
-        </code>
+        <pre> &ltscript src="thingorigin.js"></script></pre>
     </body>
 </html>

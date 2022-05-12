@@ -53,13 +53,11 @@ export class TScene extends Scene {
      */
     public createScene(container: HTMLElement, userSceneParam?: ThingOriginParams): void {
         this.handleAlter(userSceneParam);
-        console.log(this.alterArr);
 
         for (var i = 0; i < this.alterArr.length; i++) {
             let property = Object.getOwnPropertyNames(this.alterArr[i])[0];
             this.setSceneParam(this.sceneParam, this.alterArr[i], property);
         }
-
         console.log(this.sceneParam);
 
         this.container = container;
