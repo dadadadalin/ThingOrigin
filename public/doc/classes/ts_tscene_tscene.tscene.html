@@ -95,6 +95,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_tscene_tscene.tscene.html#css2drenderer" class="tsd-kind-icon">CSS2DRenderer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="ts_tscene_tscene.tscene.html#alterarr" class="tsd-kind-icon">alter<wbr>Arr</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#autoupdate" class="tsd-kind-icon">auto<wbr>Update</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#background" class="tsd-kind-icon">background</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_tscene_tscene.tscene.html#camera" class="tsd-kind-icon">camera</a></li>
@@ -168,6 +169,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#getworldposition" class="tsd-kind-icon">get<wbr>World<wbr>Position</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#getworldquaternion" class="tsd-kind-icon">get<wbr>World<wbr>Quaternion</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#getworldscale" class="tsd-kind-icon">get<wbr>World<wbr>Scale</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="ts_tscene_tscene.tscene.html#handlealter" class="tsd-kind-icon">handle<wbr>Alter</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#haseventlistener" class="tsd-kind-icon">has<wbr>Event<wbr>Listener</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="ts_tscene_tscene.tscene.html#initcamera" class="tsd-kind-icon">init<wbr>Camera</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="ts_tscene_tscene.tscene.html#initcontrol" class="tsd-kind-icon">init<wbr>Control</a></li>
@@ -193,6 +195,7 @@
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#setrotationfromeuler" class="tsd-kind-icon">set<wbr>Rotation<wbr>From<wbr>Euler</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#setrotationfrommatrix" class="tsd-kind-icon">set<wbr>Rotation<wbr>From<wbr>Matrix</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#setrotationfromquaternion" class="tsd-kind-icon">set<wbr>Rotation<wbr>From<wbr>Quaternion</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="ts_tscene_tscene.tscene.html#setsceneparam" class="tsd-kind-icon">set<wbr>Scene<wbr>Param</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tscene_tscene.tscene.html#setvisible" class="tsd-kind-icon">set<wbr>Visible</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="ts_tscene_tscene.tscene.html#showstats" class="tsd-kind-icon">show<wbr>Stats</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="ts_tscene_tscene.tscene.html#tojson" class="tsd-kind-icon">toJSON</a></li>
@@ -241,7 +244,7 @@
 					<div class="tsd-signature tsd-kind-icon">CSS2DRenderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CSS2DRenderer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L29">src/ts/TScene/TScene.ts:29</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L30">src/ts/TScene/TScene.ts:30</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -249,6 +252,16 @@
 							<p>当前渲染2D的渲染器</p>
 						</div>
 					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="alterarr" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> alter<wbr>Arr</h3>
+					<div class="tsd-signature tsd-kind-icon">alter<wbr>Arr<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = []</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L45">src/ts/TScene/TScene.ts:45</a></li>
+						</ul>
+					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="autoupdate" class="tsd-anchor"></a>
@@ -278,7 +291,7 @@
 					<div class="tsd-signature tsd-kind-icon">camera<span class="tsd-signature-symbol">:</span> <a href="ts_tcamera.tcamera.html" class="tsd-signature-type" data-tsd-kind="Class">TCamera</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L21">src/ts/TScene/TScene.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L22">src/ts/TScene/TScene.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -325,7 +338,7 @@
 					<div class="tsd-signature tsd-kind-icon">container<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L19">src/ts/TScene/TScene.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L20">src/ts/TScene/TScene.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -340,7 +353,7 @@
 					<div class="tsd-signature tsd-kind-icon">controls<span class="tsd-signature-symbol">:</span> <a href="ts_tcontrol.tcontrol.html" class="tsd-signature-type" data-tsd-kind="Class">TControl</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L25">src/ts/TScene/TScene.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L26">src/ts/TScene/TScene.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -390,7 +403,7 @@
 					<div class="tsd-signature tsd-kind-icon">e<wbr>Dispatcher<span class="tsd-signature-symbol">:</span> <a href="ts_controls_teventdispatcher.teventdispatcher.html" class="tsd-signature-type" data-tsd-kind="Class">TEventDispatcher</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L36">src/ts/TScene/TScene.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L37">src/ts/TScene/TScene.ts:37</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -405,7 +418,7 @@
 					<div class="tsd-signature tsd-kind-icon">effect<span class="tsd-signature-symbol">:</span> <a href="ts_teffect.teffect.html" class="tsd-signature-type" data-tsd-kind="Class">TEffect</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L31">src/ts/TScene/TScene.ts:31</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L32">src/ts/TScene/TScene.ts:32</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -431,7 +444,7 @@
 					<div class="tsd-signature tsd-kind-icon">exporters<span class="tsd-signature-symbol">:</span> <a href="ts_exporters_texporters.texporters.html" class="tsd-signature-type" data-tsd-kind="Class">TExporters</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L38">src/ts/TScene/TScene.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L39">src/ts/TScene/TScene.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -478,7 +491,7 @@
 					<div class="tsd-signature tsd-kind-icon">helper<span class="tsd-signature-symbol">:</span> <a href="ts_thelper.thelper.html" class="tsd-signature-type" data-tsd-kind="Class">THelper</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L23">src/ts/TScene/TScene.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L24">src/ts/TScene/TScene.ts:24</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -548,7 +561,7 @@
 					<div class="tsd-signature tsd-kind-icon">light<span class="tsd-signature-symbol">:</span> <a href="ts_tlight.tlight.html" class="tsd-signature-type" data-tsd-kind="Class">TLight</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L17">src/ts/TScene/TScene.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L18">src/ts/TScene/TScene.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -850,7 +863,7 @@
 					<div class="tsd-signature tsd-kind-icon">renderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">WebGLRenderer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L27">src/ts/TScene/TScene.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L28">src/ts/TScene/TScene.ts:28</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -894,10 +907,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
 					<a name="sceneparam" class="tsd-anchor"></a>
 					<h3>scene<wbr>Param</h3>
-					<div class="tsd-signature tsd-kind-icon">scene<wbr>Param<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a></div>
+					<div class="tsd-signature tsd-kind-icon">scene<wbr>Param<span class="tsd-signature-symbol">:</span> <a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L40">src/ts/TScene/TScene.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L41">src/ts/TScene/TScene.ts:41</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -907,7 +920,7 @@
 					<div class="tsd-signature tsd-kind-icon">stats<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Stats</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L42">src/ts/TScene/TScene.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L43">src/ts/TScene/TScene.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -917,7 +930,7 @@
 					<div class="tsd-signature tsd-kind-icon">tool<span class="tsd-signature-symbol">:</span> <a href="ts_ttool.ttool.html" class="tsd-signature-type" data-tsd-kind="Class">TTool</a><span class="tsd-signature-symbol"> = ...</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L33">src/ts/TScene/TScene.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L34">src/ts/TScene/TScene.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -1063,7 +1076,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L399">src/ts/TScene/TScene.ts:399</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L451">src/ts/TScene/TScene.ts:451</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1283,7 +1296,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L333">src/ts/TScene/TScene.ts:333</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L385">src/ts/TScene/TScene.ts:385</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1346,13 +1359,13 @@
 					<a name="createscene" class="tsd-anchor"></a>
 					<h3>create<wbr>Scene</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">create<wbr>Scene<span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, sceneParams<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Scene<span class="tsd-signature-symbol">(</span>container<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLElement</span>, userSceneParam<span class="tsd-signature-symbol">?: </span><a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L51">src/ts/TScene/TScene.ts:51</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L54">src/ts/TScene/TScene.ts:54</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1377,7 +1390,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>sceneParams: <a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a></h5>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> userSceneParam: <a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>场景参数</p>
 									</div>
@@ -1629,6 +1642,44 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="handlealter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> handle<wbr>Alter</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">handle<wbr>Alter<span class="tsd-signature-symbol">(</span>sceneParams<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L90">src/ts/TScene/TScene.ts:90</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>处理用户传入的场景参数</p>
+									</dd>
+									<dt>author</dt>
+									<dd><p>LL</p>
+									</dd>
+									<dt>date</dt>
+									<dd><p>2022-05-12</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>sceneParams: <a href="../interfaces/ts_tscene_sceneprams.thingoriginparams.html" class="tsd-signature-type" data-tsd-kind="Interface">ThingOriginParams</a></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="haseventlistener" class="tsd-anchor"></a>
 					<h3>has<wbr>Event<wbr>Listener</h3>
@@ -1695,7 +1746,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L80">src/ts/TScene/TScene.ts:80</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L132">src/ts/TScene/TScene.ts:132</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1734,7 +1785,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L141">src/ts/TScene/TScene.ts:141</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L193">src/ts/TScene/TScene.ts:193</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1773,7 +1824,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L127">src/ts/TScene/TScene.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L179">src/ts/TScene/TScene.ts:179</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1812,7 +1863,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L92">src/ts/TScene/TScene.ts:92</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L144">src/ts/TScene/TScene.ts:144</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1851,7 +1902,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L268">src/ts/TScene/TScene.ts:268</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L320">src/ts/TScene/TScene.ts:320</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1890,7 +1941,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L236">src/ts/TScene/TScene.ts:236</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L288">src/ts/TScene/TScene.ts:288</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1929,7 +1980,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L180">src/ts/TScene/TScene.ts:180</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L232">src/ts/TScene/TScene.ts:232</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2094,7 +2145,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L420">src/ts/TScene/TScene.ts:420</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L472">src/ts/TScene/TScene.ts:472</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2186,7 +2237,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L357">src/ts/TScene/TScene.ts:357</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L409">src/ts/TScene/TScene.ts:409</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2375,7 +2426,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L225">src/ts/TScene/TScene.ts:225</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L277">src/ts/TScene/TScene.ts:277</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2502,6 +2553,50 @@
 						</li>
 					</ul>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setsceneparam" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> set<wbr>Scene<wbr>Param</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">set<wbr>Scene<wbr>Param<span class="tsd-signature-symbol">(</span>obj<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span>, alter<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">object</span>, property<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L113">src/ts/TScene/TScene.ts:113</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>将用户传入的场景参数覆盖原有不一样的地方</p>
+									</dd>
+									<dt>author</dt>
+									<dd><p>LL</p>
+									</dd>
+									<dt>date</dt>
+									<dd><p>2022-05-12</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>obj: <span class="tsd-signature-type">object</span></h5>
+								</li>
+								<li>
+									<h5>alter: <span class="tsd-signature-type">object</span></h5>
+								</li>
+								<li>
+									<h5>property: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="setvisible" class="tsd-anchor"></a>
 					<h3>set<wbr>Visible</h3>
@@ -2512,7 +2607,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L434">src/ts/TScene/TScene.ts:434</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L486">src/ts/TScene/TScene.ts:486</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2557,7 +2652,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/d881e51/src/ts/TScene/TScene.ts#L162">src/ts/TScene/TScene.ts:162</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TScene/TScene.ts#L214">src/ts/TScene/TScene.ts:214</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -3046,6 +3141,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class">
 								<a href="ts_tscene_tscene.tscene.html#css2drenderer" class="tsd-kind-icon">CSS2DRenderer</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="ts_tscene_tscene.tscene.html#alterarr" class="tsd-kind-icon">alter<wbr>Arr</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="ts_tscene_tscene.tscene.html#autoupdate" class="tsd-kind-icon">auto<wbr>Update</a>
 							</li>
@@ -3250,6 +3348,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="ts_tscene_tscene.tscene.html#getworldscale" class="tsd-kind-icon">get<wbr>World<wbr>Scale</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="ts_tscene_tscene.tscene.html#handlealter" class="tsd-kind-icon">handle<wbr>Alter</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="ts_tscene_tscene.tscene.html#haseventlistener" class="tsd-kind-icon">has<wbr>Event<wbr>Listener</a>
 							</li>
@@ -3325,6 +3426,9 @@
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="ts_tscene_tscene.tscene.html#setrotationfromquaternion" class="tsd-kind-icon">set<wbr>Rotation<wbr>From<wbr>Quaternion</a>
 							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="ts_tscene_tscene.tscene.html#setsceneparam" class="tsd-kind-icon">set<wbr>Scene<wbr>Param</a>
+							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ts_tscene_tscene.tscene.html#setvisible" class="tsd-kind-icon">set<wbr>Visible</a>
 							</li>
@@ -3386,13 +3490,14 @@
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
 			</ul>
 		</div>
 	</div>

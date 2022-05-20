@@ -38,7 +38,7 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-ThingOrigin.model.initFileModel("gltf", "/static/three/xi.gltf", { scale: [1, 1, 1] }).then((model) => {
+ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb", { scale: [1, 1, 1] }).then((model) => {
     console.log(model);
     mainScene.add(model);
     // ThingOrigin.animate.showExploded(model, 2, 3000);
@@ -48,7 +48,7 @@ ThingOrigin.model.initFileModel("gltf", "/static/three/xi.gltf", { scale: [1, 1,
     // };
     // ThingOrigin.animate.showExploded(model, 10, 2000);
     // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-    // mainScene.effect.initModelClip(model, "x", 10);
+    mainScene.effect.initModelClip(model, "x", 10);
 });
 // }, 2000);
 
