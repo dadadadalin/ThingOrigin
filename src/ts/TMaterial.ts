@@ -1,4 +1,4 @@
-import { BackSide, DoubleSide, FrontSide, LinearFilter, Mesh, MeshPhysicalMaterial, RGBFormat, SpriteMaterial, TextureLoader, VideoTexture } from "three";
+import { BackSide, DoubleSide, FrontSide, LinearFilter, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, RGBFormat, SpriteMaterial, TextureLoader, VideoTexture } from "three";
 import { ThingOrigin } from "./../ThingOrigin";
 
 export class TMaterial {
@@ -82,5 +82,12 @@ export class TMaterial {
         texture.format = RGBFormat;
 
         return texture;
+    }
+
+    public initPicMaterial(url: string): MeshBasicMaterial {
+        const texture = new TextureLoader().load(url);
+        let material = new MeshBasicMaterial();
+        material.map = texture;
+        return material;
     }
 }

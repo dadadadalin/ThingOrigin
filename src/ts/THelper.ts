@@ -48,6 +48,7 @@ export class THelper {
 
         this.box = new BoxHelper(obj);
         this.box.name = "boxHelper";
+
         this.tScene.add(this.box);
     }
 

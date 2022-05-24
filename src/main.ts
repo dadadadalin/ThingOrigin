@@ -1,26 +1,105 @@
 // import { Plane, Vector3 } from "three";
 // import "../public/js/main.js";
 // import { ThingOrigin } from "./ThingOrigin";
-
+// import * as CANNON from "cannon";
+import * as CANNON from "cannon";
 import { ThingOrigin } from "./ThingOrigin";
 
 // console.log(clone(abc, alter));
 
 // import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 
-// sd2.models = [
-//     {
-//         name: "Scene",
-//         position: { x: 0, y: 0, z: 0 },
-//         rotation: { _x: 0, _y: 0, _z: 0, _order: "XYZ" },
-//         scale: { x: 1, y: 1, z: 1 },
-//         type: "Group",
-//         uuid: "C5A0A76D-51F7-44B8-89B7-4051B365A030",
-//         objInfo: { objType: "modelFile", fileType: "gltf", folder: "test/", fileName: "scene4.glb" },
-//     },
-// ];
-
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+console.log(CANNON);
+
+var world,
+    mass,
+    body,
+    shape,
+    timeStep = 1 / 60,
+    camera,
+    scene,
+    renderer,
+    geometry,
+    material,
+    mesh;
+
+initThree();
+initCannon();
+animate();
+function initCannon() {
+    world = new CANNON.World();
+    world.gravity.set(0, -10, 0);
+    world.broadphase = new CANNON.NaiveBroadphase();
+    world.solver.iterations = 10; //迭代次数
+
+    // world.defaultContactMaterial.contactEquationStiffness = 1e7;
+    // world.defaultContactMaterial.contactEquationRelaxation = 4;
+
+    // Create a plane
+    var groundShape = new CANNON.Plane();
+    var groundBody = new CANNON.Body({ mass: 0 });
+    groundBody.addShape(groundShape);
+    groundBody.quaternion.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI / 2);
+    world.addBody(groundBody);
+
+    shape = new CANNON.Box(new CANNON.Vec3(11, 4, 6));
+    mass = 1;
+    body = new CANNON.Body({
+        mass: 1,
+    });
+    body.addShape(shape);
+    body.position.set(0, 30, 0);
+    body.angularVelocity.set(1, 5, 1); //角速度
+    body.angularDamping = 0.1; //角度阻尼
+    world.addBody(body);
+}
+
+let modelA;
+let modelB;
+function initThree() {
+    modelB = ThingOrigin.model.initSphere("wb");
+    modelB.position.set(0, 20, 0);
+    mainScene.add(modelB);
+
+    // modelB.material = ThingOrigin.material.initPicMaterial("/static/img/wb.jpg");
+    // ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] }).then((model) => {
+    //     console.log(model);
+    //     mainScene.add(model);
+    //     console.log(ThingOrigin.tool.getObjectBox(model));
+    //     modelA = model;
+    //     animate();
+
+    //     ThingOrigin.animate.showExploded(model, 5, 5000);
+    // });
+    // geometry = new BoxGeometry(2, 2, 2);
+    // material = new MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+
+    // mesh = new Mesh(geometry, material);
+    // mainScene.add(mesh);
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    updatePhysics();
+}
+
+function updatePhysics() {
+    // Step the physics world
+    world.step(timeStep);
+
+    // Copy coordinates from Cannon.js to Three.js
+    // modelA.position.copy(body.position);
+    // modelA.quaternion.copy(body.quaternion);
+    modelB.position.copy(body.position);
+    modelB.quaternion.copy(body.quaternion);
+    // mesh.position.copy(body.position);
+    // mesh.quaternion.copy(body.quaternion);
+}
+
+// demo.addVisual(sphereBody);
+// demo.addVisual(boxBody);
+// demo.addVisual(cylinderBody);
 
 // window.onclick = () => {};
 
@@ -38,18 +117,18 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb", { scale: [1, 1, 1] }).then((model) => {
-    console.log(model);
-    mainScene.add(model);
-    // ThingOrigin.animate.showExploded(model, 2, 3000);
-    // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
-    // window.onclick = () => {
-    //     model.children[0].children[1].layers.toggle(1);
-    // };
-    // ThingOrigin.animate.showExploded(model, 10, 2000);
-    // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-    mainScene.effect.initModelClip(model, "x", 10);
-});
+// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
+//     console.log(model);
+//     mainScene.add(model);
+//     // ThingOrigin.animate.showExploded(model, 2, 3000);
+//     // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+//     // window.onclick = () => {
+//     //     model.children[0].children[1].layers.toggle(1);
+//     // };
+//     // ThingOrigin.animate.showExploded(model, 10, 2000);
+//     // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
+//     // mainScene.effect.initModelClip(model, "x", 10);
+// });
 // }, 2000);
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
