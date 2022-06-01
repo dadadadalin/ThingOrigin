@@ -144,6 +144,7 @@ interface cameraParams {
 }
 
 interface lightParams {
+    type?: string;
     name?: string;
     color?: string;
     intensity?: number;

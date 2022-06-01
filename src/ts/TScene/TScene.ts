@@ -1,4 +1,4 @@
-import { BackSide, Color, Fog, FogExp2, Group, Mesh, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
+import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
 import sceneData from "../../../public/static/data/sceneParams.js";
@@ -85,17 +85,15 @@ export class TScene extends Scene {
      * @author LL
      * @date 2022-05-12
      * @private
-     * @param {ThingOriginParams} sceneParams
+     * @param {ThingOriginParams} userSceneParam
      */
-    private handleAlter(sceneParams: ThingOriginParams) {
+    private handleAlter(userSceneParam: ThingOriginParams) {
         var temp = {};
-        for (var key in sceneParams) {
-            console.log(key, sceneParams[key].length, typeof sceneParams[key] == "object" && sceneParams[key].length);
-
-            if (typeof sceneParams[key] == "object" && sceneParams[key].length) {
-                this.handleAlter(sceneParams[key]);
+        for (var key in userSceneParam) {
+            if (typeof userSceneParam[key] == "object" && !(userSceneParam[key] instanceof Array)) {
+                this.handleAlter(userSceneParam[key]);
             } else {
-                temp[key] = sceneParams[key];
+                temp[key] = userSceneParam[key];
                 this.alterArr.push(temp);
             }
         }
@@ -297,7 +295,8 @@ export class TScene extends Scene {
             if (can) {
                 for (let i = 0; i < sceneParams.css2d.length; i++) {
                     let item = sceneParams.css2d[i];
-                    this.addCSS2D("name", item.name, document.getElementById(item.domId));
+                    var model = this.getObjectByName(item.name);
+                    this.addCSS2D(model, document.getElementById(item.domId));
                 }
                 clearInterval(timer);
             }
@@ -441,26 +440,24 @@ export class TScene extends Scene {
      * @description 给模型添加2d元素
      * @author gj
      * @date 2021/08/30
-     * @param {string} property 模型属性
-     * @param {string} value 属性值
+     * @param {Object3D} model
      * @param {HTMLElement} html dom元素
      * @param {number} [ratio=1.1]
      * @param {number[]} [offset=[0,0,0]]
      * @return {*}  {string}
      */
-    public addCSS2D(property: string, value: string, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
-        let obj = this.getObjectByProperty(property, value);
-        if (!obj) {
+    public addCSS2D(model: Object3D, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
+        if (!model) {
             console.warn("标注添加失败，物体不存在");
             return;
         }
 
         let CSSLabel = new CSS2DObject(html);
-        let sphere = ThingOrigin.tool.getObjectSphere(obj);
+        let sphere = ThingOrigin.tool.getObjectSphere(model);
         CSSLabel.position.set(sphere.center.x + offset[0], sphere.center.y + sphere.radius * ratio + offset[1], sphere.center.z + offset[2]);
         CSSLabel.element.id = CSSLabel.uuid;
-        CSSLabel.userData.modelUUID = value;
-        obj.attach(CSSLabel);
+        CSSLabel.userData.modelUUID = model.uuid;
+        model.attach(CSSLabel);
         return CSSLabel.uuid;
     }
 

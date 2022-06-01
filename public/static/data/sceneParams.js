@@ -5,7 +5,7 @@ export default {
             alpha: true, //是否支持背景透明
         },
         stats: {
-            show: true,
+            show: false,
             mode: 0, //监控模式 0:画面每秒传输帧数（fps）  1：画面渲染的时间
         },
         background: {

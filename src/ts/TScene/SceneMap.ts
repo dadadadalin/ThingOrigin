@@ -16,7 +16,7 @@ function animate() {
 
             if (cScene.helper.box) cScene.helper.updateBox();
             if (cScene.controls.pointerLock) cScene.controls.updatePointerLock();
-            cScene.stats.update();
+            if (cScene.stats) cScene.stats.update();
         })(item);
     });
 
@@ -88,7 +88,7 @@ export class SceneMap {
 
         cScene.renderer.dispose();
         cScene.renderer.forceContextLoss();
-        cScene.renderer.context = null;
+        // cScene.renderer.context = null;
         let gl = cScene.renderer.domElement.getContext("webgl");
         gl && gl.getExtension("WEBGL_lose_context").loseContext();
 
