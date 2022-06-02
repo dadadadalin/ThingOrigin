@@ -5,6 +5,18 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
         stats: {
             show: true,
         },
+        fog: {
+            show: true,
+            color: "#f00",
+        },
+        background: { type: "color", sky: { color: { top: "#f00" } } },
+    },
+    camera: {
+        position: {
+            x: 100,
+            y: 80,
+            z: 200,
+        },
     },
     lights: [
         {
@@ -14,8 +26,8 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
             intensity: 1,
             position: {
                 x: 15,
-                y: 5,
-                z: 5,
+                y: 15,
+                z: 15,
             },
         },
     ],
@@ -35,18 +47,18 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
-//     console.log(model);
-//     mainScene.add(model);
-//     // ThingOrigin.animate.showExploded(model, 2, 3000);
-//     // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
-//     // window.onclick = () => {
-//     //     model.children[0].children[1].layers.toggle(1);
-//     // };
-//     // ThingOrigin.animate.showExploded(model, 10, 2000);
-//     // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-//     // mainScene.effect.initModelClip(model, "x", 10);
-// });
+ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
+    console.log(model);
+    mainScene.add(model);
+    // ThingOrigin.animate.showExploded(model, 2, 3000);
+    // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+    // window.onclick = () => {
+    //     model.children[0].children[1].layers.toggle(1);
+    // };
+    // ThingOrigin.animate.showExploded(model, 10, 2000);
+    // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
+    // mainScene.effect.initModelClip(model, "x", 10);
+});
 // }, 2000);
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同

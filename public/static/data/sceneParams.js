@@ -54,39 +54,6 @@ export default {
                 z: 5,
             },
         },
-        {
-            name: "light2",
-            type: "DirectionalLight",
-            color: undefined,
-            intensity: 1,
-            position: {
-                x: 10,
-                y: 5,
-                z: -10,
-            },
-        },
-        {
-            name: "light3",
-            type: "DirectionalLight",
-            color: undefined,
-            intensity: 1,
-            position: {
-                x: 10,
-                y: -5,
-                z: 5,
-            },
-        },
-        {
-            name: "light4",
-            type: "DirectionalLight",
-            color: undefined,
-            intensity: 1,
-            position: {
-                x: -10,
-                y: -5,
-                z: 5,
-            },
-        },
     ],
     controls: {
         orbit: {

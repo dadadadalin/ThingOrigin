@@ -1,3 +1,4 @@
+import merge from "lodash.merge";
 import { BackSide, Color, Fog, FogExp2, Group, Mesh, Object3D, Scene, ShaderMaterial, SphereBufferGeometry, TextureLoader, Vector3, WebGLRenderer } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { CSS2DObject, CSS2DRenderer } from "three/examples/jsm/renderers/CSS2DRenderer";
@@ -42,8 +43,6 @@ export class TScene extends Scene {
 
     public stats: Stats;
 
-    private alterArr = [];
-
     /**
      * @description 创建一个场景
      * @author LL
@@ -52,16 +51,10 @@ export class TScene extends Scene {
      * @param {ThingOriginParams} userSceneParam 场景参数
      */
     public createScene(container: HTMLElement, userSceneParam?: ThingOriginParams): void {
-        this.handleAlter(userSceneParam);
-
-        for (var i = 0; i < this.alterArr.length; i++) {
-            let property = Object.getOwnPropertyNames(this.alterArr[i])[0];
-            this.setSceneParam(this.sceneParam, this.alterArr[i], property);
-        }
+        this.sceneParam = merge(this.sceneParam, userSceneParam);
         console.log(this.sceneParam);
 
         this.container = container;
-
         this.initCamera(this.sceneParam);
         this.initRender(this.sceneParam);
         this.initLight(this.sceneParam);
@@ -78,46 +71,6 @@ export class TScene extends Scene {
         if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
         if (this.sceneParam.models) this.loadModel(this.sceneParam);
         if (this.sceneParam.css2d) this.loadCSS2D(this.sceneParam);
-    }
-
-    /**
-     * @description 处理用户传入的场景参数
-     * @author LL
-     * @date 2022-05-12
-     * @private
-     * @param {ThingOriginParams} userSceneParam
-     */
-    private handleAlter(userSceneParam: ThingOriginParams) {
-        var temp = {};
-        for (var key in userSceneParam) {
-            if (typeof userSceneParam[key] == "object" && !(userSceneParam[key] instanceof Array)) {
-                this.handleAlter(userSceneParam[key]);
-            } else {
-                temp[key] = userSceneParam[key];
-                this.alterArr.push(temp);
-            }
-        }
-    }
-
-    /**
-     * @description 将用户传入的场景参数覆盖原有不一样的地方
-     * @author LL
-     * @date 2022-05-12
-     * @private
-     * @param {object} obj
-     * @param {object} alter
-     * @param {string} property
-     */
-    private setSceneParam(obj: object, alter: object, property: string) {
-        for (var key in obj) {
-            if (key == property) {
-                obj[key] = alter[key];
-            } else {
-                if (typeof obj[key] == "object") {
-                    this.setSceneParam(obj[key], alter, property);
-                }
-            }
-        }
     }
 
     /**
