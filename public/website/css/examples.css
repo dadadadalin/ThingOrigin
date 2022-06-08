@@ -12,34 +12,34 @@ body {
   width: 100%;
   height: 100%;
 }
-.full-height .menu-part {
+.menu-part {
   width: 260px;
   background: #f1fff0;
   height: 100%;
   padding-left: 20px;
 }
-.full-height .menu-part .level1 {
+.menu-part .level1 {
   font-weight: bold;
   padding-top: 30px;
   cursor: default;
 }
-.full-height .menu-part .level1 .level2,
-.full-height .menu-part .level1 .level3 {
+.menu-part .level1 .level2,
+.menu-part .level1 .level3 {
   cursor: pointer;
   font-weight: normal;
   padding-top: 8px;
   padding-left: 16px;
 }
-.full-height .menu-part .level1 .level3:hover {
+.menu-part .level1 .level3:hover {
   color: #5baa59;
 }
-.full-height .content-part {
+.content-part {
   height: 100%;
   flex: 1;
   padding: 0 60px;
   overflow: hidden;
 }
-.full-height .content-part iframe {
+.content-part iframe {
   width: 100%;
   height: 100%;
 }
@@ -54,14 +54,26 @@ body {
   margin: 90px 0 20px 0;
 }
 .instruct {
-  margin-left: 20px;
+  margin: 20px;
 }
 .instruct .instruct-title {
   margin-bottom: 5px;
+  font-weight: bold;
+  font-size: 18px;
 }
 .instruct div:not(.instruct-title) {
   line-height: 30px;
   margin-left: 10px;
+}
+.api-code {
+  font-size: 19px;
+  margin: 5px 0 15px;
+  font-weight: bold;
+  color: #5072e4;
+  letter-spacing: 0.5px;
+}
+.api-param {
+  line-height: 35px;
 }
 .param {
   display: flex;

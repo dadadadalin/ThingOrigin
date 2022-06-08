@@ -8,10 +8,10 @@ export class TAnimate {
      * @author LL
      * @date 26/04/2022
      * @param {Object3D} model 模型
-     * @param {string} axis 方向 可传入字符串 'x'/'y'/'z'
-     * @param {number} from 从哪个角度开始
-     * @param {number} to 到哪个角度停止
-     * @param {number} time 完成时间（毫秒）
+     * @param {string} axis 方向（'x'/'y'/'z'）
+     * @param {number} from 起始角度
+     * @param {number} to 目标角度
+     * @param {number} time 动画时间（毫秒）
      */
     public tweenRotate(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {

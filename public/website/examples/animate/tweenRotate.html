@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <link rel="stylesheet" href="../../css/examples.css" />
+        <style>
+            #tweenRotate {
+                width: 85%;
+                height: 500px;
+                position: relative;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-title">补间动画</div>
+
+        <div class="content-title">效果展示</div>
+
+        <div id="tweenRotate">
+            <!-- <div class="demo-btns">
+                <button id="line" onclick="handleLine()">开始连线</button>
+            </div> -->
+        </div>
+
+        <div class="content-title">API说明</div>
+        <div class="api-code">ThingOrigin.model(model: Object3D, axis: string, from: number, to: number, time: number)</div>
+        <div class="api-param">model - 模型</div>
+        <div class="api-param">axis - 方向（'x'/'y'/'z'）</div>
+        <div class="api-param">from - 起始角度</div>
+        <div class="api-param">to - 目标角度</div>
+        <div class="api-param">time - 动画时间（毫秒）</div>
+
+        <div class="content-title">案例代码</div>
+        <pre id="codeShow"></pre>
+
+        <script src="../../../js/thingorigin.js"></script>
+
+        <!-- 案例代码 -->
+        <script id="code">
+            let scene = ThingOrigin.addScene("tweenRotate", document.getElementById("tweenRotate"));
+        </script>
+        <!-- 其他 -->
+        <script>
+            document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+        </script>
+    </body>
+</html>

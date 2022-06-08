@@ -21,6 +21,15 @@ var data = {
             title: "Examples",
             children: [
                 {
+                    title: "animate",
+                    children: [
+                        {
+                            title: "补间动画",
+                            url: "./animate/tweenRotate.html",
+                        },
+                    ],
+                },
+                {
                     title: "control",
                     children: [
                         {
@@ -34,10 +43,6 @@ var data = {
                     children: [
                         {
                             title: "剖切面_全局",
-                            url: "./effect/clipGlobal.html",
-                        },
-                        {
-                            title: "剖切面_单模型",
                             url: "./effect/clipGlobal.html",
                         },
                     ],
