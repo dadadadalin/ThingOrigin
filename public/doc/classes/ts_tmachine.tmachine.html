@@ -86,19 +86,14 @@
 								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
-						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
-							<h3>Properties</h3>
-							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static"><a href="ts_tmachine.tmachine.html#aubojoints" class="tsd-kind-icon">aubo<wbr>Joints</a></li>
-							</ul>
-						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#resetaobo" class="tsd-kind-icon">reset<wbr>Aobo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#resetjoint6" class="tsd-kind-icon">reset<wbr>Joint6</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#resetjoint" class="tsd-kind-icon">reset<wbr>Joint</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#twinangle" class="tsd-kind-icon">twin<wbr>Angle</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#twinaobo" class="tsd-kind-icon">twin<wbr>Aobo</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#twinjoint6" class="tsd-kind-icon">twin<wbr>Joint6</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_tmachine.tmachine.html#twinradian" class="tsd-kind-icon">twin<wbr>Radian</a></li>
 							</ul>
 						</section>
 					</div>
@@ -116,40 +111,12 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TMachine.ts#L4">src/ts/TMachine.ts:4</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/fded550/src/ts/TMachine.ts#L5">src/ts/TMachine.ts:5</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="ts_tmachine.tmachine.html" class="tsd-signature-type" data-tsd-kind="Class">TMachine</a></h4>
 						</li>
 					</ul>
-				</section>
-			</section>
-			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
-				<h2>Properties</h2>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-					<a name="aubojoints" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagStatic">Static</span> <span class="tsd-flag ts-flagPrivate">Private</span> aubo<wbr>Joints</h3>
-					<div class="tsd-signature tsd-kind-icon">aubo<wbr>Joints<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>axis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>name<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">; </span>reverse<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> = ...</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TMachine.ts#L52">src/ts/TMachine.ts:52</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<dl class="tsd-comment-tags">
-							<dt>description</dt>
-							<dd><p>aubo机器人的关节</p>
-							</dd>
-							<dt>author</dt>
-							<dd><p>LL</p>
-							</dd>
-							<dt>date</dt>
-							<dd><p>2022-05-10</p>
-							</dd>
-							<dt>static</dt>
-							<dd></dd>
-						</dl>
-					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -164,7 +131,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TMachine.ts#L83">src/ts/TMachine.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/fded550/src/ts/TMachine.ts#L90">src/ts/TMachine.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -190,6 +157,9 @@
 								</li>
 								<li>
 									<h5>jointData: <a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>关节数据</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -197,22 +167,22 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="resetjoint6" class="tsd-anchor"></a>
-					<h3>reset<wbr>Joint6</h3>
+					<a name="resetjoint" class="tsd-anchor"></a>
+					<h3>reset<wbr>Joint</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">reset<wbr>Joint6<span class="tsd-signature-symbol">(</span>robot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, joints<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointsparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointsParams</a><span class="tsd-signature-symbol">[]</span>, jointData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">reset<wbr>Joint<span class="tsd-signature-symbol">(</span>robot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, joints<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointsparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointsParams</a><span class="tsd-signature-symbol">[]</span>, jointData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TMachine.ts#L15">src/ts/TMachine.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/fded550/src/ts/TMachine.ts#L16">src/ts/TMachine.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>重置6轴机器人关节</p>
+									<dd><p>重置机器人关节</p>
 									</dd>
 									<dt>author</dt>
 									<dd><p>LL</p>
@@ -227,7 +197,7 @@
 								<li>
 									<h5>robot: <span class="tsd-signature-type">Object3D</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>6轴机器人</p>
+										<p>机器人</p>
 									</div>
 								</li>
 								<li>
@@ -248,6 +218,69 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="twinangle" class="tsd-anchor"></a>
+					<h3>twin<wbr>Angle</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">twin<wbr>Angle<span class="tsd-signature-symbol">(</span>robot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, joints<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointsparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointsParams</a><span class="tsd-signature-symbol">[]</span>, preData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a>, curData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/fded550/src/ts/TMachine.ts#L32">src/ts/TMachine.ts:32</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>模型孪生旋转动画（角度）</p>
+									</dd>
+									<dt>author</dt>
+									<dd><p>LL</p>
+									</dd>
+									<dt>date</dt>
+									<dd><p>2022-05-09</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>robot: <span class="tsd-signature-type">Object3D</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>机器人</p>
+									</div>
+								</li>
+								<li>
+									<h5>joints: <a href="../interfaces/ts_tmachinesinterfaces.jointsparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointsParams</a><span class="tsd-signature-symbol">[]</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>关节参数</p>
+									</div>
+								</li>
+								<li>
+									<h5>preData: <a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>上一次动作数据</p>
+									</div>
+								</li>
+								<li>
+									<h5>curData: <a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>当前动作数据</p>
+									</div>
+								</li>
+								<li>
+									<h5>time: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>动画时间</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="twinaobo" class="tsd-anchor"></a>
 					<h3>twin<wbr>Aobo</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -257,7 +290,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TMachine.ts#L70">src/ts/TMachine.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/fded550/src/ts/TMachine.ts#L79">src/ts/TMachine.ts:79</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -305,27 +338,28 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="twinjoint6" class="tsd-anchor"></a>
-					<h3>twin<wbr>Joint6</h3>
+					<a name="twinradian" class="tsd-anchor"></a>
+					<h3>twin<wbr>Radian</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">twin<wbr>Joint6<span class="tsd-signature-symbol">(</span>robot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, joints<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointsparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointsParams</a><span class="tsd-signature-symbol">[]</span>, preData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a>, curData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">twin<wbr>Radian<span class="tsd-signature-symbol">(</span>robot<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, joints<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointsparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointsParams</a><span class="tsd-signature-symbol">[]</span>, preData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a>, curData<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_tmachinesinterfaces.jointdataparams.html" class="tsd-signature-type" data-tsd-kind="Interface">jointDataParams</a>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/19bc7e3/src/ts/TMachine.ts#L31">src/ts/TMachine.ts:31</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/fded550/src/ts/TMachine.ts#L56">src/ts/TMachine.ts:56</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd></dd>
+									<dd><p>模型孪生旋转动画（弧度）</p>
+									</dd>
 									<dt>author</dt>
 									<dd><p>LL</p>
 									</dd>
 									<dt>date</dt>
-									<dd><p>2022-05-09</p>
+									<dd><p>2022-06-15</p>
 									</dd>
 								</dl>
 							</div>
@@ -334,7 +368,7 @@
 								<li>
 									<h5>robot: <span class="tsd-signature-type">Object3D</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>6轴机器人</p>
+										<p>机器人</p>
 									</div>
 								</li>
 								<li>
@@ -449,20 +483,20 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="ts_tmachine.tmachine.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private tsd-is-static">
-								<a href="ts_tmachine.tmachine.html#aubojoints" class="tsd-kind-icon">aubo<wbr>Joints</a>
-							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ts_tmachine.tmachine.html#resetaobo" class="tsd-kind-icon">reset<wbr>Aobo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="ts_tmachine.tmachine.html#resetjoint6" class="tsd-kind-icon">reset<wbr>Joint6</a>
+								<a href="ts_tmachine.tmachine.html#resetjoint" class="tsd-kind-icon">reset<wbr>Joint</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ts_tmachine.tmachine.html#twinangle" class="tsd-kind-icon">twin<wbr>Angle</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="ts_tmachine.tmachine.html#twinaobo" class="tsd-kind-icon">twin<wbr>Aobo</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="ts_tmachine.tmachine.html#twinjoint6" class="tsd-kind-icon">twin<wbr>Joint6</a>
+								<a href="ts_tmachine.tmachine.html#twinradian" class="tsd-kind-icon">twin<wbr>Radian</a>
 							</li>
 						</ul>
 					</li>

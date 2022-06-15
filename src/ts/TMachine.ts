@@ -72,8 +72,8 @@ export class TMachine {
      * @author LL
      * @date 2022-05-09
      * @param {Object3D} aubo aobo机器人
-     * @param {jointDataParams[]} preData 上一次动作数据
-     * @param {jointDataParams[]} curData 当前动作数据
+     * @param {jointDataParams} preData 上一次动作数据
+     * @param {jointDataParams} curData 当前动作数据
      * @param {number} time 动画时间
      */
     public twinAobo(aubo: Object3D, preData: jointDataParams, curData: jointDataParams, time: number) {
@@ -85,9 +85,7 @@ export class TMachine {
      * @author LL
      * @date 2022-05-09
      * @param {Object3D} aubo aobo机器人
-     * @param {jointDataParams[]} preData 上一次动作数据
-     * @param {jointDataParams[]} curData 当前动作数据
-     * @param {number} time 动画时间
+     * @param {jointDataParams} jointData 关节数据
      */
     public resetAobo(aubo: Object3D, jointData: jointDataParams) {
         this.resetJoint(aubo, machines.aubo.joints, jointData);
