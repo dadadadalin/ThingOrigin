@@ -33,6 +33,8 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
     ],
 });
 
+mainScene;
+
 // // let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 // // mainScene.add(arrow);
 // // let plane = ThingOrigin.model.initPlane("initPlane", [0, 1, 0], 0, 200, "#0f0");
@@ -47,7 +49,7 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
+ThingOrigin.model.initFileModel("gltf", "/static/three/yyy.gltf", { scale: [1, 1, 1] }).then((model) => {
     console.log(model);
     mainScene.add(model);
     // ThingOrigin.animate.showExploded(model, 2, 3000);
@@ -60,6 +62,17 @@ ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale
     // mainScene.effect.initModelClip(model, "x", 10);
 });
 // }, 2000);
+
+ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {
+    console.log(e);
+    if (e.event[0]) {
+        eval("e.event[0].object.position.set(0, 30, 0);");
+        e.event[0].object.userData = { name: "userData set" };
+        console.log(mainScene);
+
+        mainScene.exporters.exportGLTF("ttt", "yyy");
+    }
+});
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {
@@ -282,38 +295,6 @@ ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale
 // ThingOrigin.getScene("ttt").model.addCylinder("cube1", {
 //     radiusTop: 10,
 //     radiusBottom: 20,
-// });
-
-// ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {
-//     console.log(e);
-//     if (e.event[0]) {
-//         if (e.event[0].object.name == "qiu") {
-//             if (!ThingOrigin.getScene("ttt").ifOwnCSS2D(e.event[0] && e.event[0].object)) {
-//                 ThingOrigin.getScene("ttt").model.addCSS2D("name", "qiu", document.getElementById("menu").cloneNode(true) as HTMLElement);
-//             } else {
-//                 let boxId = e.event[0].object.children[0].uuid;
-//                 console.log(boxId);
-//                 ThingOrigin.getScene("ttt").model.removeCSS2D(boxId);
-//             }
-//         }
-//     }
-
-//     // ThingOrigin.getScene("ttt").model.showExploded("name", "AB_tai003", 1.4, 1000);
-//     // ThingOrigin.getScene("ttt").model.setVisible("qiu1", false);
-//     // ThingOrigin.getScene("ttt").controls.initRaycaster(sceneParams.controls.raycaster.events);
-//     // var a = ThingOrigin.getScene("ttt").getObjectByProperty("name", "car");
-//     // var b = ThingOrigin.getScene("ttt").cloneObject("ttt", a.uuid, [100, 10, 100]);
-//     // ThingOrigin.getScene("ttt").add(b);
-//     // console.log(e);
-//     // wallPoints.push([e.position.x, e.position.y, e.position.z]);
-//     // console.log(wallPoints);
-//     // let unResponse = ["BoxHelper", "GridHelper", "AxesHelper", "TransformControlsPlane", "Line"];
-//     // for (let i = 0; i < e.event.length; i++) {
-//     //     if (unResponse.indexOf(e.event[i].object.type) == -1) {
-//     //         ThingOrigin.getScene("ttt").camera.lookAt(e.event[i].object.uuid, 1000, 1);
-//     //         break;
-//     //     }
-//     // }
 // });
 
 // let showOn;

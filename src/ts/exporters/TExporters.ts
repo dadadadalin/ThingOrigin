@@ -16,6 +16,8 @@ export class TExporters {
         gltfExporter.parse(
             ThingOrigin.getScene(sceneName),
             (result) => {
+                console.log(result);
+
                 if (result instanceof ArrayBuffer) {
                     this.saveArrayBuffer(result, fileName + ".glb");
                 } else {

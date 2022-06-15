@@ -1,6 +1,4 @@
 export default {
-    //访问资源路径
-    fileRoot: "/static/three/",
     scene: {
         webglrenderer: {
             //是否支持背景透明
@@ -52,9 +50,31 @@ export default {
             color: undefined,
             intensity: 1,
             position: {
-                x: 15,
-                y: 5,
-                z: 5,
+                x: 150,
+                y: 50,
+                z: 50,
+            },
+        },
+        {
+            name: "light2",
+            type: "DirectionalLight",
+            color: undefined,
+            intensity: 1,
+            position: {
+                x: -150,
+                y: 50,
+                z: -50,
+            },
+        },
+        {
+            name: "light3",
+            type: "DirectionalLight",
+            color: undefined,
+            intensity: 1,
+            position: {
+                x: -150,
+                y: -50,
+                z: -50,
             },
         },
     ],
@@ -105,13 +125,8 @@ export default {
             threshold: 1, //泛光的光照强度阈值
         },
     },
-    models: [
-        // {
-        //     name: "sphere",
-        //     position: { x: 0, y: 0, z: 0 },
-        //     rotation: { x: 0, y: 0, z: 0 },
-        //     scale: { x: 1, y: 1, z: 1 },
-        //     objInfo: { objType: "sphere", color: "#f00" },
-        // },
-    ],
+    models: [],
+    animations: [],
+    css2d: [],
+    handles: [],
 };

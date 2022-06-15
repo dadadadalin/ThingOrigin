@@ -184,7 +184,7 @@ export class TScene extends Scene {
         for (let i = 0; i < sceneParams.models.length; i++) {
             let item = sceneParams.models[i];
             if (item["objInfo"].objType == "modelFile") {
-                ThingOrigin.model.initFileModel(item["objInfo"].fileType, sceneParams.fileRoot + item["objInfo"].folder + item["objInfo"].fileName).then((model) => {
+                ThingOrigin.model.initFileModel(item["objInfo"].fileType, item["objInfo"].url).then((model) => {
                     this.add(model);
                 });
             } else if (item["objInfo"].objType == "sphere") {

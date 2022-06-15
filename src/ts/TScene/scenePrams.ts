@@ -1,6 +1,5 @@
 /** 创建场景参数 */
 interface ThingOriginParams {
-    fileRoot?: string;
     shadow?: boolean; //是否产生阴影
     scene?: sceneParam;
     camera?: cameraParams;

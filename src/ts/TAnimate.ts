@@ -13,7 +13,7 @@ export class TAnimate {
      * @param {number} to 目标角度
      * @param {number} time 动画时间（毫秒）
      */
-    public tweenRotate(model: Object3D, axis: string, from: number, to: number, time: number) {
+    public rotateAngle(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {
             console.warn("旋转动画播放失败，物体不存在");
             return;
@@ -45,7 +45,7 @@ export class TAnimate {
      * @param {number} to 到哪个弧度停止
      * @param {number} time 完成时间（毫秒）
      */
-    public tweenRotation(model: Object3D, axis: string, from: number, to: number, time: number) {
+    public rotateRadian(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {
             console.warn("旋转动画播放失败，物体不存在");
             return;
@@ -77,7 +77,7 @@ export class TAnimate {
      * @param {number} to 到哪个位置停止
      * @param {number} time 完成时间（毫秒）
      */
-    public tweenMove(model: Object3D, axis: string, from: number, to: number, time: number) {
+    public move(model: Object3D, axis: string, from: number, to: number, time: number) {
         if (!model) {
             console.warn("平移动画播放失败，物体不存在");
             return;
@@ -119,9 +119,9 @@ export class TAnimate {
         var a = ThingOrigin.tool.getChildrenInfo(model);
         for (var i = 0; i < a.length; i++) {
             var child = model.getObjectByProperty("uuid", a[i].uuid);
-            this.tweenMove(child, "x", a[i].position.x, a[i].position.x * ratio, time);
-            this.tweenMove(child, "y", a[i].position.y, a[i].position.y * ratio, time);
-            this.tweenMove(child, "z", a[i].position.z, a[i].position.z * ratio, time);
+            this.move(child, "x", a[i].position.x, a[i].position.x * ratio, time);
+            this.move(child, "y", a[i].position.y, a[i].position.y * ratio, time);
+            this.move(child, "z", a[i].position.z, a[i].position.z * ratio, time);
         }
     }
 }

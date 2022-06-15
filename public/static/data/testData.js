@@ -1,5 +1,4 @@
 ﻿export default {
-    fileRoot: "/static/three/",
     scene: { webglrenderer: { alpha: true }, background: { alpha: 0.3, color: "#911", type: "color", url: "" } },
     camera: { position: [0, 100, 500], near: 0.1, far: 2000 },
     lights: [
