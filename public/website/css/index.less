@@ -1,3 +1,4 @@
+@mainColor: #0F7C45;
 html {
     height: 100%;
     overflow: hidden;
@@ -10,12 +11,12 @@ body {
     overflow: auto;
 }
 .header {
-    height: 60px;
-    background: rgb(91, 170, 89);
+    height: 70px;
+    background: @mainColor;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 30px;
+    padding: 0 40px;
 
     img {
         height: 70%;
@@ -26,7 +27,7 @@ body {
         li {
             float: left;
             list-style: none;
-            margin-left: 40px;
+            margin-left: 100px;
             cursor: pointer;
             color: #fff;
             letter-spacing: 1px;
@@ -44,25 +45,34 @@ body {
         height: 100%;
     }
 }
-.logo {
-    margin: 8% 0 0 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    img {
-        width: 220px;
+.main{
+    background: url('../../static/img/main-bg.jpg') 100% 100%;
+    background-size: 100% auto;
+    // background-color: #282A36;
+    color: #fff;
+    padding: 150px 0;
+    .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        img {
+            width: 220px;
+        }
+        h1 {
+            font-size: 3em;
+            color:@mainColor
+        }
     }
-    h1 {
-        font-size: 3em;
+    .description {
+        text-indent: 2rem;
+        padding: 0 20%;
+        font-size: 1.2em;
+        line-height: 2em;
     }
+
 }
-.description {
-    text-indent: 2rem;
-    padding: 0 20%;
-    font-size: 1.2em;
-    line-height: 2em;
-}
+
 .system {
     display: flex;
     align-items: center;
