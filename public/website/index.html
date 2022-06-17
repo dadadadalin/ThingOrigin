@@ -4,18 +4,47 @@
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="./css/index.css" />
     </head>
+    <style>
+        .start{
+            display: flex;
+            width: 100%;
+            height: 30%;
+            justify-content: center;
+            align-items: center;
+            /*margin-top: 30px;*/
+        }
+        .btnSty{
+            width: 150px;
+            height: 40px;
+            background: rgb(86,162,87);
+            border: none;
+            border-radius: 5px;
+            color: white;
+        }
+        .pS{
+            margin-left: 35px;
+            color: rgb(86,162,87);
+        }
+        .mb20{
+            margin-bottom: 20px;
+        }
+    </style>
     <body>
         <div class="main">
             <div class="logo">
-                <img src="../static/img/logo.png" alt="" />
-                <h1>ThingOrigin.js</h1>
+                <img src="../static/img/22.png" alt="" />
+                <!--<h1>ThingOrigin.js</h1>-->
             </div>
             <div class="description text-center">ThingOrigin.js 是基于 Three.js 的 3D 引擎。零基础、低门槛、快速的搭建动态 3D 场景。创建3D场景从未如此简单。</div>
+            <div class="start">
+                <button class="btnSty">快速开始</button>
+                <p class="pS">入门教程 ></p>
+            </div>
         </div>
 
-        <h2 class="text-center" style="margin-top: 10%">架构图</h2>
-        <div class="system">
-            <img src="../static/img/架构图.jpg" alt="" />
+        <h2 class="text-center" style="margin-top: 2%">架构图</h2>
+        <div class="system mb20" style="margin-top: 2%">
+            <img src="../static/img/jg.png" alt="" />
         </div>
     </body>
 </html>
