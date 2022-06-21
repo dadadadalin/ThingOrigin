@@ -47,6 +47,15 @@ var data = {
                         },
                     ],
                 },
+                {
+                    title: "scene",
+                    children: [
+                        {
+                            title: "天空盒",
+                            url: "./scene/initSky.html",
+                        },
+                    ],
+                },
             ],
         },
     ],
