@@ -4,8 +4,16 @@
         <meta charset="UTF-8" />
         <title>ThingOrigin.js</title>
         <link rel="stylesheet" href="./public/website/css/index.css" />
+        <style>
+            body {
+                height: 100%;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
     </head>
-    <body style="overflow: hidden">
+    <body>
         <div class="header">
             <img onclick="changePage('index')" src="./public/static/img/11.png" alt="" />
 
@@ -18,10 +26,9 @@
             </ul>
         </div>
         <div class="content">
-            <!-- <iframe id="iframe" src="./public/website/index.html" ="0"></iframe> -->
-            <iframe id="iframe" src="./public/website/examples/menu.html"></iframe>
+            <iframe id="iframe" src="./public/website/index.html" ="0"></iframe>
+            <!-- <iframe id="iframe" src="./public/website/examples/menu.html"></iframe> -->
         </div>
-
         <script>
             function changePage(page) {
                 const frame = document.getElementById("iframe");

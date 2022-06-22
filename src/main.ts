@@ -33,7 +33,7 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
     ],
 });
 
-mainScene;
+// mainScene;
 
 // // let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 // // mainScene.add(arrow);
@@ -49,9 +49,12 @@ mainScene;
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-ThingOrigin.model.initFileModel("gltf", "/static/three/yyy.gltf", { scale: [1, 1, 1] }).then((model) => {
+ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
     console.log(model);
     mainScene.add(model);
+
+    console.log(ThingOrigin.tool.getObjectStructure(model));
+    // console.log(ThingOrigin.tool.getChildrenInfo(model));
     // ThingOrigin.animate.showExploded(model, 2, 3000);
     // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
     // window.onclick = () => {
@@ -63,16 +66,16 @@ ThingOrigin.model.initFileModel("gltf", "/static/three/yyy.gltf", { scale: [1, 1
 });
 // }, 2000);
 
-ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {
-    console.log(e);
-    if (e.event[0]) {
-        eval("e.event[0].object.position.set(0, 30, 0);");
-        e.event[0].object.userData = { name: "userData set" };
-        console.log(mainScene);
+// ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {
+//     console.log(e);
+//     if (e.event[0]) {
+//         eval("e.event[0].object.position.set(0, 30, 0);");
+//         e.event[0].object.userData = { name: "userData set" };
+//         console.log(mainScene);
 
-        mainScene.exporters.exportGLTF("ttt", "yyy");
-    }
-});
+//         mainScene.exporters.exportGLTF("ttt", "yyy");
+//     }
+// });
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {

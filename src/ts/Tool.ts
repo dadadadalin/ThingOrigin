@@ -111,6 +111,7 @@ export class Tool {
             let infoData = {
                 name: child.name,
                 uuid: child.uuid,
+                parent: child.parent.uuid,
                 type: child.type,
                 position: child.position,
                 rotation: child.rotation,
@@ -123,6 +124,32 @@ export class Tool {
         info.splice(0, 1);
         return info;
     }
+
+    public getObjectStructure(model: Object3D): Object3D[] {
+        var arr = this.getChildrenInfo(model);
+
+        const newArr = [];
+        const map = {};
+        arr.forEach((item) => {
+            if (!item.children) item.children = []; //判断数据是否有子级   没有则进行子级的添加
+            map[item.uuid] = item; // 添加对应的映射关系
+        });
+        arr.forEach((item) => {
+            //@ts-ignore
+            if (map[item.parent]) {
+                //@ts-ignore
+                map[item.parent].children.push(item);
+            } else {
+                newArr.push(item);
+            }
+        });
+
+        console.log(newArr);
+
+        return newArr;
+    }
+
+    private get;
 
     /**
      * @description 获取模型参数信息

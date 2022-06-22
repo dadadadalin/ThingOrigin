@@ -4,47 +4,116 @@
         <meta charset="UTF-8" />
         <link rel="stylesheet" href="./css/index.css" />
     </head>
-    <style>
-        .start{
-            display: flex;
-            width: 100%;
-            height: 30%;
-            justify-content: center;
-            align-items: center;
-            /*margin-top: 30px;*/
-        }
-        .btnSty{
-            width: 150px;
-            height: 40px;
-            background: rgb(86,162,87);
-            border: none;
-            border-radius: 5px;
-            color: white;
-        }
-        .pS{
-            margin-left: 35px;
-            color: rgb(86,162,87);
-        }
-        .mb20{
-            margin-bottom: 20px;
-        }
-    </style>
     <body>
-        <div class="main">
-            <div class="logo">
-                <img src="../static/img/22.png" alt="" />
-                <!--<h1>ThingOrigin.js</h1>-->
+        <div id="main">
+            <div id="carousel">
+                <div id="carousel-container">
+                    <div class="item item1">
+                        <div class="logo">
+                            <img src="../static/img/22.png" alt="" />
+                        </div>
+                        <div class="description text-center">
+                            <div>ThingOrigin.js 是基于 Three.js 的 3D 引擎。零基础、低门槛、快速的搭建动态 3D 场景</div>
+                            <div>3D开发从未如此简单</div>
+                        </div>
+                        <div class="start">
+                            <button class="btnSty">快速开始</button>
+                            <p class="pS">入门教程 ></p>
+                        </div>
+                    </div>
+                    <div class="item item2">
+                        <div class="logo">
+                            <img src="../static/img/22.png" alt="" />
+                        </div>
+                        <div class="description text-center">
+                            <div>200种主流工业设备协议，兼容windows Linux，支持ms级万点数据采集，可实现设备模型图式关联构建存储</div>
+                            <div>数据是数字孪生的基石，有了血液双胞胎才有生命力</div>
+                        </div>
+                        <div class="start">
+                            <button class="btnSty">查看详情</button>
+                        </div>
+                    </div>
+                    <div class="item item3">
+                        <div class="logo">
+                            <img src="../static/img/22.png" alt="" />
+                        </div>
+                        <div class="description text-center">
+                            <div>对接工业的数字孪生工具，BS架构打破系统束缚。</div>
+                            <div>普通人员半天时间即可完成培训，大幅降低了人员、时间和试错成本。</div>
+                        </div>
+                        <div class="start">
+                            <button class="btnSty">查看详情</button>
+                        </div>
+                    </div>
+                    <div class="item item4">
+                        <div class="logo">
+                            <img src="../static/img/22.png" alt="" />
+                        </div>
+                        <div class="description text-center">
+                            <div>内置50+种图表，多维度的展示数据、拖拉拽式操作降低门槛</div>
+                            <div>元素联动让数据之前通畅交流，降低成本，提升效率</div>
+                        </div>
+                        <div class="start">
+                            <button class="btnSty">查看详情</button>
+                        </div>
+                    </div>
+                    <div class="item item5">联系我们</div>
+                </div>
             </div>
-            <div class="description text-center">ThingOrigin.js 是基于 Three.js 的 3D 引擎。零基础、低门槛、快速的搭建动态 3D 场景。创建3D场景从未如此简单。</div>
-            <div class="start">
-                <button class="btnSty">快速开始</button>
-                <p class="pS">入门教程 ></p>
+            <div id="list">
+                <div @click="changePage(1)" class="btn1" :class="activePage==1?'active':''">引 擎 ThingOrigin.js</div>
+                <div @click="changePage(2)" class="btn2" :class="activePage==2?'active':''">数据采集 Gateway</div>
+                <div @click="changePage(3)" class="btn3" :class="activePage==3?'active':''">数字孪生 3DEditor</div>
+                <div @click="changePage(4)" class="btn4" :class="activePage==4?'active':''">BI 工具 ViewEditor</div>
+                <div @click="changePage(5)" class="btn5" :class="activePage==5?'active':''">增强现实 AREditor</div>
             </div>
         </div>
 
-        <h2 class="text-center" style="margin-top: 2%">架构图</h2>
-        <div class="system mb20" style="margin-top: 2%">
-            <img src="../static/img/jg.png" alt="" />
+        <div id="steps">
+            <h2 class="text-center" style="margin-top: 2%">数字孪生开发流程</h2>
         </div>
+
+        <div id="environment">
+            <h2 class="text-center" style="margin-top: 2%">生态体系</h2>
+            <div class="system" style="margin-top: 2%">
+                <img src="../static/img/jg.png" alt="" />
+            </div>
+        </div>
+        <iframe class="footer" src="./footer.html" frameborder="0"></iframe>
+
+        <script src="./js/vue.js"></script>
+        <script>
+            var vm = new Vue({
+                el: "#list",
+                data: {
+                    activePage: 1,
+                },
+                methods: {
+                    changePage(index) {
+                        document.getElementById("carousel-container").style.marginLeft = -(index - 1) * 100 + "%";
+                        this.activePage = index;
+                    },
+                },
+            });
+        </script>
+
+        <script>
+            var list = new Vue({
+                el: "#steps",
+                data: {
+                    activePage: 1,
+                    steps: [
+                        { title: "建模", sub: { text: "建模服务", url: "" } },
+                        { title: "建模", sub: { text: "建模服务", url: "" } },
+                    ],
+                },
+                methods: {
+                    changePage(index) {
+                        document.getElementById("carousel-container").style.marginLeft = -(index - 1) * 100 + "%";
+                        this.activePage = index;
+                    },
+                },
+            });
+        </script>
     </body>
 </html>
