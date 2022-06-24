@@ -64,6 +64,16 @@ body {
   height: calc(100% - 220px);
   float: left;
   background-color: #2f2e52;
+  position: relative;
+}
+#main #carousel .item .scene {
+  position: absolute;
+  width: 60%;
+  height: 90%;
+  bottom: 2%;
+  left: 2%;
+  outline: none;
+  z-index: 1;
 }
 #main #carousel .item1 {
   background: url('../../static/img/main-bg.jpg') no-repeat;
@@ -75,6 +85,8 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  position: relative;
+  z-index: 100;
 }
 #main #carousel .logo img {
   height: 180px;
@@ -91,6 +103,8 @@ body {
   font-size: 1.3em;
   line-height: 2em;
   margin-top: 50px;
+  position: relative;
+  z-index: 100;
 }
 #main #carousel .start {
   display: flex;
@@ -98,6 +112,8 @@ body {
   justify-content: center;
   align-items: center;
   margin-top: 50px;
+  position: relative;
+  z-index: 100;
 }
 #main #carousel .start .btnSty {
   width: 150px;
@@ -123,6 +139,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  z-index: 1000;
 }
 #main #list div {
   margin-top: 20px;

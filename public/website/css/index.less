@@ -75,6 +75,17 @@ body {
             height: calc(100% - 220px);
             float: left;
             background-color: rgb(47, 46, 82);
+            position: relative;
+
+            .scene{
+                position: absolute;
+                width: 60%;
+                height: 90%;
+                bottom: 2%;
+                left: 2%;
+                outline: none;
+                z-index: 1;
+            }
         }
 
         .item1{
@@ -88,6 +99,8 @@ body {
             justify-content: center;
             align-items: center;
             flex-direction: column;
+            position: relative;
+            z-index: 100;
             img {
                 height: 180px;
             }
@@ -104,6 +117,8 @@ body {
             font-size: 1.3em;
             line-height: 2em;
             margin-top: 50px;
+            position: relative;
+            z-index: 100;
         }
         .start {
             display: flex;
@@ -111,6 +126,8 @@ body {
             justify-content: center;
             align-items: center;
             margin-top: 50px;
+            position: relative;
+            z-index: 100;
     
             .btnSty {
                 width: 150px;
@@ -139,6 +156,7 @@ body {
         display: flex;
         flex-direction: column;
         justify-content: center;
+        z-index: 1000;
         div {
             margin-top: 20px;
             margin-left: 10px;

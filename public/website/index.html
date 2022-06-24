@@ -20,6 +20,7 @@
                             <button class="btnSty">快速开始</button>
                             <p class="pS">入门教程 ></p>
                         </div>
+                        <div class="scene" id="TO"></div>
                     </div>
                     <div class="item item2">
                         <div class="logo">
@@ -82,6 +83,7 @@
         <iframe class="footer" src="./footer.html" frameborder="0"></iframe>
 
         <script src="./js/vue.js"></script>
+        <script src="../js/thingorigin.js"></script>
         <script>
             var vm = new Vue({
                 el: "#list",
@@ -95,6 +97,57 @@
                     },
                 },
             });
+
+            let demo1 = ThingOrigin.addScene("3D", document.getElementById("TO"), {
+                scene: {
+                    background: {
+                        type: "color",
+                        color: {
+                            alpha: 0, //透明度 取值范围0~1
+                            color: "#fff",
+                        },
+                    },
+                },
+                helper: {
+                    axes: {
+                        active: false,
+                    },
+                    grid: {
+                        active: false,
+                    },
+                },
+                controls: {
+                    orbit: {
+                        active: false, //是否启用智能相机控制器
+                    },
+                },
+            });
+
+            let font = ThingOrigin.model
+                .initText(
+                    "ThingOrigin.js",
+                    "../static/font/Microsoft YaHei Light_Regular.json",
+                    { color: "#0F7C45", size: 12, height: 5, curveSegments: 12, bevelEnabled: false, bevelThickness: 20, bevelSize: 8, bevelSegments: 3, sideColor: "#fff" },
+                    { position: [-100, 50, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
+                )
+                .then((model) => {
+                    model.rotateX(-0.3);
+                    demo1.add(model);
+                });
+
+            // let cube = ThingOrigin.model.initBox("cube", { width: 60, height: 60, depth: 60 }, { color: "#0E5F36", position: [0, 60, 0], scale: [1, 1, 1], rotation: [0, 0, 0] });
+            // let cube2 = ThingOrigin.model.initBox("cube", { width: 20, height: 20, depth: 20 }, { color: "#0E5F36", position: [-50, 60, -30], scale: [1, 1, 1], rotation: [-2, 1, 3] });
+
+            // setInterval(() => {
+            //     cube.rotation.x += 0.01;
+            //     cube.rotation.y += 0.01;
+            //     cube.rotation.z += 0.01;
+            //     cube2.rotation.x += 0.01;
+            //     cube2.rotation.y += 0.01;
+            //     cube2.rotation.z += 0.01;
+            // }, 100);
+            // demo1.add(cube);
+            // demo1.add(cube2);
         </script>
 
         <script>

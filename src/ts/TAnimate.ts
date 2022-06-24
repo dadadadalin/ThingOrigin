@@ -1,4 +1,6 @@
 import { Object3D } from "three";
+// import { Flow } from "";
+// import { Flow } from "three/examples/jsm/modifiers/CurveModifier";
 import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../ThingOrigin";
 
@@ -124,4 +126,8 @@ export class TAnimate {
             this.move(child, "z", a[i].position.z, a[i].position.z * ratio, time);
         }
     }
+
+    // public alongPoints(model: Object3D, points: number[][]) {
+    //     let flow = new Flow(objectToCurve);
+    // }
 }

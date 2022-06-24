@@ -12,7 +12,7 @@ export default {
         background: {
             type: "sky",
             color: {
-                alpha: 0.3, //透明度 取值范围0~1
+                alpha: 0, //透明度 取值范围0~1
                 color: "#944",
             },
             img: {
