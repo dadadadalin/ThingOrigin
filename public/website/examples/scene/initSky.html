@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <link rel="stylesheet" href="../../css/examples.css" />
+        <style>
+            #initSky {
+                width: 85%;
+                height: 500px;
+                position: relative;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-title">天空盒</div>
+
+        <div class="content-title">效果展示</div>
+
+        <button onclick="changeSkyBg()">切换天空盒背景色</button>
+        <div id="initSky">
+           
+        </div>
+
+        <div class="content-title">API说明</div>
+        <div class="api-code">
+            initSky(
+                colors: skyColorsParams = { top: "#86b6f5", line: "#ffffff", bottom: "#999999" },
+        </div>
+        <div class="api-code">
+                skyConfigs: skyConfigsParams = {
+                    radius: 4000,
+                    widthSegments: 32,
+                    heightSegments: 15,
+                    skyCenter: [0, 0, 0]
+                }
+             )
+        </div>
+        <div class="api-param">skyColorsParams - 天空盒颜色参数：</div>
+        <div class="api-param">top - 天空顶部</div>
+        <div class="api-param">line - 交界位置</div>
+        <div class="api-param">bottom - 底部</div>
+        <div class="api-param">skyConfigsParams - 天空盒配置参数：</div>
+        <div class="api-param">radius — 球体半径. 默认值为50</div>
+        <div class="api-param">widthSegments — 水平分割面的数量. 最小值为3, 默认值为8</div>
+        <div class="api-param"> heightSegments — 垂直分割面的数量. 最小值为2, 默认值为6</div>
+        <div class="api-param">  skyCenter - 中心点（x,y,z轴）</div>
+    
+
+        <div class="content-title">案例代码</div>
+        <pre id="codeShow"></pre>
+
+        <script src="../../../js/thingorigin.js"></script>
+
+        <!-- 案例代码 -->
+        <script id="code">
+            let scene = ThingOrigin.addScene("initSky", document.getElementById("initSky"));
+            scene.initSky(
+                {
+                     top: "#86b6f5", 
+                     line: "#ffffff", 
+                     bottom: "#999999"
+                },
+                {
+                    radius: 4000,
+                    widthSegments: 32,
+                    heightSegments: 15,
+                    skyCenter: [0, 0, 0],
+                }
+            )
+
+            //切换天空盒背景色
+            function changeSkyBg(){
+                let topData = "#" + Math.floor((Math.random() * 9 + 1) * 100000);
+                let lineData = "#" +  Math.floor((Math.random() * 9 + 1) * 100000);
+                let bottomData = "#" +  Math.floor((Math.random() * 9 + 1) * 100000);
+                scene.initSky(
+                {
+                     top: topData, 
+                     line: lineData, 
+                     bottom: bottomData
+                },
+                {
+                    radius: 4000,
+                    widthSegments: 32,
+                    heightSegments: 15,
+                    skyCenter: [0, 0, 0],
+                }
+            )
+            }
+        </script>
+        <!-- 其他 -->
+        <script>
+            document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+        </script>
+    </body>
+</html>
