@@ -54,6 +54,10 @@ var data = {
                             title: "天空盒",
                             url: "./scene/initSky.html",
                         },
+                        {
+                            title: "背景图片",
+                            url: "./scene/backgroundImg.html",
+                        },
                     ],
                 },
             ],

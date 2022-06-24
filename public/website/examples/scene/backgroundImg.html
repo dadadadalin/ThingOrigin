@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <link rel="stylesheet" href="../../css/examples.css" />
+        <style>
+            #backgroundImg {
+                width: 85%;
+                height: 500px;
+                position: relative;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="page-title">背景图片</div>
+
+        <div class="content-title">效果展示</div>
+
+        <button onclick="changeBg()">切换背景图片</button>
+        <div id="backgroundImg">
+           
+        </div>
+
+        <div class="content-title">API说明</div>
+        <div class="api-code">
+            setBackgroundImg(url: string) 
+        </div>
+        <div class="api-param">url - 图片地址</div>
+    
+        <div class="content-title">案例代码</div>
+        <pre id="codeShow"></pre>
+
+        <script src="../../../js/thingorigin.js"></script>
+
+        <!-- 案例代码 -->
+        <script id="code">
+            //设置天空盒为图片img类型
+            let scene = ThingOrigin.addScene("backgroundImg", document.getElementById("backgroundImg"),{scene:{background:{type:'img'}}});
+            scene.setBackgroundImg('../../../static/img/背景1.jpg');
+            //切换背景图片
+            function changeBg(){
+                scene.setBackgroundImg('../../../static/img/ground.jpg');
+            }
+        </script>
+        <!-- 其他 -->
+        <script>
+            document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+        </script>
+    </body>
+</html>
