@@ -15,7 +15,11 @@ export class TMachine {
      */
     public setJointAngle(robot: Object3D, joints: jointsParams[], jointData: jointDataParams) {
         for (var i = 0; i < joints.length; i++) {
-            robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)] / 180) * Math.PI;
+            if (jointData["joint" + (i + 1)]) {
+                robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)] / 180) * Math.PI;
+            } else {
+                console.log("重置数据异常：" + i + "=" + jointData["joint" + (i + 1)]);
+            }
         }
     }
 
@@ -29,7 +33,11 @@ export class TMachine {
      */
     public setJointRadian(robot: Object3D, joints: jointsParams[], jointData: jointDataParams) {
         for (var i = 0; i < joints.length; i++) {
-            robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)]);
+            if (jointData["joint" + (i + 1)]) {
+                robot.getObjectByName(joints[i].name).rotation[joints[i].axis] = joints[i].reverse * Number(jointData["joint" + (i + 1)]);
+            } else {
+                console.log("重置数据异常：" + i + "=" + jointData["joint" + (i + 1)]);
+            }
         }
     }
 
@@ -45,14 +53,18 @@ export class TMachine {
      */
     public twinAngle(robot: Object3D, joints: jointsParams[], preData: jointDataParams, curData: jointDataParams, time: number) {
         for (var i = 0; i < joints.length; i++) {
-            if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
-                ThingOrigin.animate.rotateAngle(
-                    robot.getObjectByName(joints[i].name),
-                    joints[i].axis,
-                    joints[i].reverse * Number(preData["joint" + (i + 1)]),
-                    joints[i].reverse * Number(curData["joint" + (i + 1)]),
-                    time
-                );
+            if (preData["joint" + (i + 1)] && curData["joint" + (i + 1)]) {
+                if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
+                    ThingOrigin.animate.rotateAngle(
+                        robot.getObjectByName(joints[i].name),
+                        joints[i].axis,
+                        joints[i].reverse * Number(preData["joint" + (i + 1)]),
+                        joints[i].reverse * Number(curData["joint" + (i + 1)]),
+                        time
+                    );
+                }
+            } else {
+                console.log("数据异常：pre=" + preData["joint" + (i + 1)] + ",cur:" + curData["joint" + (i + 1)]);
             }
         }
     }
@@ -69,14 +81,18 @@ export class TMachine {
      */
     public twinRadian(robot: Object3D, joints: jointsParams[], preData: jointDataParams, curData: jointDataParams, time: number) {
         for (var i = 0; i < 6; i++) {
-            if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
-                ThingOrigin.animate.rotateRadian(
-                    robot.getObjectByName(joints[i].name),
-                    joints[i].axis,
-                    joints[i].reverse * Number(preData["joint" + (i + 1)]),
-                    joints[i].reverse * Number(curData["joint" + (i + 1)]),
-                    time
-                );
+            if (preData["joint" + (i + 1)] && curData["joint" + (i + 1)]) {
+                if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
+                    ThingOrigin.animate.rotateRadian(
+                        robot.getObjectByName(joints[i].name),
+                        joints[i].axis,
+                        joints[i].reverse * Number(preData["joint" + (i + 1)]),
+                        joints[i].reverse * Number(curData["joint" + (i + 1)]),
+                        time
+                    );
+                }
+            } else {
+                console.log("数据异常：pre=" + preData["joint" + (i + 1)] + ",cur:" + curData["joint" + (i + 1)]);
             }
         }
     }
