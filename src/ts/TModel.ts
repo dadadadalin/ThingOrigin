@@ -14,6 +14,7 @@ import {
     Group,
     Line,
     LineBasicMaterial,
+    MathUtils,
     Mesh,
     MeshBasicMaterial,
     MeshLambertMaterial,
@@ -61,13 +62,15 @@ export class TModel {
      * @param {boolean} [cached=false] 是否是本地缓存模型
      * @returns {*}  {Promise<Object3D>}
      */
-    public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1] }, cached: boolean = false): Promise<Object3D> {
+    public initFileModel(type: string, url: string, modelConfigs: modelConfigs = { position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }, cached: boolean = false): Promise<Object3D> {
         return new Promise((resolve) => {
             if (type == "fbx") {
                 this.FBXLoader.load(url, (fbx: Group) => {
                     if (modelConfigs) {
-                        fbx.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
-                        fbx.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
+                        if (modelConfigs.scale) fbx.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
+                        if (modelConfigs.rotation)
+                            fbx.rotation.set(MathUtils.degToRad(modelConfigs.rotation[0]), MathUtils.degToRad(modelConfigs.rotation[1]), MathUtils.degToRad(modelConfigs.rotation[2]));
+                        if (modelConfigs.position) fbx.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
                     }
                     fbx.updateMatrixWorld(true);
                     resolve(fbx);
@@ -78,8 +81,10 @@ export class TModel {
                     material.side = DoubleSide;
                     var mesh = new Mesh(geometry, material); //网格模型对象Mesh
                     if (modelConfigs) {
-                        mesh.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
-                        mesh.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
+                        if (modelConfigs.scale) mesh.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
+                        if (modelConfigs.rotation)
+                            mesh.rotation.set(MathUtils.degToRad(modelConfigs.rotation[0]), MathUtils.degToRad(modelConfigs.rotation[1]), MathUtils.degToRad(modelConfigs.rotation[2]));
+                        if (modelConfigs.position) mesh.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
                     }
                     mesh.updateMatrixWorld(true);
                     resolve(mesh);
@@ -110,6 +115,8 @@ export class TModel {
                 this.GLTFLoader.load(url, (gltf) => {
                     if (modelConfigs) {
                         if (modelConfigs.scale) gltf.scene.scale.set(modelConfigs.scale[0], modelConfigs.scale[1], modelConfigs.scale[2]);
+                        if (modelConfigs.rotation)
+                            gltf.scene.rotation.set(MathUtils.degToRad(modelConfigs.rotation[0]), MathUtils.degToRad(modelConfigs.rotation[1]), MathUtils.degToRad(modelConfigs.rotation[2]));
                         if (modelConfigs.position) gltf.scene.position.set(modelConfigs.position[0], modelConfigs.position[1], modelConfigs.position[2]);
                     }
                     gltf.scene.updateMatrixWorld(true);

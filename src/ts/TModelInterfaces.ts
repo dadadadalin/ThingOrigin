@@ -47,6 +47,7 @@ interface textLineParams {
 interface modelConfigs {
     position?: number[];
     scale?: number[];
+    rotation?: number[];
 }
 
 /**
