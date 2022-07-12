@@ -70,6 +70,10 @@ var data = {
                             title: "模型克隆",
                             url: "./scene/modelClone.html",
                         },
+                        {
+                            title: "添加/移除2D元素",
+                            url: "./scene/CSS2DOperate.html",
+                        }
                     ],
                 },
             ],

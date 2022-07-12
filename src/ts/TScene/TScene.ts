@@ -393,10 +393,10 @@ export class TScene extends Scene {
      * @description 给模型添加2d元素
      * @author gj
      * @date 2021/08/30
-     * @param {Object3D} model
+     * @param {Object3D} model 模型元素
      * @param {HTMLElement} html dom元素
-     * @param {number} [ratio=1.1]
-     * @param {number[]} [offset=[0,0,0]]
+     * @param {number} [ratio=1.1] 比率，比例
+     * @param {number[]} [offset=[0,0,0]] 偏移量
      * @return {*}  {string}
      */
     public addCSS2D(model: Object3D, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
@@ -417,7 +417,7 @@ export class TScene extends Scene {
     /**
      * @description 删除2d元素
      * @author gj
-     * @param {string} uuid 模型的uuid
+     * @param {string} uuid 2D元素的uuid
      */
     public removeCSS2D(uuid: string): void {
         let mySelfHtml = document.getElementById(uuid);

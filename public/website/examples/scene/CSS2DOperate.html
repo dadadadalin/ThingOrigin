@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Title</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #modelVisible {
+            width: 85%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<div class="page-title">添加/移除2D元素</div>
+
+<div class="content-title">效果展示</div>
+
+<button onclick="add()">添加</button>
+<button onclick="remove()">移除</button>
+<div id="modelVisible">
+
+
+</div>
+
+<div class="content-title">添加元素API说明</div>
+<div class="api-code">
+    addCSS2D(model: Object3D, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string
+</div>
+
+<div class="api-param">model -  模型元素</div>
+<div class="api-param">html - dom元素</div>
+<div class="api-param">ratio - 比率，比例</div>
+<div class="api-param">offset - 偏移量</div>
+<div class="api-param">返回2D元素的uuid</div>
+
+<div class="content-title">移除元素API说明</div>
+<div class="api-code">
+    removeCSS2D(uuid: string): void
+</div>
+
+<div class="api-param">uuid -  2D元素的uuid</div>
+
+
+<div class="content-title">案例代码</div>
+<pre id="codeShow"></pre>
+
+<div id="css2DDiv" style="display: none"> 这是一只漂亮的小鸟 </div>
+
+<script src="../../../js/thingorigin.js"></script>
+
+<!-- 案例代码 -->
+<script id="code">
+    let scene = ThingOrigin.addScene("modelVisible", document.getElementById("modelVisible"));
+    //加载模型
+    let modelData = null;
+    ThingOrigin.model.initFileModel("gltf", '../../../static/three/examplesModel/Parrot.glb', {
+        scale: [1, 1, 1],
+        rotation: [0, 30, 0],
+        position: [0, 10, 0]
+    }).then((model) => {
+        console.log(model);
+        modelData = model;
+        scene.add(model);
+    })
+
+    //添加2D元素
+    let css2D_uuid = null;
+    function add(){
+        let CSSDiv = document.createElement("div");
+
+        CSSDiv.innerHTML =  document.getElementById('css2DDiv').innerHTML;
+        CSSDiv.style.cssText =  'border:1px solid #00ffff;border-radius: 5px;width: 150px;height: 40px;line-height:40px;padding: 5px;background: #fff;';
+        // CSSDiv.innerHTML =  `&lt;div style="border:1px solid #00ffff;border-radius: 5px;width: 150px;height: 40px;line-height:40px;padding: 5px;background: #fff;"> 这是一只漂亮的小鸟 &lt;/div>`;
+        //以上两种写法均可
+
+        css2D_uuid = scene.addCSS2D(modelData,CSSDiv,1.2,[0,-160,0]);
+        //添加元素
+        scene.add(css2D_uuid);
+    }
+
+    //移除2D元素
+    function remove(){
+        scene.removeCSS2D(css2D_uuid);
+    }
+</script>
+<!-- 其他 -->
+<script>
+    document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+</script>
+</body>
+</html>
