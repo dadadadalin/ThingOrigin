@@ -94,6 +94,7 @@ interface sceneParam {
 interface webglrendererParams {
     gammaFactor?: number;
     alpha?: boolean;
+    antialias?: boolean;
 }
 interface backgroundParams {
     type?: string;

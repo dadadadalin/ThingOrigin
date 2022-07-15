@@ -1,5 +1,6 @@
 import { Object3D, OrthographicCamera, PerspectiveCamera } from "three";
 import { TAnimate } from "./ts/TAnimate";
+import { TIndexedDB } from "./ts/TIndexedDB";
 import { TMachine } from "./ts/TMachine";
 import { TMaterial } from "./ts/TMaterial";
 import { TModel } from "./ts/TModel";
@@ -17,6 +18,7 @@ export class ThingOrigin {
     public static material: TMaterial = new TMaterial();
     public static model: TModel = new TModel();
     public static machine: TMachine = new TMachine();
+    public static indexedDB: TIndexedDB = new TIndexedDB();
 
     constructor() {}
 

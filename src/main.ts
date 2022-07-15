@@ -32,7 +32,37 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
         },
     ],
 });
+let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
 
+ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {
+    console.log(res);
+    if (res.saved) {
+        ThingOrigin.model.initFileModel(modelInfo.type, res.url, { scale: [1, 1, 1] }).then((model) => {
+            mainScene.add(model);
+        });
+    } else {
+        alert("shoucijia");
+        ThingOrigin.indexedDB.insertModel("db", "model", modelInfo).then((modelParam) => {
+            ThingOrigin.model.initFileModel(modelInfo.type, modelParam.url, { scale: [1, 1, 1] }).then((model) => {
+                mainScene.add(model);
+            });
+        });
+    }
+});
+
+// window.onclick = () => {
+//     ThingOrigin.indexedDB.updateModel("db", "model", { id: 1, type: "gltf", name: "model", url: "/static/three/jiance2.gltf" });
+// };
+// ThingOrigin.indexedDB.getDataBase("uui").then((db) => {
+//     console.log(db.objectStoreNames.contains("book"));
+// });
+// ThingOrigin.indexedDB.createDateBase("test", "xp");
+// ThingOrigin.indexedDB.accessModel("test", "xp", 10).then((exist) => {
+//     console.log(exist);
+//     if (exist) {
+//     }
+// });
+// ThingOrigin.indexedDB.insertData("test", "xp", { id: 1, name: "testModel", type: "gltf", model: "456456" });
 // mainScene;
 
 // // let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
@@ -49,21 +79,7 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
-    console.log(model);
-    mainScene.add(model);
 
-    console.log(ThingOrigin.tool.getObjectStructure(model));
-    // console.log(ThingOrigin.tool.getChildrenInfo(model));
-    // ThingOrigin.animate.showExploded(model, 2, 3000);
-    // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
-    // window.onclick = () => {
-    //     model.children[0].children[1].layers.toggle(1);
-    // };
-    // ThingOrigin.animate.showExploded(model, 10, 2000);
-    // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
-    // mainScene.effect.initModelClip(model, "x", 10);
-});
 // }, 2000);
 
 // ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {

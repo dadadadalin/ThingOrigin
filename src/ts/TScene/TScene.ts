@@ -399,7 +399,7 @@ export class TScene extends Scene {
      * @param {number[]} [offset=[0,0,0]]
      * @return {*}  {string}
      */
-    public addCSS2D(model: Object3D, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
+    public addCSS2D(model: Object3D | Group, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
         if (!model) {
             console.warn("标注添加失败，物体不存在");
             return;
