@@ -3,6 +3,7 @@ export default {
         webglrenderer: {
             //是否支持背景透明
             alpha: true,
+            antialias: true,
         },
         stats: {
             show: false,
@@ -124,6 +125,12 @@ export default {
             radius: 1, //泛光散发的半径
             threshold: 1, //泛光的光照强度阈值
         },
+    },
+    indexedDB: {
+        use: false,
+        dataBaseName: "",
+        headers: [{ text: "id", key: true }, { text: "name" }, { text: "type" }, { text: "model" }],
+        models: [{ id: 1, name: "aaa", type: "gltf", model: "", url: "" }],
     },
     models: [],
     animations: [],
