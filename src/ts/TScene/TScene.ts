@@ -249,7 +249,7 @@ export class TScene extends Scene {
                 for (let i = 0; i < sceneParams.css2d.length; i++) {
                     let item = sceneParams.css2d[i];
                     var model = this.getObjectByName(item.name);
-                    this.addCSS2D(model, document.getElementById(item.domId));
+                    this.addCSS2D(model, document.getElementById(item.domId).innerText);
                 }
                 clearInterval(timer);
             }
@@ -399,13 +399,16 @@ export class TScene extends Scene {
      * @param {number[]} [offset=[0,0,0]]
      * @return {*}  {string}
      */
-    public addCSS2D(model: Object3D | Group, html: HTMLElement, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
+    public addCSS2D(model: Object3D | Group, html: string, ratio: number = 1.1, offset: number[] = [0, 0, 0]): string {
         if (!model) {
             console.warn("标注添加失败，物体不存在");
             return;
         }
 
-        let CSSLabel = new CSS2DObject(html);
+        let div = document.createElement("div");
+        div.innerHTML = html;
+
+        let CSSLabel = new CSS2DObject(div);
         let sphere = ThingOrigin.tool.getObjectSphere(model);
         CSSLabel.position.set(sphere.center.x + offset[0], sphere.center.y + sphere.radius * ratio + offset[1], sphere.center.z + offset[2]);
         CSSLabel.element.id = CSSLabel.uuid;

@@ -32,23 +32,23 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
         },
     ],
 });
-let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
 
-ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {
-    console.log(res);
-    if (res.saved) {
-        ThingOrigin.model.initFileModel(modelInfo.type, res.url, { scale: [1, 1, 1] }).then((model) => {
-            mainScene.add(model);
-        });
-    } else {
-        alert("shoucijia");
-        ThingOrigin.indexedDB.insertModel("db", "model", modelInfo).then((modelParam) => {
-            ThingOrigin.model.initFileModel(modelInfo.type, modelParam.url, { scale: [1, 1, 1] }).then((model) => {
-                mainScene.add(model);
-            });
-        });
-    }
-});
+// let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
+// ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {
+//     console.log(res);
+//     if (res.saved) {
+//         ThingOrigin.model.initFileModel(modelInfo.type, res.url, { scale: [1, 1, 1] }).then((model) => {
+//             mainScene.add(model);
+//         });
+//     } else {
+//         alert("shoucijia");
+//         ThingOrigin.indexedDB.insertModel("db", "model", modelInfo).then((modelParam) => {
+//             ThingOrigin.model.initFileModel(modelInfo.type, modelParam.url, { scale: [1, 1, 1] }).then((model) => {
+//                 mainScene.add(model);
+//             });
+//         });
+//     }
+// });
 
 // window.onclick = () => {
 //     ThingOrigin.indexedDB.updateModel("db", "model", { id: 1, type: "gltf", name: "model", url: "/static/three/jiance2.gltf" });
@@ -236,16 +236,14 @@ ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
 
-// var tagId: string;
-// let CSSDiv = document.createElement("div");
-// CSSDiv.id = "Test";
-// CSSDiv.textContent = "文字测试";
-// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
-//     console.log(model);
+var tagId: string;
 
-//     mainScene.add(model);
-//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
-// });
+ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+    console.log(model);
+
+    mainScene.add(model);
+    tagId = mainScene.addCSS2D(model.getObjectByName("car001"), "<div style='background: #f00'>文字测试</div>");
+});
 
 // ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
 //     console.log(model);
