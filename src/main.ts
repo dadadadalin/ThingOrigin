@@ -1,36 +1,36 @@
 import { ThingOrigin } from "./ThingOrigin";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
-    scene: {
-        stats: {
-            show: true,
-        },
-        fog: {
-            show: true,
-            color: "#f00",
-        },
-        background: { type: "color", sky: { color: { top: "#f00" } } },
+  scene: {
+    stats: {
+      show: true,
     },
-    camera: {
-        position: {
-            x: 100,
-            y: 80,
-            z: 200,
-        },
+    fog: {
+      show: true,
+      color: "#f00",
     },
-    lights: [
-        {
-            name: "light1",
-            type: "DirectionalLight",
-            color: undefined,
-            intensity: 1,
-            position: {
-                x: 15,
-                y: 15,
-                z: 15,
-            },
-        },
-    ],
+    background: { type: "color", sky: { color: { top: "#f00" } } },
+  },
+  camera: {
+    position: {
+      x: 100,
+      y: 80,
+      z: 200,
+    },
+  },
+  lights: [
+    {
+      name: "light1",
+      type: "DirectionalLight",
+      color: undefined,
+      intensity: 1,
+      position: {
+        x: 15,
+        y: 15,
+        z: 15,
+      },
+    },
+  ],
 });
 
 // let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
@@ -238,12 +238,17 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 
 var tagId: string;
 
-ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+ThingOrigin.model
+  .initFileModel("gltf", "/static/three/test/scene4.glb")
+  .then((model) => {
     console.log(model);
 
     mainScene.add(model);
-    tagId = mainScene.addCSS2D(model.getObjectByName("car001"), "<div style='background: #f00'>文字测试</div>");
-});
+    tagId = mainScene.addCSS2D(
+      model.getObjectByName("car001"),
+      "<div style='background: #f00'>文字测试</div>"
+    );
+  });
 
 // ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
 //     console.log(model);

@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TAnimate | thingorigin</title>
+	<title>TIndexedDB | thingorigin</title>
 	<meta name="description" content="Documentation for thingorigin">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">thingorigin</a>
 				</li>
 				<li>
-					<a href="../modules/ts_TAnimate.html">ts/TAnimate</a>
+					<a href="../modules/ts_TIndexedDB.html">ts/TIndexedDB</a>
 				</li>
 				<li>
-					<a href="ts_TAnimate.TAnimate.html">TAnimate</a>
+					<a href="ts_TIndexedDB.TIndexedDB.html">TIndexedDB</a>
 				</li>
 			</ul>
-			<h1>Class TAnimate</h1>
+			<h1>Class TIndexedDB</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">TAnimate</span>
+						<span class="target">TIndexedDB</span>
 					</li>
 				</ul>
 			</section>
@@ -83,16 +83,22 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="ts_TAnimate.TAnimate.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="ts_TIndexedDB.TIndexedDB.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_TIndexedDB.TIndexedDB.html#DBs" class="tsd-kind-icon">DBs</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TAnimate.TAnimate.html#move" class="tsd-kind-icon">move</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TAnimate.TAnimate.html#rotateAngle" class="tsd-kind-icon">rotate<wbr>Angle</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TAnimate.TAnimate.html#rotateRadian" class="tsd-kind-icon">rotate<wbr>Radian</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TAnimate.TAnimate.html#showExploded" class="tsd-kind-icon">show<wbr>Exploded</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TIndexedDB.TIndexedDB.html#accessModel" class="tsd-kind-icon">access<wbr>Model</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TIndexedDB.TIndexedDB.html#deleteModel" class="tsd-kind-icon">delete<wbr>Model</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TIndexedDB.TIndexedDB.html#insertModel" class="tsd-kind-icon">insert<wbr>Model</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TIndexedDB.TIndexedDB.html#updateModel" class="tsd-kind-icon">update<wbr>Model</a></li>
 							</ul>
 						</section>
 					</div>
@@ -104,246 +110,199 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new TAnimate<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ts_TAnimate.TAnimate.html" class="tsd-signature-type" data-tsd-kind="Class">TAnimate</a></li>
+						<li class="tsd-signature tsd-kind-icon">new TIndexedDB<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ts_TIndexedDB.TIndexedDB.html" class="tsd-signature-type" data-tsd-kind="Class">TIndexedDB</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 							</aside>
-							<h4 class="tsd-returns-title">Returns <a href="ts_TAnimate.TAnimate.html" class="tsd-signature-type" data-tsd-kind="Class">TAnimate</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="ts_TIndexedDB.TIndexedDB.html" class="tsd-signature-type" data-tsd-kind="Class">TIndexedDB</a></h4>
 						</li>
 					</ul>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="DBs" class="tsd-anchor"></a>
+					<h3>DBs</h3>
+					<div class="tsd-signature tsd-kind-icon">DBs<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">IDBDatabase</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> = ...</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDB.ts#L2">src/ts/TIndexedDB.ts:2</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Methods</h2>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="move" class="tsd-anchor"></a>
-					<h3>move</h3>
+					<a name="accessModel" class="tsd-anchor"></a>
+					<h3>access<wbr>Model</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">move<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, axis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">access<wbr>Model<span class="tsd-signature-symbol">(</span>dataBaseName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, modelInfo<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-signature-type" data-tsd-kind="Interface">IDBParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ts_TIndexedDBInterfaces.modelResultParams.html" class="tsd-signature-type" data-tsd-kind="Interface">modelResultParams</a><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TAnimate.ts#L82">src/ts/TAnimate.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDB.ts#L13">src/ts/TIndexedDB.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>间补平移动画</p>
-									</dd>
-									<dt>author</dt>
-									<dd><p>LL</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>model: <span class="tsd-signature-type">Object3D</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>模型</p>
-									</div>
-								</li>
-								<li>
-									<h5>axis: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>方向 可传入字符串 &#39;x&#39;/&#39;y&#39;/&#39;z&#39;</p>
-									</div>
-								</li>
-								<li>
-									<h5>from: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>从哪个位置开始</p>
-									</div>
-								</li>
-								<li>
-									<h5>to: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>到哪个位置停止</p>
-									</div>
-								</li>
-								<li>
-									<h5>time: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>完成时间（毫秒）</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="rotateAngle" class="tsd-anchor"></a>
-					<h3>rotate<wbr>Angle</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">rotate<wbr>Angle<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, axis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TAnimate.ts#L18">src/ts/TAnimate.ts:18</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>description</dt>
-									<dd><p>间补旋转动画(旋转角度)</p>
+									<dd><p>判断是否已缓存此模型，返回是否存储，若已缓存返回数据会包含存储路径</p>
 									</dd>
 									<dt>author</dt>
 									<dd><p>LL</p>
 									</dd>
 									<dt>date</dt>
-									<dd><p>26/04/2022</p>
+									<dd><p>2022-07-14</p>
 									</dd>
 								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>model: <span class="tsd-signature-type">Object3D</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>模型</p>
-									</div>
+									<h5>dataBaseName: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>axis: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>方向（&#39;x&#39;/&#39;y&#39;/&#39;z&#39;）</p>
-									</div>
+									<h5>tableName: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>from: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>起始角度</p>
-									</div>
-								</li>
-								<li>
-									<h5>to: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>目标角度</p>
-									</div>
-								</li>
-								<li>
-									<h5>time: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>动画时间（毫秒）</p>
-									</div>
+									<h5>modelInfo: <a href="../interfaces/ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-signature-type" data-tsd-kind="Interface">IDBParams</a></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ts_TIndexedDBInterfaces.modelResultParams.html" class="tsd-signature-type" data-tsd-kind="Interface">modelResultParams</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>{Promise<object>}</p>
 						</li>
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="rotateRadian" class="tsd-anchor"></a>
-					<h3>rotate<wbr>Radian</h3>
+					<a name="deleteModel" class="tsd-anchor"></a>
+					<h3>delete<wbr>Model</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">rotate<wbr>Radian<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, axis<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, from<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, to<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+						<li class="tsd-signature tsd-kind-icon">delete<wbr>Model<span class="tsd-signature-symbol">(</span>dataBaseName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, id<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TAnimate.ts#L50">src/ts/TAnimate.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDB.ts#L120">src/ts/TIndexedDB.ts:120</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<dl class="tsd-comment-tags">
 									<dt>description</dt>
-									<dd><p>间补旋转动画(旋转数)</p>
-									</dd>
-									<dt>author</dt>
-									<dd><p>LL</p>
-									</dd>
-								</dl>
-							</div>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>model: <span class="tsd-signature-type">Object3D</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>模型</p>
-									</div>
-								</li>
-								<li>
-									<h5>axis: <span class="tsd-signature-type">string</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>方向 可传入字符串 &#39;x&#39;/&#39;y&#39;/&#39;z&#39;</p>
-									</div>
-								</li>
-								<li>
-									<h5>from: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>从哪个弧度开始</p>
-									</div>
-								</li>
-								<li>
-									<h5>to: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>到哪个弧度停止</p>
-									</div>
-								</li>
-								<li>
-									<h5>time: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>完成时间（毫秒）</p>
-									</div>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
-						</li>
-					</ul>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
-					<a name="showExploded" class="tsd-anchor"></a>
-					<h3>show<wbr>Exploded</h3>
-					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">show<wbr>Exploded<span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Object3D</span>, ratio<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
-					</ul>
-					<ul class="tsd-descriptions">
-						<li class="tsd-description">
-							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TAnimate.ts#L115">src/ts/TAnimate.ts:115</a></li>
-								</ul>
-							</aside>
-							<div class="tsd-comment tsd-typography">
-								<dl class="tsd-comment-tags">
-									<dt>description</dt>
-									<dd><p>展示爆炸图</p>
+									<dd><p>删除模型</p>
 									</dd>
 									<dt>author</dt>
 									<dd><p>LL</p>
 									</dd>
 									<dt>date</dt>
-									<dd><p>2021/09/01</p>
+									<dd><p>2022-07-15</p>
 									</dd>
 								</dl>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
-									<h5>model: <span class="tsd-signature-type">Object3D</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>模型</p>
-									</div>
+									<h5>dataBaseName: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>ratio: <span class="tsd-signature-type">number</span></h5>
-									<div class="tsd-comment tsd-typography">
-										<p>爆炸图偏移系数</p>
-									</div>
+									<h5>tableName: <span class="tsd-signature-type">string</span></h5>
 								</li>
 								<li>
-									<h5>time: <span class="tsd-signature-type">number</span></h5>
+									<h5>id: <span class="tsd-signature-type">number</span></h5>
 									<div class="tsd-comment tsd-typography">
-										<p>完成时间（毫秒）</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="insertModel" class="tsd-anchor"></a>
+					<h3>insert<wbr>Model</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Model<span class="tsd-signature-symbol">(</span>dataBaseName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, modelInfo<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-signature-type" data-tsd-kind="Interface">IDBParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ts_TIndexedDBInterfaces.modelResultParams.html" class="tsd-signature-type" data-tsd-kind="Interface">modelResultParams</a><span class="tsd-signature-symbol">&gt;</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDB.ts#L79">src/ts/TIndexedDB.ts:79</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>向indexedDB数据表中，存储模型</p>
+									</dd>
+									<dt>author</dt>
+									<dd><p>LL</p>
+									</dd>
+									<dt>date</dt>
+									<dd><p>2022-07-14</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>dataBaseName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>tableName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>modelInfo: <a href="../interfaces/ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-signature-type" data-tsd-kind="Interface">IDBParams</a></h5>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/ts_TIndexedDBInterfaces.modelResultParams.html" class="tsd-signature-type" data-tsd-kind="Interface">modelResultParams</a><span class="tsd-signature-symbol">&gt;</span></h4>
+							<p>{Promise<object>}</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="updateModel" class="tsd-anchor"></a>
+					<h3>update<wbr>Model</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">update<wbr>Model<span class="tsd-signature-symbol">(</span>dataBaseName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, tableName<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, modelInfo<span class="tsd-signature-symbol">: </span><a href="../interfaces/ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-signature-type" data-tsd-kind="Interface">IDBParams</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDB.ts#L148">src/ts/TIndexedDB.ts:148</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<dl class="tsd-comment-tags">
+									<dt>description</dt>
+									<dd><p>更新模型</p>
+									</dd>
+									<dt>author</dt>
+									<dd><p>LL</p>
+									</dd>
+									<dt>date</dt>
+									<dd><p>2022-07-15</p>
+									</dd>
+								</dl>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>dataBaseName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>tableName: <span class="tsd-signature-type">string</span></h5>
+								</li>
+								<li>
+									<h5>modelInfo: <a href="../interfaces/ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-signature-type" data-tsd-kind="Interface">IDBParams</a></h5>
+									<div class="tsd-comment tsd-typography">
 									</div>
 								</li>
 							</ul>
@@ -365,7 +324,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_Event.html">ts/<wbr>Event</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TAnimate.html">ts/TAnimate</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -380,7 +339,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_THelper.html">ts/THelper</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/ts_TIndexedDB.html">ts/TIndexedDB</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -435,22 +394,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="ts_TAnimate.TAnimate.html" class="tsd-kind-icon">TAnimate</a>
+						<a href="ts_TIndexedDB.TIndexedDB.html" class="tsd-kind-icon">TIndexedDB</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="ts_TAnimate.TAnimate.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="ts_TIndexedDB.TIndexedDB.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_TIndexedDB.TIndexedDB.html#DBs" class="tsd-kind-icon">DBs</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="ts_TAnimate.TAnimate.html#move" class="tsd-kind-icon">move</a>
+								<a href="ts_TIndexedDB.TIndexedDB.html#accessModel" class="tsd-kind-icon">access<wbr>Model</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="ts_TAnimate.TAnimate.html#rotateAngle" class="tsd-kind-icon">rotate<wbr>Angle</a>
+								<a href="ts_TIndexedDB.TIndexedDB.html#deleteModel" class="tsd-kind-icon">delete<wbr>Model</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="ts_TAnimate.TAnimate.html#rotateRadian" class="tsd-kind-icon">rotate<wbr>Radian</a>
+								<a href="ts_TIndexedDB.TIndexedDB.html#insertModel" class="tsd-kind-icon">insert<wbr>Model</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="ts_TAnimate.TAnimate.html#showExploded" class="tsd-kind-icon">show<wbr>Exploded</a>
+								<a href="ts_TIndexedDB.TIndexedDB.html#updateModel" class="tsd-kind-icon">update<wbr>Model</a>
 							</li>
 						</ul>
 					</li>
@@ -468,6 +430,7 @@
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
 				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">

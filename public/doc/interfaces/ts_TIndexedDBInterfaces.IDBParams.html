@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>modelConfigs | thingorigin</title>
+	<title>IDBParams | thingorigin</title>
 	<meta name="description" content="Documentation for thingorigin">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,45 +55,24 @@
 					<a href="../modules.html">thingorigin</a>
 				</li>
 				<li>
-					<a href="../modules/ts_TModelInterfaces.html">ts/TModelInterfaces</a>
+					<a href="../modules/ts_TIndexedDBInterfaces.html">ts/TIndexedDBInterfaces</a>
 				</li>
 				<li>
-					<a href="ts_TModelInterfaces.modelConfigs.html">modelConfigs</a>
+					<a href="ts_TIndexedDBInterfaces.IDBParams.html">IDBParams</a>
 				</li>
 			</ul>
-			<h1>Interface modelConfigs</h1>
+			<h1>Interface IDBParams</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<dl class="tsd-comment-tags">
-						<dt>description</dt>
-						<dd><p>几何体参数</p>
-						</dd>
-						<dt>author</dt>
-						<dd><p>LL</p>
-						</dd>
-						<dt>date</dt>
-						<dd><p>2021/07/23</p>
-						</dd>
-						<dt>position</dt>
-						<dd><p>number[] 摆放位置 例:[0,0,0]</p>
-						</dd>
-						<dt>scale</dt>
-						<dd><p>number[] 缩放系数 例:[2,2,2]</p>
-						</dd>
-					</dl>
-				</div>
-			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">modelConfigs</span>
+						<span class="target">IDBParams</span>
 					</li>
 				</ul>
 			</section>
@@ -104,9 +83,15 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TModelInterfaces.modelConfigs.html#position" class="tsd-kind-icon">position</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TModelInterfaces.modelConfigs.html#rotation" class="tsd-kind-icon">rotation</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TModelInterfaces.modelConfigs.html#scale" class="tsd-kind-icon">scale</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#custom" class="tsd-kind-icon">custom</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#id" class="tsd-kind-icon">id</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#model" class="tsd-kind-icon">model</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#name" class="tsd-kind-icon">name</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#position" class="tsd-kind-icon">position</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#rotation" class="tsd-kind-icon">rotation</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#scale" class="tsd-kind-icon">scale</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#type" class="tsd-kind-icon">type</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TIndexedDBInterfaces.IDBParams.html#url" class="tsd-kind-icon">url</a></li>
 							</ul>
 						</section>
 					</div>
@@ -115,12 +100,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="custom" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> custom</h3>
+					<div class="tsd-signature tsd-kind-icon">custom<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L6">src/ts/TIndexedDBInterfaces.ts:6</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="id" class="tsd-anchor"></a>
+					<h3>id</h3>
+					<div class="tsd-signature tsd-kind-icon">id<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L2">src/ts/TIndexedDBInterfaces.ts:2</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="model" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> model</h3>
+					<div class="tsd-signature tsd-kind-icon">model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Blob</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L10">src/ts/TIndexedDBInterfaces.ts:10</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="name" class="tsd-anchor"></a>
+					<h3>name</h3>
+					<div class="tsd-signature tsd-kind-icon">name<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L3">src/ts/TIndexedDBInterfaces.ts:3</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="position" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagOptional">Optional</span> position</h3>
 					<div class="tsd-signature tsd-kind-icon">position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TModelInterfaces.ts#L48">src/ts/TModelInterfaces.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L7">src/ts/TIndexedDBInterfaces.ts:7</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -130,7 +155,7 @@
 					<div class="tsd-signature tsd-kind-icon">rotation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TModelInterfaces.ts#L50">src/ts/TModelInterfaces.ts:50</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L8">src/ts/TIndexedDBInterfaces.ts:8</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -140,7 +165,27 @@
 					<div class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TModelInterfaces.ts#L49">src/ts/TModelInterfaces.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L9">src/ts/TIndexedDBInterfaces.ts:9</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L4">src/ts/TIndexedDBInterfaces.ts:4</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="url" class="tsd-anchor"></a>
+					<h3>url</h3>
+					<div class="tsd-signature tsd-kind-icon">url<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/116ee15/src/ts/TIndexedDBInterfaces.ts#L5">src/ts/TIndexedDBInterfaces.ts:5</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -176,7 +221,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TIndexedDB.html">ts/TIndexedDB</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/ts_TIndexedDBInterfaces.html">ts/TIndexedDBInterfaces</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -197,7 +242,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TModel.html">ts/TModel</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TModelInterfaces.html">ts/TModel<wbr>Interfaces</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -225,65 +270,44 @@
 			</nav>
 			<nav class="tsd-navigation secondary menu-sticky">
 				<ul class="before-current">
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.LineParams.html" class="tsd-kind-icon">Line<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.coneParams.html" class="tsd-kind-icon">cone<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.cubeParams.html" class="tsd-kind-icon">cube<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.cylinderParams.html" class="tsd-kind-icon">cylinder<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.geometryConfigs.html" class="tsd-kind-icon">geometry<wbr>Configs</a>
-					</li>
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.modelConfigs.html" class="tsd-kind-icon">model<wbr>Configs</a>
+						<a href="ts_TIndexedDBInterfaces.IDBParams.html" class="tsd-kind-icon">IDBParams</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_TModelInterfaces.modelConfigs.html#position" class="tsd-kind-icon">position</a>
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#custom" class="tsd-kind-icon">custom</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_TModelInterfaces.modelConfigs.html#rotation" class="tsd-kind-icon">rotation</a>
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#id" class="tsd-kind-icon">id</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_TModelInterfaces.modelConfigs.html#scale" class="tsd-kind-icon">scale</a>
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#model" class="tsd-kind-icon">model</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#name" class="tsd-kind-icon">name</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#position" class="tsd-kind-icon">position</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#rotation" class="tsd-kind-icon">rotation</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#scale" class="tsd-kind-icon">scale</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#type" class="tsd-kind-icon">type</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TIndexedDBInterfaces.IDBParams.html#url" class="tsd-kind-icon">url</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.pointConfigsParams.html" class="tsd-kind-icon">point<wbr>Configs<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.pointsData.html" class="tsd-kind-icon">points<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.sphereParams.html" class="tsd-kind-icon">sphere<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.spriteData.html" class="tsd-kind-icon">sprite<wbr>Data</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.spritePicParams.html" class="tsd-kind-icon">sprite<wbr>Pic<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.spriteShapeParams.html" class="tsd-kind-icon">sprite<wbr>Shape<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.textLineParams.html" class="tsd-kind-icon">text<wbr>Line<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.textParams.html" class="tsd-kind-icon">text<wbr>Params</a>
-					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
-						<a href="ts_TModelInterfaces.textShapeParams.html" class="tsd-kind-icon">text<wbr>Shape<wbr>Params</a>
+						<a href="ts_TIndexedDBInterfaces.modelResultParams.html" class="tsd-kind-icon">model<wbr>Result<wbr>Params</a>
 					</li>
 				</ul>
 			</nav>
