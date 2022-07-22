@@ -17,10 +17,12 @@
 
 <div class="content-title">效果展示</div>
 
-<button onclick="add()">添加</button>
-<button onclick="remove()">移除</button>
-<div id="modelVisible">
 
+<div id="modelVisible">
+    <div class="demo-btns">
+        <button onclick="add()">添加</button>
+        <button onclick="remove()">移除</button>
+    </div>
 
 </div>
 
@@ -76,8 +78,6 @@
         //以上两种写法均可
 
         css2D_uuid = scene.addCSS2D(modelData,CSSDiv,1.2,[0,-160,0]);
-        //添加元素
-        scene.add(css2D_uuid);
     }
 
     //移除2D元素

@@ -10,7 +10,7 @@ import { TScene } from "./TScene/TScene";
 
 export class TEffect {
     public tScene: TScene;
-
+    initSceneClip
     public renderPass: RenderPass;
 
     /** 效果合成器 */
@@ -154,7 +154,7 @@ export class TEffect {
     }
 
     /**
-     * @description 删除场景剖切面
+     * @description 删除模型剖切面
      * @author LL
      * @date 25/04/2022
      */

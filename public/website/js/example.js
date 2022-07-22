@@ -42,8 +42,12 @@ var data = {
                     title: "effect",
                     children: [
                         {
-                            title: "剖切面_全局",
+                            title: "剖切面_场景",
                             url: "./effect/clipGlobal.html",
+                        },
+                        {
+                            title: "剖切面_模型",
+                            url: "./effect/clipModel.html",
                         },
                     ],
                 },

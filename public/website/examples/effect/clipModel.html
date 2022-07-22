@@ -24,22 +24,23 @@
             </div>
         </div>
 
-        <div class="content-title">初始化场景剖切API说明</div>
+        <div class="content-title">初始化模型剖切API说明</div>
         <div class="api-code">
-            initSceneClip(axis: string, constant: number)
+            initModelClip(model: Object3D, axis: string, constant: number)
         </div>
+        <div class="api-param"> model - 被剖切的模型</div>
         <div class="api-param">axis - 剖切轴</div>
-        <div class="api-param">constant - 初始剖切位置</div>
+        <div class="api-param">constant - 剖切面位置</div>
 
-        <div class="content-title">更新场景剖切API说明</div>
+        <div class="content-title">更新模型剖切API说明</div>
         <div class="api-code">
-            updateSceneClip(constant: number)
+            updateModelClip(constant: number)
         </div>
         <div class="api-param">constant - 更新剖切位置</div>
 
-        <div class="content-title">删除场景剖切API说明</div>
+        <div class="content-title">删除模型剖切API说明</div>
         <div class="api-code">
-            deleteSceneClip()
+            deleteModelClip()
         </div>
 
 
@@ -50,21 +51,28 @@
         <script src="../../../js/thingorigin.js"></script>
         <!-- 案例代码 -->
         <script id="code">
-            let scene = ThingOrigin.addScene("mouseLineScene", document.getElementById("mouseLine"));
+            let scene = ThingOrigin.addScene("mouseLine", document.getElementById("mouseLine"));
+            //加载模型
+            let modelUUID = null;
+            ThingOrigin.model.initFileModel("gltf", '../../../static/three/examplesModel/Parrot.glb', {
+                scale: [1, 1, 1],
+                rotation: [0, 30, 0],
+                position: [0, 30, 0]
+            }).then((model) => {
+                modelUUID = model.uuid;
+                scene.add(model);
+                //初始化
+                scene.effect.initModelClip(model,"x", 3);
+            })
 
-            let cone = ThingOrigin.model.initCone("cone");
-            scene.add(cone);
-
-            //初始化
-            scene.effect.initSceneClip("x", 0.1);
 
             //更新
             function updateClip() {
-                scene.effect.updateSceneClip(Math.random() * 50);
+                scene.effect.updateModelClip(Math.random() * 50);
             }
             //删除
             function deleteClip() {
-                scene.effect.deleteSceneClip();
+                scene.effect.deleteModelClip();
             }
         </script>
         <!-- 其他 -->
