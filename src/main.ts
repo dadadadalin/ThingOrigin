@@ -33,6 +33,19 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
   ],
 });
 
+ThingOrigin.model
+  .initFileModel("gltf", "/static/three/test/scene.gltf")
+  .then((model) => {
+    console.log(model);
+
+    mainScene.add(model);
+
+    mainScene.eDispatcher.addEventListener("CLICK", (e) => {
+      mainScene.effect.initBreath(e.event[0].object);
+      console.log(e.event[0].object.parent.type);
+    });
+  });
+
 // let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
 // ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {
 //     console.log(res);
@@ -235,20 +248,6 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 0] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
-
-var tagId: string;
-
-ThingOrigin.model
-  .initFileModel("gltf", "/static/three/test/scene4.glb")
-  .then((model) => {
-    console.log(model);
-
-    mainScene.add(model);
-    tagId = mainScene.addCSS2D(
-      model.getObjectByName("car001"),
-      "<div style='background: #f00'>文字测试</div>"
-    );
-  });
 
 // ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
 //     console.log(model);
