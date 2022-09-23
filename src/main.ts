@@ -34,7 +34,7 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 });
 
 ThingOrigin.model
-  .initFileModel("gltf", "/static/three/test/scene.gltf")
+  .initFileModel("gltf", "/static/three/factory.glb")
   .then((model) => {
     console.log(model);
 
@@ -42,9 +42,63 @@ ThingOrigin.model
 
     mainScene.eDispatcher.addEventListener("CLICK", (e) => {
       mainScene.effect.initBreath(e.event[0].object);
-      console.log(e.event[0].object.parent.type);
+      console.log(e.event);
     });
   });
+
+// var box = ThingOrigin.model.initBox("box1");
+// mainScene.add(box);
+
+// var center = ThingOrigin.tool.getObjectCenter(box);
+// console.log(center);
+
+// let cone = ThingOrigin.model.initCone(
+//   "cone1",
+//   { radius: 15, height: 30 },
+//   { position: [30, 0, 0] }
+// );
+// mainScene.add(cone);
+
+// // var sphere = ThingOrigin.model.initSphere("sphere1", {
+// //   radius: 20,
+// //   widthSegments: 30,
+// //   heightSegments: 30,
+// // });
+// // mainScene.add(sphere);
+
+// mainScene.eDispatcher.addEventListener("CLICK", (e) => {
+//   console.log(e.event[0]);
+
+//   mainScene.effect.disposeBreath();
+//   mainScene.effect.initBreath(e.event[0].object);
+
+//   // let panel = ThingOrigin.model.initPlane(
+//   //   "panle1",
+//   //   [e.event[0].point.x, e.event[0].point.y, e.event[0].point.z],
+//   //   -ThingOrigin.tool.distance(
+//   //     [center.x, center.y, center.z],
+//   //     [e.event[0].point.x, e.event[0].point.y, e.event[0].point.z]
+//   //   ),
+//   //   10
+//   // );
+
+//   // mainScene.add(panel);
+
+//   // mainScene.remove(sphere);
+
+//   // var line = ThingOrigin.model.initArrow(
+//   //   "arrow1",
+//   //   [
+//   //     e.event[0].face.normal.x,
+//   //     e.event[0].face.normal.y,
+//   //     e.event[0].face.normal.z,
+//   //   ],
+//   //   [center.x, center.y, center.z],
+//   //   20,
+//   //   "#f00"
+//   // );
+//   // mainScene.add(line);
+// });
 
 // let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
 // ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {

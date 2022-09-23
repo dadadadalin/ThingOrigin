@@ -121,7 +121,11 @@ export class TScene extends Scene {
     this.renderer = new WebGLRenderer(sceneParams.scene.webglrenderer);
 
     if (sceneParams.scene.background.type == "sky") {
-      this.initSky();
+      this.initSky({
+        top: sceneParams.scene.background.sky.color.top,
+        line: sceneParams.scene.background.sky.color.line,
+        bottom: sceneParams.scene.background.sky.color.bottom,
+      });
     } else if (sceneParams.scene.background.type == "color") {
       if (sceneParams.scene.webglrenderer.alpha) {
         this.renderer.setClearColor(
@@ -140,6 +144,8 @@ export class TScene extends Scene {
     if (sceneParams && sceneParams.shadow) {
       this.renderer.shadowMap.enabled = sceneParams.shadow;
     }
+    this.renderer.domElement.style.position = "absolute";
+    this.renderer.domElement.style.bottom = "0";
     this.container.appendChild(this.renderer.domElement);
 
     //2D渲染器
@@ -317,7 +323,7 @@ export class TScene extends Scene {
         for (let i = 0; i < sceneParams.css2d.length; i++) {
           let item = sceneParams.css2d[i];
           var model = this.getObjectByName(item.name);
-          this.addCSS2D(model, document.getElementById(item.domId).innerText);
+          this.addCSS2D(model, document.getElementById(item.domId));
         }
         clearInterval(timer);
       }
@@ -499,7 +505,7 @@ export class TScene extends Scene {
    */
   public addCSS2D(
     model: Object3D | Group,
-    html: string,
+    html: HTMLElement,
     ratio: number = 1.1,
     offset: number[] = [0, 0, 0]
   ): string {
@@ -508,10 +514,10 @@ export class TScene extends Scene {
       return;
     }
 
-    let div = document.createElement("div");
-    div.innerHTML = html;
+    // let div = document.createElement("div");
+    // div.innerHTML = html;
 
-    let CSSLabel = new CSS2DObject(div);
+    let CSSLabel = new CSS2DObject(html);
     let sphere = ThingOrigin.tool.getObjectSphere(model);
     CSSLabel.position.set(
       sphere.center.x + offset[0],
