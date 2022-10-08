@@ -1,136 +1,110 @@
+// import { Plane, Vector3 } from "three";
+// import "../public/js/main.js";
+// import { ThingOrigin } from "./ThingOrigin";
+// import * as CANNON from "cannon";
+import * as CANNON from "cannon";
 import { ThingOrigin } from "./ThingOrigin";
 
-let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
-  scene: {
-    stats: {
-      show: true,
-    },
-    fog: {
-      show: true,
-      color: "#f00",
-    },
-    background: { type: "color", sky: { color: { top: "#f00" } } },
-  },
-  camera: {
-    position: {
-      x: 100,
-      y: 80,
-      z: 200,
-    },
-  },
-  lights: [
-    {
-      name: "light1",
-      type: "DirectionalLight",
-      color: undefined,
-      intensity: 1,
-      position: {
-        x: 15,
-        y: 15,
-        z: 15,
-      },
-    },
-  ],
-});
+// console.log(clone(abc, alter));
 
-ThingOrigin.model
-  .initFileModel("gltf", "/static/three/factory.glb")
-  .then((model) => {
-    console.log(model);
+// import { GUI } from 'three/examples/jsm/libs/dat.gui.module';
 
-    mainScene.add(model);
+let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+console.log(CANNON);
 
-    mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-      mainScene.effect.initBreath(e.event[0].object);
-      console.log(e.event);
-    });
+var world,
+  mass,
+  body,
+  shape,
+  timeStep = 1 / 60,
+  camera,
+  scene,
+  renderer,
+  geometry,
+  material,
+  mesh;
+
+initThree();
+initCannon();
+animate();
+function initCannon() {
+  world = new CANNON.World();
+  world.gravity.set(0, -10, 0);
+  world.broadphase = new CANNON.NaiveBroadphase();
+  world.solver.iterations = 10; //迭代次数
+
+  // world.defaultContactMaterial.contactEquationStiffness = 1e7;
+  // world.defaultContactMaterial.contactEquationRelaxation = 4;
+
+  // Create a plane
+  var groundShape = new CANNON.Plane();
+  var groundBody = new CANNON.Body({ mass: 0 });
+  groundBody.addShape(groundShape);
+  groundBody.quaternion.setFromAxisAngle(
+    new CANNON.Vec3(1, 0, 0),
+    -Math.PI / 2
+  );
+  world.addBody(groundBody);
+
+  shape = new CANNON.Box(new CANNON.Vec3(11, 4, 6));
+  mass = 1;
+  body = new CANNON.Body({
+    mass: 1,
   });
+  body.addShape(shape);
+  body.position.set(0, 30, 0);
+  body.angularVelocity.set(1, 10, 1); //角速度
+  body.angularDamping = 0.01; //角度阻尼
+  world.addBody(body);
+}
 
-// var box = ThingOrigin.model.initBox("box1");
-// mainScene.add(box);
+let modelA;
+let modelB;
+function initThree() {
+  modelB = ThingOrigin.model.initBox("wb");
+  modelB.position.set(0, 60, 0);
+  mainScene.add(modelB);
 
-// var center = ThingOrigin.tool.getObjectCenter(box);
-// console.log(center);
+  // modelB.material = ThingOrigin.material.initPicMaterial("/static/img/wb.jpg");
+  // ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] }).then((model) => {
+  //     console.log(model);
+  //     mainScene.add(model);
+  //     console.log(ThingOrigin.tool.getObjectBox(model));
+  //     modelA = model;
+  //     animate();
 
-// let cone = ThingOrigin.model.initCone(
-//   "cone1",
-//   { radius: 15, height: 30 },
-//   { position: [30, 0, 0] }
-// );
-// mainScene.add(cone);
+  //     ThingOrigin.animate.showExploded(model, 5, 5000);
+  // });
+  // geometry = new BoxGeometry(2, 2, 2);
+  // material = new MeshBasicMaterial({ color: 0xff0000, wireframe: true });
 
-// // var sphere = ThingOrigin.model.initSphere("sphere1", {
-// //   radius: 20,
-// //   widthSegments: 30,
-// //   heightSegments: 30,
-// // });
-// // mainScene.add(sphere);
+  // mesh = new Mesh(geometry, material);
+  // mainScene.add(mesh);
+}
 
-// mainScene.eDispatcher.addEventListener("CLICK", (e) => {
-//   console.log(e.event[0]);
+function animate() {
+  requestAnimationFrame(animate);
+  updatePhysics();
+}
 
-//   mainScene.effect.disposeBreath();
-//   mainScene.effect.initBreath(e.event[0].object);
+function updatePhysics() {
+  // Step the physics world
+  world.step(timeStep);
 
-//   // let panel = ThingOrigin.model.initPlane(
-//   //   "panle1",
-//   //   [e.event[0].point.x, e.event[0].point.y, e.event[0].point.z],
-//   //   -ThingOrigin.tool.distance(
-//   //     [center.x, center.y, center.z],
-//   //     [e.event[0].point.x, e.event[0].point.y, e.event[0].point.z]
-//   //   ),
-//   //   10
-//   // );
+  // Copy coordinates from Cannon.js to Three.js
+  // modelA.position.copy(body.position);
+  // modelA.quaternion.copy(body.quaternion);
+  modelB.position.copy(body.position);
+  modelB.quaternion.copy(body.quaternion);
+  // mesh.position.copy(body.position);
+  // mesh.quaternion.copy(body.quaternion);
+}
 
-//   // mainScene.add(panel);
+// demo.addVisual(sphereBody);
+// demo.addVisual(boxBody);
+// demo.addVisual(cylinderBody);
 
-//   // mainScene.remove(sphere);
-
-//   // var line = ThingOrigin.model.initArrow(
-//   //   "arrow1",
-//   //   [
-//   //     e.event[0].face.normal.x,
-//   //     e.event[0].face.normal.y,
-//   //     e.event[0].face.normal.z,
-//   //   ],
-//   //   [center.x, center.y, center.z],
-//   //   20,
-//   //   "#f00"
-//   // );
-//   // mainScene.add(line);
-// });
-
-// let modelInfo = { id: 1, type: "gltf", name: "model", url: "/static/three/scene_0620.gltf" };
-// ThingOrigin.indexedDB.accessModel("db", "model", modelInfo).then((res) => {
-//     console.log(res);
-//     if (res.saved) {
-//         ThingOrigin.model.initFileModel(modelInfo.type, res.url, { scale: [1, 1, 1] }).then((model) => {
-//             mainScene.add(model);
-//         });
-//     } else {
-//         alert("shoucijia");
-//         ThingOrigin.indexedDB.insertModel("db", "model", modelInfo).then((modelParam) => {
-//             ThingOrigin.model.initFileModel(modelInfo.type, modelParam.url, { scale: [1, 1, 1] }).then((model) => {
-//                 mainScene.add(model);
-//             });
-//         });
-//     }
-// });
-
-// window.onclick = () => {
-//     ThingOrigin.indexedDB.updateModel("db", "model", { id: 1, type: "gltf", name: "model", url: "/static/three/jiance2.gltf" });
-// };
-// ThingOrigin.indexedDB.getDataBase("uui").then((db) => {
-//     console.log(db.objectStoreNames.contains("book"));
-// });
-// ThingOrigin.indexedDB.createDateBase("test", "xp");
-// ThingOrigin.indexedDB.accessModel("test", "xp", 10).then((exist) => {
-//     console.log(exist);
-//     if (exist) {
-//     }
-// });
-// ThingOrigin.indexedDB.insertData("test", "xp", { id: 1, name: "testModel", type: "gltf", model: "456456" });
-// mainScene;
+// window.onclick = () => {};
 
 // // let arrow = ThingOrigin.model.initArrow("arrow1", [-5, -5, -5], [0, 0, 0], 100, "#f00", 10, 5);
 // // mainScene.add(arrow);
@@ -146,19 +120,19 @@ ThingOrigin.model
 // mainScene.effect.initSceneClip("x", 0.1);
 
 // setTimeout(() => {
-
-// }, 2000);
-
-// ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {
-//     console.log(e);
-//     if (e.event[0]) {
-//         eval("e.event[0].object.position.set(0, 30, 0);");
-//         e.event[0].object.userData = { name: "userData set" };
-//         console.log(mainScene);
-
-//         mainScene.exporters.exportGLTF("ttt", "yyy");
-//     }
+// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [1, 1, 1] }).then((model) => {
+//     console.log(model);
+//     mainScene.add(model);
+//     // ThingOrigin.animate.showExploded(model, 2, 3000);
+//     // ThingOrigin.animate.tweenRotate(model, "x", 0, 20, 3000);
+//     // window.onclick = () => {
+//     //     model.children[0].children[1].layers.toggle(1);
+//     // };
+//     // ThingOrigin.animate.showExploded(model, 10, 2000);
+//     // ThingOrigin.animate.tweenRotate(model, "x", 10, 50, 1000);
+//     // mainScene.effect.initModelClip(model, "x", 10);
 // });
+// }, 2000);
 
 // var request = window.indexedDB.open("webDB", 1); //用var是为了方便反复执行，下同
 // request.onerror = function (event) {
@@ -303,6 +277,17 @@ ThingOrigin.model
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, -180] }));
 // mainScene.add(ThingOrigin.model.initSphere("qiu1", undefined, { position: [0, 0, 180] }));
 
+// var tagId: string;
+// let CSSDiv = document.createElement("div");
+// CSSDiv.id = "Test";
+// CSSDiv.textContent = "文字测试";
+// ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene4.glb").then((model) => {
+//     console.log(model);
+
+//     mainScene.add(model);
+//     tagId = mainScene.addCSS2D("name", "car001", CSSDiv);
+// });
+
 // ThingOrigin.model.initMap("/static/data/china.json").then((model) => {
 //     console.log(model);
 
@@ -370,6 +355,38 @@ ThingOrigin.model
 // ThingOrigin.getScene("ttt").model.addCylinder("cube1", {
 //     radiusTop: 10,
 //     radiusBottom: 20,
+// });
+
+// ThingOrigin.getScene("ttt").eDispatcher.addEventListener("CLICK", (e) => {
+//     console.log(e);
+//     if (e.event[0]) {
+//         if (e.event[0].object.name == "qiu") {
+//             if (!ThingOrigin.getScene("ttt").ifOwnCSS2D(e.event[0] && e.event[0].object)) {
+//                 ThingOrigin.getScene("ttt").model.addCSS2D("name", "qiu", document.getElementById("menu").cloneNode(true) as HTMLElement);
+//             } else {
+//                 let boxId = e.event[0].object.children[0].uuid;
+//                 console.log(boxId);
+//                 ThingOrigin.getScene("ttt").model.removeCSS2D(boxId);
+//             }
+//         }
+//     }
+
+//     // ThingOrigin.getScene("ttt").model.showExploded("name", "AB_tai003", 1.4, 1000);
+//     // ThingOrigin.getScene("ttt").model.setVisible("qiu1", false);
+//     // ThingOrigin.getScene("ttt").controls.initRaycaster(sceneParams.controls.raycaster.events);
+//     // var a = ThingOrigin.getScene("ttt").getObjectByProperty("name", "car");
+//     // var b = ThingOrigin.getScene("ttt").cloneObject("ttt", a.uuid, [100, 10, 100]);
+//     // ThingOrigin.getScene("ttt").add(b);
+//     // console.log(e);
+//     // wallPoints.push([e.position.x, e.position.y, e.position.z]);
+//     // console.log(wallPoints);
+//     // let unResponse = ["BoxHelper", "GridHelper", "AxesHelper", "TransformControlsPlane", "Line"];
+//     // for (let i = 0; i < e.event.length; i++) {
+//     //     if (unResponse.indexOf(e.event[i].object.type) == -1) {
+//     //         ThingOrigin.getScene("ttt").camera.lookAt(e.event[i].object.uuid, 1000, 1);
+//     //         break;
+//     //     }
+//     // }
 // });
 
 // let showOn;
