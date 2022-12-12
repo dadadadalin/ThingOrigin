@@ -98,7 +98,10 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      if (preData["joint" + (i + 1)] && curData["joint" + (i + 1)]) {
+      if (
+        preData["joint" + (i + 1)] != undefined &&
+        curData["joint" + (i + 1)] != undefined
+      ) {
         if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
           ThingOrigin.animate.rotateAngle(
             robot.getObjectByName(joints[i].name),
@@ -142,7 +145,10 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < 6; i++) {
-      if (preData["joint" + (i + 1)] && curData["joint" + (i + 1)]) {
+      if (
+        preData["joint" + (i + 1)] != undefined &&
+        curData["joint" + (i + 1)] != undefined
+      ) {
         if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
           ThingOrigin.animate.rotateRadian(
             robot.getObjectByName(joints[i].name),

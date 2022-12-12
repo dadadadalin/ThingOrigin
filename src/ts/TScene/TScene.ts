@@ -72,7 +72,6 @@ export class TScene extends Scene {
     userSceneParam?: ThingOriginParams
   ): void {
     this.sceneParam = merge(this.sceneParam, userSceneParam);
-    console.log(this.sceneParam);
 
     this.container = container;
     this.initCamera(this.sceneParam);
@@ -518,6 +517,7 @@ export class TScene extends Scene {
     // div.innerHTML = html;
 
     let CSSLabel = new CSS2DObject(html);
+    console.log(CSSLabel);
     let sphere = ThingOrigin.tool.getObjectSphere(model);
     CSSLabel.position.set(
       sphere.center.x + offset[0],
