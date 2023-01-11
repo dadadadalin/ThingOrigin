@@ -95,7 +95,7 @@ export default {
       },
     },
     transform: {
-      active: false, //是否启用模型变换控制器
+      active: true, //是否启用模型变换控制器
     },
     pointerLock: {
       speed: 1000, //是否启用人工漫游控制器
