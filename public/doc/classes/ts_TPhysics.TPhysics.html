@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>TTool | thingorigin</title>
+	<title>TPhysics | thingorigin</title>
 	<meta name="description" content="Documentation for thingorigin">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,13 +55,13 @@
 					<a href="../modules.html">thingorigin</a>
 				</li>
 				<li>
-					<a href="../modules/ts_TTool.html">ts/TTool</a>
+					<a href="../modules/ts_TPhysics.html">ts/TPhysics</a>
 				</li>
 				<li>
-					<a href="ts_TTool.TTool.html">TTool</a>
+					<a href="ts_TPhysics.TPhysics.html">TPhysics</a>
 				</li>
 			</ul>
-			<h1>Class TTool</h1>
+			<h1>Class TPhysics</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">TTool</span>
+						<span class="target">TPhysics</span>
 					</li>
 				</ul>
 			</section>
@@ -83,13 +83,22 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="ts_TTool.TTool.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="ts_TPhysics.TPhysics.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_TTool.TTool.html#tScene" class="tsd-kind-icon">t<wbr>Scene</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_TPhysics.TPhysics.html#body" class="tsd-kind-icon">body</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_TPhysics.TPhysics.html#mass" class="tsd-kind-icon">mass</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_TPhysics.TPhysics.html#shape" class="tsd-kind-icon">shape</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="ts_TPhysics.TPhysics.html#world" class="tsd-kind-icon">world</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="ts_TPhysics.TPhysics.html#initPhysics" class="tsd-kind-icon">init<wbr>Physics</a></li>
 							</ul>
 						</section>
 					</div>
@@ -101,22 +110,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new TTool<span class="tsd-signature-symbol">(</span>tScene<span class="tsd-signature-symbol">: </span><a href="ts_TScene_TScene.TScene.html" class="tsd-signature-type" data-tsd-kind="Class">TScene</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ts_TTool.TTool.html" class="tsd-signature-type" data-tsd-kind="Class">TTool</a></li>
+						<li class="tsd-signature tsd-kind-icon">new TPhysics<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="ts_TPhysics.TPhysics.html" class="tsd-signature-type" data-tsd-kind="Class">TPhysics</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<ul>
-									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TTool.ts#L6">src/ts/TTool.ts:6</a></li>
-								</ul>
 							</aside>
-							<h4 class="tsd-parameters-title">Parameters</h4>
-							<ul class="tsd-parameters">
-								<li>
-									<h5>tScene: <a href="ts_TScene_TScene.TScene.html" class="tsd-signature-type" data-tsd-kind="Class">TScene</a></h5>
-								</li>
-							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="ts_TTool.TTool.html" class="tsd-signature-type" data-tsd-kind="Class">TTool</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="ts_TPhysics.TPhysics.html" class="tsd-signature-type" data-tsd-kind="Class">TPhysics</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -124,14 +124,64 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
-					<a name="tScene" class="tsd-anchor"></a>
-					<h3>t<wbr>Scene</h3>
-					<div class="tsd-signature tsd-kind-icon">t<wbr>Scene<span class="tsd-signature-symbol">:</span> <a href="ts_TScene_TScene.TScene.html" class="tsd-signature-type" data-tsd-kind="Class">TScene</a></div>
+					<a name="body" class="tsd-anchor"></a>
+					<h3>body</h3>
+					<div class="tsd-signature tsd-kind-icon">body<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TTool.ts#L4">src/ts/TTool.ts:4</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TPhysics.ts#L6">src/ts/TPhysics.ts:6</a></li>
 						</ul>
 					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="mass" class="tsd-anchor"></a>
+					<h3>mass</h3>
+					<div class="tsd-signature tsd-kind-icon">mass<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 1</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TPhysics.ts#L7">src/ts/TPhysics.ts:7</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="shape" class="tsd-anchor"></a>
+					<h3>shape</h3>
+					<div class="tsd-signature tsd-kind-icon">shape<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TPhysics.ts#L5">src/ts/TPhysics.ts:5</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="world" class="tsd-anchor"></a>
+					<h3>world</h3>
+					<div class="tsd-signature tsd-kind-icon">world<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TPhysics.ts#L4">src/ts/TPhysics.ts:4</a></li>
+						</ul>
+					</aside>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="initPhysics" class="tsd-anchor"></a>
+					<h3>init<wbr>Physics</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">init<wbr>Physics<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TPhysics.ts#L9">src/ts/TPhysics.ts:9</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -189,7 +239,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TModelInterfaces.html">ts/TModel<wbr>Interfaces</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/ts_TPhysics.html">ts/TPhysics</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -201,7 +251,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TScene_scenePrams.html">ts/TScene/scene<wbr>Prams</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/ts_TTool.html">ts/TTool</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -220,13 +270,25 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="ts_TTool.TTool.html" class="tsd-kind-icon">TTool</a>
+						<a href="ts_TPhysics.TPhysics.html" class="tsd-kind-icon">TPhysics</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="ts_TTool.TTool.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="ts_TPhysics.TPhysics.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class">
-								<a href="ts_TTool.TTool.html#tScene" class="tsd-kind-icon">t<wbr>Scene</a>
+								<a href="ts_TPhysics.TPhysics.html#body" class="tsd-kind-icon">body</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_TPhysics.TPhysics.html#mass" class="tsd-kind-icon">mass</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_TPhysics.TPhysics.html#shape" class="tsd-kind-icon">shape</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="ts_TPhysics.TPhysics.html#world" class="tsd-kind-icon">world</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="ts_TPhysics.TPhysics.html#initPhysics" class="tsd-kind-icon">init<wbr>Physics</a>
 							</li>
 						</ul>
 					</li>
@@ -245,6 +307,7 @@
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
 				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>

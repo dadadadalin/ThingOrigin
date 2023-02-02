@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>fogParams | thingorigin</title>
+	<title>orbitParams | thingorigin</title>
 	<meta name="description" content="Documentation for thingorigin">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -58,10 +58,10 @@
 					<a href="../modules/ts_TScene_scenePrams.html">ts/TScene/scenePrams</a>
 				</li>
 				<li>
-					<a href="ts_TScene_scenePrams.fogParams.html">fogParams</a>
+					<a href="ts_TScene_scenePrams.orbitParams.html">orbitParams</a>
 				</li>
 			</ul>
-			<h1>Interface fogParams</h1>
+			<h1>Interface orbitParams</h1>
 		</div>
 	</div>
 </header>
@@ -72,7 +72,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">fogParams</span>
+						<span class="target">orbitParams</span>
 					</li>
 				</ul>
 			</section>
@@ -83,9 +83,11 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.fogParams.html#cameraView" class="tsd-kind-icon">camera<wbr>View</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.fogParams.html#color" class="tsd-kind-icon">color</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.fogParams.html#show" class="tsd-kind-icon">show</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.orbitParams.html#active" class="tsd-kind-icon">active</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.orbitParams.html#autoRotate" class="tsd-kind-icon">auto<wbr>Rotate</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.orbitParams.html#autoRotateSpeed" class="tsd-kind-icon">auto<wbr>Rotate<wbr>Speed</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.orbitParams.html#dampingFactor" class="tsd-kind-icon">damping<wbr>Factor</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="ts_TScene_scenePrams.orbitParams.html#enableDamping" class="tsd-kind-icon">enable<wbr>Damping</a></li>
 							</ul>
 						</section>
 					</div>
@@ -94,32 +96,52 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="cameraView" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> camera<wbr>View</h3>
-					<div class="tsd-signature tsd-kind-icon">camera<wbr>View<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="active" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> active</h3>
+					<div class="tsd-signature tsd-kind-icon">active<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L144">src/ts/TScene/scenePrams.ts:144</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L71">src/ts/TScene/scenePrams.ts:71</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="color" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> color</h3>
-					<div class="tsd-signature tsd-kind-icon">color<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<a name="autoRotate" class="tsd-anchor"></a>
+					<h3>auto<wbr>Rotate</h3>
+					<div class="tsd-signature tsd-kind-icon">auto<wbr>Rotate<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L143">src/ts/TScene/scenePrams.ts:143</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L72">src/ts/TScene/scenePrams.ts:72</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="show" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagOptional">Optional</span> show</h3>
-					<div class="tsd-signature tsd-kind-icon">show<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="autoRotateSpeed" class="tsd-anchor"></a>
+					<h3>auto<wbr>Rotate<wbr>Speed</h3>
+					<div class="tsd-signature tsd-kind-icon">auto<wbr>Rotate<wbr>Speed<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L142">src/ts/TScene/scenePrams.ts:142</a></li>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L73">src/ts/TScene/scenePrams.ts:73</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="dampingFactor" class="tsd-anchor"></a>
+					<h3>damping<wbr>Factor</h3>
+					<div class="tsd-signature tsd-kind-icon">damping<wbr>Factor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L75">src/ts/TScene/scenePrams.ts:75</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="enableDamping" class="tsd-anchor"></a>
+					<h3>enable<wbr>Damping</h3>
+					<div class="tsd-signature tsd-kind-icon">enable<wbr>Damping<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/dadadadalin/ThingOrigin/blob/161d1a4/src/ts/TScene/scenePrams.ts#L74">src/ts/TScene/scenePrams.ts:74</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -240,24 +262,9 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_TScene_scenePrams.effectComposerParams.html" class="tsd-kind-icon">effect<wbr>Composer<wbr>Params</a>
 					</li>
-				</ul>
-				<ul class="current">
-					<li class="current tsd-kind-interface tsd-parent-kind-module">
+					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_TScene_scenePrams.fogParams.html" class="tsd-kind-icon">fog<wbr>Params</a>
-						<ul>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_TScene_scenePrams.fogParams.html#cameraView" class="tsd-kind-icon">camera<wbr>View</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_TScene_scenePrams.fogParams.html#color" class="tsd-kind-icon">color</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="ts_TScene_scenePrams.fogParams.html#show" class="tsd-kind-icon">show</a>
-							</li>
-						</ul>
 					</li>
-				</ul>
-				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_TScene_scenePrams.gridParams.html" class="tsd-kind-icon">grid<wbr>Params</a>
 					</li>
@@ -273,9 +280,30 @@
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_TScene_scenePrams.modelParams.html" class="tsd-kind-icon">model<wbr>Params</a>
 					</li>
-					<li class=" tsd-kind-interface tsd-parent-kind-module">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_TScene_scenePrams.orbitParams.html" class="tsd-kind-icon">orbit<wbr>Params</a>
+						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TScene_scenePrams.orbitParams.html#active" class="tsd-kind-icon">active</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TScene_scenePrams.orbitParams.html#autoRotate" class="tsd-kind-icon">auto<wbr>Rotate</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TScene_scenePrams.orbitParams.html#autoRotateSpeed" class="tsd-kind-icon">auto<wbr>Rotate<wbr>Speed</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TScene_scenePrams.orbitParams.html#dampingFactor" class="tsd-kind-icon">damping<wbr>Factor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="ts_TScene_scenePrams.orbitParams.html#enableDamping" class="tsd-kind-icon">enable<wbr>Damping</a>
+							</li>
+						</ul>
 					</li>
+				</ul>
+				<ul class="after-current">
 					<li class=" tsd-kind-interface tsd-parent-kind-module">
 						<a href="ts_TScene_scenePrams.outlinepassParams.html" class="tsd-kind-icon">outlinepass<wbr>Params</a>
 					</li>
