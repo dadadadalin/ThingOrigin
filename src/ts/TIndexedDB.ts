@@ -91,15 +91,16 @@ export class TIndexedDB {
       ajax.open("get", modelInfo.url);
       ajax.send();
       ajax.onreadystatechange = () => {
-        console.log(ajax);
+        console.log(111,ajax);
+      // && ajax.responseText.substring(0, 9) == "<!DOCTYPE"
         if (
           ajax.readyState == 4 &&
-          ajax.status == 200 &&
-          ajax.responseText.substring(0, 9) == "<!DOCTYPE"
+          ajax.status == 200
         ) {
           modelInfo.model = new Blob([ajax.responseText]);
 
-          console.log(modelInfo.model);
+          console.log(222,modelInfo);
+          console.log(333,modelInfo.model);
           let db = this.DBs.get(dataBaseName);
 
           let indexedTable = db
@@ -110,25 +111,26 @@ export class TIndexedDB {
           request1.onsuccess = (event) => {
             console.log("数据写入成功", event);
 
-            try {
+            // try {
               let dataRequest2 = indexedTable.index("id").get(modelInfo.id);
               dataRequest2.onsuccess = (e2) => {
                 //@ts-ignore
                 let url = URL.createObjectURL(e2.target.result.model);
                 resolve({ saved: true, url: url });
               };
-            } catch (error) {
-              console.warn("写入失败，请检查文件路径");
-              resolve({ saved: false, url: undefined });
-            }
+            // } catch (error) {
+            //   console.warn("写入失败，请检查文件路径");
+            //   resolve({ saved: false, url: undefined });
+            // }
           };
           request1.onerror = (event) => {
             console.log("数据写入失败");
           };
-        } else {
-          console.warn("写入失败，请检查文件路径");
-          resolve({ saved: false, url: undefined });
         }
+        // else {
+        //   console.warn("写入失败，请检查文件路径");
+        //   resolve({ saved: false, url: undefined });
+        // }
       };
     });
   }

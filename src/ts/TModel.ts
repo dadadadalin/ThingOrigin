@@ -173,7 +173,7 @@ export class TModel {
         // this.GLTFLoader = new GLTFLoader(manager);
 
         this.GLTFLoader.load(url, (gltf) => {
-          if (modelConfigs) {
+            if (modelConfigs) {
             if (modelConfigs.scale)
               gltf.scene.scale.set(
                 modelConfigs.scale[0],
