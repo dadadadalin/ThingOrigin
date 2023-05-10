@@ -204,7 +204,7 @@ export class TEffect {
   /**
    * @description 给模型添加呼吸效果
    * @author LL
-   * @param {string} uuid
+   * @param {Object3D} model 模型
    */
   public initBreath(model: Object3D) {
     // var a;

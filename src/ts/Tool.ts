@@ -144,9 +144,8 @@ export class Tool {
         info["scale"] = model.scale;
         info["type"] = model.type;
         info["uuid"] = model.uuid;
-        info["objInfo"] = {
-            ownCSS2D: this.ifOwnCSS2D(model),
-        };
+        info["ownCSS2D"] = this.ifOwnCSS2D(model)
+        info["objInfo"] = model["objInfo"];
 
         return info;
     }
