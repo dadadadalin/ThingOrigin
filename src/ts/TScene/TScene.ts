@@ -244,6 +244,10 @@ export class TScene extends Scene {
         ThingOrigin.model
           .initFileModel(item["objInfo"].fileType, item["objInfo"].url, modelConfigs)
           .then((model) => {
+            //初始元素uuid存在，则使用初始的，否则重新生成
+            if(item['uuid']) {
+              model.uuid = item['uuid']
+            }
             this.add(model);
           });
       } else if (item["objInfo"].objType == "sphere") {
@@ -320,23 +324,27 @@ export class TScene extends Scene {
     let timer = setInterval(() => {
       let can = true;
       for (let i = 0; i < sceneParams.css2d.length; i++) {
-        if (!this.getObjectByProperty("name", sceneParams.css2d[i].name)) {
+        if (!this.getObjectByProperty("uuid", sceneParams.css2d[i]['bindModeluuid'])) {
           can = false;
         }
       }
       if (can) {
         for (let i = 0; i < sceneParams.css2d.length; i++) {
           let item = sceneParams.css2d[i];
-          let model = this.getObjectByName(item.name);
+          let model = this.getObjectByProperty('uuid',item['bindModeluuid']);
           //2d DOM元素如果存在，则加载
           if (document.getElementById(item.domId)) {
             this.addCSS2D(model, document.getElementById(item.domId));
-          } else { //否则先克隆DOM元素
-            let cloneDiv = document
-              .getElementById("css2dContainer")
-              .getElementsByClassName("css2d_" + item.domTypeIndex)[0]
-              .cloneNode(true);
-            this.addCSS2D(model, cloneDiv);
+          } else { //否则先生成DOM元素
+            let div = document.createElement('div');
+            div.id = 'css2d_' + item['bindModeluuid'];
+            div.className = 'css2dStyle css2d_' + item.domTypeIndex;
+            div.setAttribute('style', 'width:' + item.css2dForm[0].content + 'px');
+            div.innerHTML = ` 
+            <div class="css2d_title">${item.css2dForm[1].content }</div>
+           ${item.css2dForm[2].content }`;
+            document.getElementById('WebGL-output').appendChild(div);
+            this.addCSS2D(model, document.getElementById('css2d_' + item['bindModeluuid']), item.css2dBoxUuid );
           }
         }
         clearInterval(timer);
@@ -515,13 +523,15 @@ export class TScene extends Scene {
    * @param {HTMLElement} html dom元素
    * @param {number} [ratio=1.1]
    * @param {number[]} [offset=[0,0,0]]
+   * @param {string} css2dBoxUuid 初始元素uuid
    * @return {*}  {string}
    */
   public addCSS2D(
     model: Object3D | Group,
-    html: HTMLElement | Node,
+    html: HTMLElement,
+    css2dBoxUuid?: string,
     ratio: number = 1.1,
-    offset: number[] = [0, 0, 0]
+    offset: number[] = [0, 0, 0],
   ): string {
     if (!model) {
       console.warn("标注添加失败，物体不存在");
@@ -532,7 +542,11 @@ export class TScene extends Scene {
     // div.innerHTML = html;
 
     let CSSLabel = new CSS2DObject(html);
-    console.log(CSSLabel);
+    console.log("2d元素",CSSLabel);
+    //初始元素uuid存在，则使用初始的，否则重新生成
+    if(css2dBoxUuid){
+      CSSLabel.uuid = css2dBoxUuid;
+    }
     let sphere = ThingOrigin.tool.getObjectSphere(model);
     CSSLabel.position.set(
       sphere.center.x + offset[0],
