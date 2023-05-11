@@ -20,15 +20,15 @@ import {
   CSS2DRenderer,
 } from "three/examples/jsm/renderers/CSS2DRenderer";
 import sceneData from "../../../public/static/data/sceneParams.js";
-import { TEventDispatcher } from "../controls/TEventDispatcher";
-import { TExporters } from "../exporters/TExporters";
-import { TCamera } from "../TCamera";
-import { TControl } from "../TControl";
-import { THelper } from "../THelper";
-import { TLight } from "../TLight";
-import { TTool } from "../TTool";
-import { ThingOrigin } from "./../../ThingOrigin";
-import { TEffect } from "./../TEffect";
+import {TEventDispatcher} from "../controls/TEventDispatcher";
+import {TExporters} from "../exporters/TExporters";
+import {TCamera} from "../TCamera";
+import {TControl} from "../TControl";
+import {THelper} from "../THelper";
+import {TLight} from "../TLight";
+import {TTool} from "../TTool";
+import {ThingOrigin} from "./../../ThingOrigin";
+import {TEffect} from "./../TEffect";
 
 //用一个group来放模型
 export class TScene extends Scene {
@@ -226,7 +226,7 @@ export class TScene extends Scene {
 
   /**
    * @description 加载渲染模型
-   * @author LL
+   * @author LL gj
    * @date 2021/07/26
    * @private
    * @param {ThingOriginParams} sceneParams 场景参数
@@ -237,19 +237,19 @@ export class TScene extends Scene {
       if (item["objInfo"].objType == "modelFile") {
         //实际模型变量
         let modelConfigs = {
-            position: Object.values(item.position),
-            rotation: Object.values(item.rotation),
-            scale: Object.values(item.scale),
+          position: Object.values(item.position),
+          rotation: Object.values(item.rotation),
+          scale: Object.values(item.scale),
         }
         ThingOrigin.model
-          .initFileModel(item["objInfo"].fileType, item["objInfo"].url,modelConfigs)
+          .initFileModel(item["objInfo"].fileType, item["objInfo"].url, modelConfigs)
           .then((model) => {
             this.add(model);
           });
       } else if (item["objInfo"].objType == "sphere") {
         let sphere = ThingOrigin.model.initSphere(
           item.name,
-          { radius: item["objInfo"].radius },
+          {radius: item["objInfo"].radius},
           {
             color: item["objInfo"].color,
             position: [item.position.x, item.position.y, item.position.z],
@@ -287,7 +287,7 @@ export class TScene extends Scene {
       } else if (item["objInfo"].objType == "cone") {
         let cone = ThingOrigin.model.initCone(
           item.name,
-          { radius: item["objInfo"].radius, height: item["objInfo"].height },
+          {radius: item["objInfo"].radius, height: item["objInfo"].height},
           {
             color: item["objInfo"].color,
             position: [item.position.x, item.position.y, item.position.z],
@@ -310,7 +310,7 @@ export class TScene extends Scene {
 
   /**
    * @description 加载随行框
-   * @author LL
+   * @author LL gj
    * @date 2021/08/31
    * @private
    * @param {ThingOriginParams} sceneParams 场景参数
@@ -327,8 +327,17 @@ export class TScene extends Scene {
       if (can) {
         for (let i = 0; i < sceneParams.css2d.length; i++) {
           let item = sceneParams.css2d[i];
-          var model = this.getObjectByName(item.name);
-          this.addCSS2D(model, document.getElementById(item.domId));
+          let model = this.getObjectByName(item.name);
+          //2d DOM元素如果存在，则加载
+          if (document.getElementById(item.domId)) {
+            this.addCSS2D(model, document.getElementById(item.domId));
+          } else { //否则先克隆DOM元素
+            let cloneDiv = document
+              .getElementById("css2dContainer")
+              .getElementsByClassName("css2d_" + item.domTypeIndex)[0]
+              .cloneNode(true);
+            this.addCSS2D(model, cloneDiv);
+          }
         }
         clearInterval(timer);
       }
@@ -370,11 +379,11 @@ export class TScene extends Scene {
     );
     const skyMat = new ShaderMaterial({
       uniforms: {
-        topColor: { value: new Color(colors.top) },
-        skylineColor: { value: new Color(colors.line) },
-        bottomColor: { value: new Color(colors.bottom) },
-        offset: { value: 400 },
-        exponent: { value: 0.9 },
+        topColor: {value: new Color(colors.top)},
+        skylineColor: {value: new Color(colors.line)},
+        bottomColor: {value: new Color(colors.bottom)},
+        offset: {value: 400},
+        exponent: {value: 0.9},
         skyCenter: {
           value:
             new Vector3(
@@ -510,7 +519,7 @@ export class TScene extends Scene {
    */
   public addCSS2D(
     model: Object3D | Group,
-    html: HTMLElement,
+    html: HTMLElement | Node,
     ratio: number = 1.1,
     offset: number[] = [0, 0, 0]
   ): string {
