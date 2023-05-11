@@ -235,8 +235,14 @@ export class TScene extends Scene {
     for (let i = 0; i < sceneParams.models.length; i++) {
       let item = sceneParams.models[i];
       if (item["objInfo"].objType == "modelFile") {
+        //实际模型变量
+        let modelConfigs = {
+            position: Object.values(item.position),
+            rotation: Object.values(item.rotation),
+            scale: Object.values(item.scale),
+        }
         ThingOrigin.model
-          .initFileModel(item["objInfo"].fileType, item["objInfo"].url)
+          .initFileModel(item["objInfo"].fileType, item["objInfo"].url,modelConfigs)
           .then((model) => {
             this.add(model);
           });
