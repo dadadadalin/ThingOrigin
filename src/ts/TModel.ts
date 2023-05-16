@@ -9,6 +9,7 @@ import {
   DoubleSide,
   ExtrudeGeometry,
   FileLoader,
+  ObjectLoader,
   FontLoader,
   Geometry,
   Group,
@@ -53,6 +54,7 @@ export class TModel {
     .setDecoderPath("https://www.gstatic.com/draco/v1/decoders/")
     .preload();
   GLTFLoader: GLTFLoader = new GLTFLoader().setDRACOLoader(this.DRACOLoader);
+  ObjectLoader: ObjectLoader = new ObjectLoader();
 
   constructor() {}
 
@@ -75,128 +77,161 @@ export class TModel {
     }
   ): Promise<Object3D> {
     return new Promise((resolve) => {
-      if (type == "fbx") {
-        this.FBXLoader.load(url, (fbx: Group) => {
-          if (modelConfigs) {
-            if (modelConfigs.scale)
-              fbx.scale.set(
-                modelConfigs.scale[0],
-                modelConfigs.scale[1],
-                modelConfigs.scale[2]
-              );
-            if (modelConfigs.rotation)
-              fbx.rotation.set(
-                MathUtils.degToRad(modelConfigs.rotation[0]),
-                MathUtils.degToRad(modelConfigs.rotation[1]),
-                MathUtils.degToRad(modelConfigs.rotation[2])
-              );
-            if (modelConfigs.position)
-              fbx.position.set(
-                modelConfigs.position[0],
-                modelConfigs.position[1],
-                modelConfigs.position[2]
-              );
-          }
-          fbx.updateMatrixWorld(true);
-          resolve(fbx);
-        });
-      } else if (type == "obj") {
-        this.OBJLoader.load(url, (object: Object3D) => {
-          console.log(object);
-
-          if (modelConfigs) {
-            if (modelConfigs.scale)
-              object.scale.set(
-                modelConfigs.scale[0],
-                modelConfigs.scale[1],
-                modelConfigs.scale[2]
-              );
-            if (modelConfigs.rotation)
-              object.rotation.set(
-                MathUtils.degToRad(modelConfigs.rotation[0]),
-                MathUtils.degToRad(modelConfigs.rotation[1]),
-                MathUtils.degToRad(modelConfigs.rotation[2])
-              );
-            if (modelConfigs.position)
-              object.position.set(
-                modelConfigs.position[0],
-                modelConfigs.position[1],
-                modelConfigs.position[2]
-              );
-          }
-          object.updateMatrixWorld(true);
-          resolve(object);
-        });
-      } else if (type == "stl") {
-        this.STLLoader.load(url, (geometry: BufferGeometry) => {
-          var material = new MeshLambertMaterial(); //材质对象Material
-          material.side = DoubleSide;
-          var mesh = new Mesh(geometry, material); //网格模型对象Mesh
-          if (modelConfigs) {
-            if (modelConfigs.scale)
-              mesh.scale.set(
-                modelConfigs.scale[0],
-                modelConfigs.scale[1],
-                modelConfigs.scale[2]
-              );
-            if (modelConfigs.rotation)
-              mesh.rotation.set(
-                MathUtils.degToRad(modelConfigs.rotation[0]),
-                MathUtils.degToRad(modelConfigs.rotation[1]),
-                MathUtils.degToRad(modelConfigs.rotation[2])
-              );
-            if (modelConfigs.position)
-              mesh.position.set(
-                modelConfigs.position[0],
-                modelConfigs.position[1],
-                modelConfigs.position[2]
-              );
-          }
-          mesh.updateMatrixWorld(true);
-          resolve(mesh);
-        });
-      } else if (type == "gltf") {
-        // var manager = new LoadingManager();
-        // console.log(url.model);
-
-        // var blobs = { "fish.gltf": url.model };
-
-        // const objectURLs = [];
-        // manager.setURLModifier((url1) => {
-        //     url1 = URL.createObjectURL(blobs);
-
-        //     objectURLs.push(url1);
-
-        //     return url1;
-        // });
-
-        // this.GLTFLoader = new GLTFLoader(manager);
-
-        this.GLTFLoader.load(url, (gltf) => {
+      switch (type) {
+        case 'fbx':
+          this.FBXLoader.load(url, (fbx: Group) => {
             if (modelConfigs) {
-            if (modelConfigs.scale)
-              gltf.scene.scale.set(
-                modelConfigs.scale[0],
-                modelConfigs.scale[1],
-                modelConfigs.scale[2]
-              );
-            if (modelConfigs.rotation)
-              gltf.scene.rotation.set(
-                MathUtils.degToRad(modelConfigs.rotation[0]),
-                MathUtils.degToRad(modelConfigs.rotation[1]),
-                MathUtils.degToRad(modelConfigs.rotation[2])
-              );
-            if (modelConfigs.position)
-              gltf.scene.position.set(
-                modelConfigs.position[0],
-                modelConfigs.position[1],
-                modelConfigs.position[2]
-              );
-          }
-          gltf.scene.updateMatrixWorld(true);
+              if (modelConfigs.scale)
+                fbx.scale.set(
+                  modelConfigs.scale[0],
+                  modelConfigs.scale[1],
+                  modelConfigs.scale[2]
+                );
+              if (modelConfigs.rotation)
+                fbx.rotation.set(
+                  MathUtils.degToRad(modelConfigs.rotation[0]),
+                  MathUtils.degToRad(modelConfigs.rotation[1]),
+                  MathUtils.degToRad(modelConfigs.rotation[2])
+                );
+              if (modelConfigs.position)
+                fbx.position.set(
+                  modelConfigs.position[0],
+                  modelConfigs.position[1],
+                  modelConfigs.position[2]
+                );
+            }
+            fbx.updateMatrixWorld(true);
+            resolve(fbx);
+          });
+          break;
+        case 'obj':
+          this.OBJLoader.load(url, (object: Object3D) => {
+            console.log(object);
 
-          resolve(gltf.scene);
-        });
+            if (modelConfigs) {
+              if (modelConfigs.scale)
+                object.scale.set(
+                  modelConfigs.scale[0],
+                  modelConfigs.scale[1],
+                  modelConfigs.scale[2]
+                );
+              if (modelConfigs.rotation)
+                object.rotation.set(
+                  MathUtils.degToRad(modelConfigs.rotation[0]),
+                  MathUtils.degToRad(modelConfigs.rotation[1]),
+                  MathUtils.degToRad(modelConfigs.rotation[2])
+                );
+              if (modelConfigs.position)
+                object.position.set(
+                  modelConfigs.position[0],
+                  modelConfigs.position[1],
+                  modelConfigs.position[2]
+                );
+            }
+            object.updateMatrixWorld(true);
+            resolve(object);
+          });
+          break;
+        case 'stl':
+          this.STLLoader.load(url, (geometry: BufferGeometry) => {
+            var material = new MeshLambertMaterial(); //材质对象Material
+            material.side = DoubleSide;
+            var mesh = new Mesh(geometry, material); //网格模型对象Mesh
+            if (modelConfigs) {
+              if (modelConfigs.scale)
+                mesh.scale.set(
+                  modelConfigs.scale[0],
+                  modelConfigs.scale[1],
+                  modelConfigs.scale[2]
+                );
+              if (modelConfigs.rotation)
+                mesh.rotation.set(
+                  MathUtils.degToRad(modelConfigs.rotation[0]),
+                  MathUtils.degToRad(modelConfigs.rotation[1]),
+                  MathUtils.degToRad(modelConfigs.rotation[2])
+                );
+              if (modelConfigs.position)
+                mesh.position.set(
+                  modelConfigs.position[0],
+                  modelConfigs.position[1],
+                  modelConfigs.position[2]
+                );
+            }
+            mesh.updateMatrixWorld(true);
+            resolve(mesh);
+          });
+          break;
+        case 'gltf':
+          // var manager = new LoadingManager();
+          // console.log(url.model);
+
+          // var blobs = { "fish.gltf": url.model };
+
+          // const objectURLs = [];
+          // manager.setURLModifier((url1) => {
+          //     url1 = URL.createObjectURL(blobs);
+
+          //     objectURLs.push(url1);
+
+          //     return url1;
+          // });
+
+          // this.GLTFLoader = new GLTFLoader(manager);
+
+          this.GLTFLoader.load(url, (gltf) => {
+            if (modelConfigs) {
+              if (modelConfigs.scale)
+                gltf.scene.scale.set(
+                  modelConfigs.scale[0],
+                  modelConfigs.scale[1],
+                  modelConfigs.scale[2]
+                );
+              if (modelConfigs.rotation)
+                gltf.scene.rotation.set(
+                  MathUtils.degToRad(modelConfigs.rotation[0]),
+                  MathUtils.degToRad(modelConfigs.rotation[1]),
+                  MathUtils.degToRad(modelConfigs.rotation[2])
+                );
+              if (modelConfigs.position)
+                gltf.scene.position.set(
+                  modelConfigs.position[0],
+                  modelConfigs.position[1],
+                  modelConfigs.position[2]
+                );
+            }
+            gltf.scene.updateMatrixWorld(true);
+
+            resolve(gltf.scene);
+          });
+          break;
+        case 'json':
+          this.ObjectLoader.load(url, (object: Object3D) => {
+            console.log(object);
+
+            if (modelConfigs) {
+              if (modelConfigs.scale)
+                object.scale.set(
+                  modelConfigs.scale[0],
+                  modelConfigs.scale[1],
+                  modelConfigs.scale[2]
+                );
+              if (modelConfigs.rotation)
+                object.rotation.set(
+                  MathUtils.degToRad(modelConfigs.rotation[0]),
+                  MathUtils.degToRad(modelConfigs.rotation[1]),
+                  MathUtils.degToRad(modelConfigs.rotation[2])
+                );
+              if (modelConfigs.position)
+                object.position.set(
+                  modelConfigs.position[0],
+                  modelConfigs.position[1],
+                  modelConfigs.position[2]
+                );
+            }
+            object.updateMatrixWorld(true);
+            resolve(object);
+          });
+          break;
       }
     });
   }
