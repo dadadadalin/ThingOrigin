@@ -90,8 +90,8 @@ export class TCamera {
     /**
      * @description 相机观察某物体
      * @author LL
-     * @param {string} uuid
-     * @param {number} time
+     * @param {string} uuid 模型uuid
+     * @param {number} time 动画时长
      * @param {number} [scaleRadius=1] 以半径为单位，让相机距离多远观察
      */
     public lookAt(uuid: string, time: number, scaleRadius: number = 1) {
@@ -117,4 +117,5 @@ export class TCamera {
             })
             .start();
     }
+
 }
