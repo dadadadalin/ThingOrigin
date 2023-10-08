@@ -1,5 +1,6 @@
 import merge from "lodash.merge";
 import {
+  AnimationMixer,
   BackSide,
   Color,
   Fog,
@@ -15,20 +16,21 @@ import {
   WebGLRenderer,
 } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
+import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
 import {
   CSS2DObject,
   CSS2DRenderer,
 } from "three/examples/jsm/renderers/CSS2DRenderer";
 import sceneData from "../../../public/static/data/sceneParams.js";
-import {TEventDispatcher} from "../controls/TEventDispatcher";
-import {TExporters} from "../exporters/TExporters";
-import {TCamera} from "../TCamera";
-import {TControl} from "../TControl";
-import {THelper} from "../THelper";
-import {TLight} from "../TLight";
-import {TTool} from "../TTool";
-import {ThingOrigin} from "./../../ThingOrigin";
-import {TEffect} from "./../TEffect";
+import { TEventDispatcher } from "../controls/TEventDispatcher";
+import { TExporters } from "../exporters/TExporters";
+import { TCamera } from "../TCamera";
+import { TControl } from "../TControl";
+import { THelper } from "../THelper";
+import { TLight } from "../TLight";
+import { TTool } from "../TTool";
+import { ThingOrigin } from "./../../ThingOrigin";
+import { TEffect } from "./../TEffect";
 
 //用一个group来放模型
 export class TScene extends Scene {
@@ -50,6 +52,8 @@ export class TScene extends Scene {
   public effect: TEffect = new TEffect(this);
 
   public tool: TTool = new TTool(this);
+  /** 动画播放器 */
+  public mixer: AnimationMixer;
 
   /** 事件捕捉器 */
   public eDispatcher: TEventDispatcher = new TEventDispatcher();
@@ -299,6 +303,24 @@ export class TScene extends Scene {
         );
         this.add(cone);
       }
+    }
+  }
+
+  /**
+   * @description 播放模型内置动画(gltf)
+   * @author LL
+   * @date 08/10/2023
+   * @param {GLTF} model
+   * @param {(number[] | number)} index
+   * @memberof TModel
+   */
+  public playAnimation(model: GLTF, index: number[] | number) {
+    this.mixer = new AnimationMixer(model.scene);
+
+    if (ThingOrigin.tool.isArray(index)) {
+      console.log("数组类型,要求播放多个动画");
+    } else {
+      this.mixer.clipAction(model.animations[index as number]).play();
     }
   }
 

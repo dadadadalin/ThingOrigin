@@ -38,7 +38,7 @@ import {
 } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { GLTF, GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
@@ -75,7 +75,7 @@ export class TModel {
       scale: [1, 1, 1],
       rotation: [0, 0, 0],
     }
-  ): Promise<Object3D> {
+  ): Promise<Object3D | GLTF> {
     return new Promise((resolve) => {
       switch (type) {
         case 'fbx':
@@ -178,31 +178,30 @@ export class TModel {
 
           // this.GLTFLoader = new GLTFLoader(manager);
 
-          this.GLTFLoader.load(url, (gltf) => {
-            if (modelConfigs) {
-              if (modelConfigs.scale)
-                gltf.scene.scale.set(
-                  modelConfigs.scale[0],
-                  modelConfigs.scale[1],
-                  modelConfigs.scale[2]
-                );
-              if (modelConfigs.rotation)
-                gltf.scene.rotation.set(
-                  MathUtils.degToRad(modelConfigs.rotation[0]),
-                  MathUtils.degToRad(modelConfigs.rotation[1]),
-                  MathUtils.degToRad(modelConfigs.rotation[2])
-                );
-              if (modelConfigs.position)
-                gltf.scene.position.set(
-                  modelConfigs.position[0],
-                  modelConfigs.position[1],
-                  modelConfigs.position[2]
-                );
-            }
-            gltf.scene.updateMatrixWorld(true);
-
-            resolve(gltf.scene);
-          });
+        this.GLTFLoader.load(url, (gltf) => {
+          if (modelConfigs) {
+            if (modelConfigs.scale)
+              gltf.scene.scale.set(
+                modelConfigs.scale[0],
+                modelConfigs.scale[1],
+                modelConfigs.scale[2]
+              );
+            if (modelConfigs.rotation)
+              gltf.scene.rotation.set(
+                MathUtils.degToRad(modelConfigs.rotation[0]),
+                MathUtils.degToRad(modelConfigs.rotation[1]),
+                MathUtils.degToRad(modelConfigs.rotation[2])
+              );
+            if (modelConfigs.position)
+              gltf.scene.position.set(
+                modelConfigs.position[0],
+                modelConfigs.position[1],
+                modelConfigs.position[2]
+              );
+          }
+          gltf.scene.updateMatrixWorld(true);
+          resolve(gltf);
+        });
           break;
         case 'json':
           this.ObjectLoader.load(url, (object: Object3D) => {

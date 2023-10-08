@@ -1,34 +1,45 @@
 import * as CANNON from "cannon";
-import { Vector3 } from "three";
+import { AnimationMixer, Clock, LoopOnce, Vector3 } from "three";
 import { ThingOrigin } from "./ThingOrigin";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 
-//indexedDB缓存模型
-let modelInfo = {
-  id: 1,
-  type: "gltf",
-  name: "测试模型",
-  url: "/static/three/factory3.glb",
-};
-ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
-  console.log(res);
+let mixer;
+ThingOrigin.model
+  .initFileModel("gltf", "/static/three/animate/scene.gltf", {
+    scale: [4, 4, 4],
+  })
+  .then((model) => {
+    mainScene.add(model.scene);
 
-  if (res.saved) {
-    console.log("已缓存");
-  } else {
-    // ElMessage('模型首次加载缓存中，请稍后！')
-    ThingOrigin.indexedDB
-      .insertModel("ttt", "ttt", modelInfo)
-      .then((modelParam) => {
-        if (modelParam.saved == false) {
-          console.log("缓存失败");
-        } else {
-          console.log("开始缓存", modelParam);
-        }
-      });
-  }
-});
+    mainScene.playAnimation(model, 0);
+  });
+
+//indexedDB缓存模型
+// let modelInfo = {
+//   id: 1,
+//   type: "gltf",
+//   name: "测试模型",
+//   url: "/static/three/factory3.glb",
+// };
+// ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
+//   console.log(res);
+
+//   if (res.saved) {
+//     console.log("已缓存");
+//   } else {
+//     // ElMessage('模型首次加载缓存中，请稍后！')
+//     ThingOrigin.indexedDB
+//       .insertModel("ttt", "ttt", modelInfo)
+//       .then((modelParam) => {
+//         if (modelParam.saved == false) {
+//           console.log("缓存失败");
+//         } else {
+//           console.log("开始缓存", modelParam);
+//         }
+//       });
+//   }
+// });
 
 // demo2 物理引擎案例
 // var world,

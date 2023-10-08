@@ -1,7 +1,9 @@
+import { Clock } from "three";
 import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../../ThingOrigin";
 import { TScene } from "./TScene";
 
+let clock = new Clock();
 // import sceneParams from "../../../public/static/data/sceneParams.js";
 // var i = 0;
 /** 帧循环 */
@@ -17,6 +19,7 @@ function animate() {
       if (cScene.helper.box) cScene.helper.updateBox();
       if (cScene.controls.pointerLock) cScene.controls.updatePointerLock();
       if (cScene.stats) cScene.stats.update();
+      if (cScene.mixer) cScene.mixer.update(clock.getDelta());
     })(item);
   });
 
