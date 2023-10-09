@@ -10,8 +10,10 @@ ThingOrigin.model
     scale: [4, 4, 4],
   })
   .then((model) => {
+    //@ts-ignore
     mainScene.add(model.scene);
 
+    //@ts-ignore
     mainScene.playAnimation(model, 0);
   });
 

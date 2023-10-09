@@ -241,23 +241,30 @@ export class TScene extends Scene {
       if (item["objInfo"].objType == "modelFile") {
         //实际模型变量
         let modelConfigs = {
+          //@ts-ignore
           position: Object.values(item.position),
+          //@ts-ignore
           rotation: Object.values(item.rotation),
+          //@ts-ignore
           scale: Object.values(item.scale),
-        }
+        };
         ThingOrigin.model
-          .initFileModel(item["objInfo"].fileType, item["objInfo"].url, modelConfigs)
+          .initFileModel(
+            item["objInfo"].fileType,
+            item["objInfo"].url,
+            modelConfigs
+          )
           .then((model) => {
             //初始元素uuid存在，则使用初始的，否则重新生成
-            if(item['uuid']) {
-              model.uuid = item['uuid']
+            if (item["uuid"]) {
+              model.uuid = item["uuid"];
             }
             this.add(model);
           });
       } else if (item["objInfo"].objType == "sphere") {
         let sphere = ThingOrigin.model.initSphere(
           item.name,
-          {radius: item["objInfo"].radius},
+          { radius: item["objInfo"].radius },
           {
             color: item["objInfo"].color,
             position: [item.position.x, item.position.y, item.position.z],
@@ -295,7 +302,7 @@ export class TScene extends Scene {
       } else if (item["objInfo"].objType == "cone") {
         let cone = ThingOrigin.model.initCone(
           item.name,
-          {radius: item["objInfo"].radius, height: item["objInfo"].height},
+          { radius: item["objInfo"].radius, height: item["objInfo"].height },
           {
             color: item["objInfo"].color,
             position: [item.position.x, item.position.y, item.position.z],
@@ -346,27 +353,40 @@ export class TScene extends Scene {
     let timer = setInterval(() => {
       let can = true;
       for (let i = 0; i < sceneParams.css2d.length; i++) {
-        if (!this.getObjectByProperty("uuid", sceneParams.css2d[i]['bindModeluuid'])) {
+        if (
+          !this.getObjectByProperty(
+            "uuid",
+            sceneParams.css2d[i]["bindModeluuid"]
+          )
+        ) {
           can = false;
         }
       }
       if (can) {
         for (let i = 0; i < sceneParams.css2d.length; i++) {
           let item = sceneParams.css2d[i];
-          let model = this.getObjectByProperty('uuid',item['bindModeluuid']);
+          let model = this.getObjectByProperty("uuid", item["bindModeluuid"]);
           //2d DOM元素如果存在，则加载
           if (document.getElementById(item.domId)) {
             this.addCSS2D(model, document.getElementById(item.domId));
-          } else { //否则先生成DOM元素
-            let div = document.createElement('div');
-            div.id = 'css2d_' + item['bindModeluuid'];
-            div.className = 'css2dStyle css2d_' + item.domTypeIndex;
-            div.setAttribute('style', 'width:' + item.css2dForm[0].content + 'px');
+          } else {
+            //否则先生成DOM元素
+            let div = document.createElement("div");
+            div.id = "css2d_" + item["bindModeluuid"];
+            div.className = "css2dStyle css2d_" + item.domTypeIndex;
+            div.setAttribute(
+              "style",
+              "width:" + item.css2dForm[0].content + "px"
+            );
             div.innerHTML = ` 
-            <div class="css2d_title">${item.css2dForm[1].content }</div>
-           ${item.css2dForm[2].content }`;
-            document.getElementById('WebGL-output').appendChild(div);
-            this.addCSS2D(model, document.getElementById('css2d_' + item['bindModeluuid']), item.css2dBoxUuid );
+            <div class="css2d_title">${item.css2dForm[1].content}</div>
+           ${item.css2dForm[2].content}`;
+            document.getElementById("WebGL-output").appendChild(div);
+            this.addCSS2D(
+              model,
+              document.getElementById("css2d_" + item["bindModeluuid"]),
+              item.css2dBoxUuid
+            );
           }
         }
         clearInterval(timer);
@@ -409,11 +429,11 @@ export class TScene extends Scene {
     );
     const skyMat = new ShaderMaterial({
       uniforms: {
-        topColor: {value: new Color(colors.top)},
-        skylineColor: {value: new Color(colors.line)},
-        bottomColor: {value: new Color(colors.bottom)},
-        offset: {value: 400},
-        exponent: {value: 0.9},
+        topColor: { value: new Color(colors.top) },
+        skylineColor: { value: new Color(colors.line) },
+        bottomColor: { value: new Color(colors.bottom) },
+        offset: { value: 400 },
+        exponent: { value: 0.9 },
         skyCenter: {
           value:
             new Vector3(
@@ -553,7 +573,7 @@ export class TScene extends Scene {
     html: HTMLElement,
     css2dBoxUuid?: string,
     ratio: number = 1.1,
-    offset: number[] = [0, 0, 0],
+    offset: number[] = [0, 0, 0]
   ): string {
     if (!model) {
       console.warn("标注添加失败，物体不存在");
@@ -564,9 +584,9 @@ export class TScene extends Scene {
     // div.innerHTML = html;
 
     let CSSLabel = new CSS2DObject(html);
-    console.log("2d元素",CSSLabel);
+    console.log("2d元素", CSSLabel);
     //初始元素uuid存在，则使用初始的，否则重新生成
-    if(css2dBoxUuid){
+    if (css2dBoxUuid) {
       CSSLabel.uuid = css2dBoxUuid;
     }
     let sphere = ThingOrigin.tool.getObjectSphere(model);

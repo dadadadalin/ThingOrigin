@@ -75,10 +75,10 @@ export class TModel {
       scale: [1, 1, 1],
       rotation: [0, 0, 0],
     }
-  ): Promise<Object3D | GLTF> {
+  ): Promise<Object3D> {
     return new Promise((resolve) => {
       switch (type) {
-        case 'fbx':
+        case "fbx":
           this.FBXLoader.load(url, (fbx: Group) => {
             if (modelConfigs) {
               if (modelConfigs.scale)
@@ -104,7 +104,7 @@ export class TModel {
             resolve(fbx);
           });
           break;
-        case 'obj':
+        case "obj":
           this.OBJLoader.load(url, (object: Object3D) => {
             console.log(object);
 
@@ -132,7 +132,7 @@ export class TModel {
             resolve(object);
           });
           break;
-        case 'stl':
+        case "stl":
           this.STLLoader.load(url, (geometry: BufferGeometry) => {
             var material = new MeshLambertMaterial(); //材质对象Material
             material.side = DoubleSide;
@@ -161,7 +161,7 @@ export class TModel {
             resolve(mesh);
           });
           break;
-        case 'gltf':
+        case "gltf":
           // var manager = new LoadingManager();
           // console.log(url.model);
 
@@ -178,32 +178,33 @@ export class TModel {
 
           // this.GLTFLoader = new GLTFLoader(manager);
 
-        this.GLTFLoader.load(url, (gltf) => {
-          if (modelConfigs) {
-            if (modelConfigs.scale)
-              gltf.scene.scale.set(
-                modelConfigs.scale[0],
-                modelConfigs.scale[1],
-                modelConfigs.scale[2]
-              );
-            if (modelConfigs.rotation)
-              gltf.scene.rotation.set(
-                MathUtils.degToRad(modelConfigs.rotation[0]),
-                MathUtils.degToRad(modelConfigs.rotation[1]),
-                MathUtils.degToRad(modelConfigs.rotation[2])
-              );
-            if (modelConfigs.position)
-              gltf.scene.position.set(
-                modelConfigs.position[0],
-                modelConfigs.position[1],
-                modelConfigs.position[2]
-              );
-          }
-          gltf.scene.updateMatrixWorld(true);
-          resolve(gltf);
-        });
+          this.GLTFLoader.load(url, (gltf) => {
+            if (modelConfigs) {
+              if (modelConfigs.scale)
+                gltf.scene.scale.set(
+                  modelConfigs.scale[0],
+                  modelConfigs.scale[1],
+                  modelConfigs.scale[2]
+                );
+              if (modelConfigs.rotation)
+                gltf.scene.rotation.set(
+                  MathUtils.degToRad(modelConfigs.rotation[0]),
+                  MathUtils.degToRad(modelConfigs.rotation[1]),
+                  MathUtils.degToRad(modelConfigs.rotation[2])
+                );
+              if (modelConfigs.position)
+                gltf.scene.position.set(
+                  modelConfigs.position[0],
+                  modelConfigs.position[1],
+                  modelConfigs.position[2]
+                );
+            }
+            gltf.scene.updateMatrixWorld(true);
+            //@ts-ignore
+            resolve(gltf);
+          });
           break;
-        case 'json':
+        case "json":
           this.ObjectLoader.load(url, (object: Object3D) => {
             console.log(object);
 

@@ -1,6 +1,14 @@
-import { Box3, Color, Object3D, Sphere, Vector3 } from "three";
+import {
+  Box3,
+  BufferGeometry,
+  Color,
+  Geometry,
+  Mesh,
+  Object3D,
+  Sphere,
+  Vector3,
+} from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
-import {ThingOrigin} from "../ThingOrigin";
 
 /**
  * 自定义工具方法
@@ -132,30 +140,30 @@ export class Tool {
     return info;
   }
 
-    /**
-     * @description 获取模型参数信息
-     * @author LL
-     * @date 2021/08/19
-     * @param {Object3D} model 模型
-     * @returns {*}  {object}
-     */
-    public getObjectInfo(model: Object3D): object {
-        let info = new Object();
-        if (!model) {
-            console.warn("获取信息失败，物体不存在");
-            return;
-        }
-        info["name"] = model.name;
-        info["position"] = model.position;
-        info["rotation"] = model.rotation;
-        info["scale"] = model.scale;
-        info["type"] = model.type;
-        info["uuid"] = model.uuid;
-        info["ownCSS2D"] = this.ifOwnCSS2D(model)
-        info["objInfo"] = model["objInfo"];
-
-        return info;
+  /**
+   * @description 获取模型参数信息
+   * @author LL
+   * @date 2021/08/19
+   * @param {Object3D} model 模型
+   * @returns {*}  {object}
+   */
+  public getObjectInfo(model: Object3D): object {
+    let info = new Object();
+    if (!model) {
+      console.warn("获取信息失败，物体不存在");
+      return;
     }
+    info["name"] = model.name;
+    info["position"] = model.position;
+    info["rotation"] = model.rotation;
+    info["scale"] = model.scale;
+    info["type"] = model.type;
+    info["uuid"] = model.uuid;
+    info["ownCSS2D"] = this.ifOwnCSS2D(model);
+    info["objInfo"] = model["objInfo"];
+
+    return info;
+  }
   /**
    * @description 获取模型顶点数
    * @author gj
@@ -163,7 +171,7 @@ export class Tool {
    * @param {Object3D} model 模型
    * @returns {*}  {number} 顶点数
    */
-  public getModelVerticesCount(model: Object3D):number {
+  public getModelVerticesCount(model: Object3D): number {
     if (!model) {
       console.warn("获取信息失败，物体不存在");
       return;
@@ -174,7 +182,10 @@ export class Tool {
         let geometry = object.geometry;
         if (geometry instanceof Geometry) {
           vertices += geometry.vertices.length;
-        } else if (geometry instanceof BufferGeometry && geometry.attributes.position) {
+        } else if (
+          geometry instanceof BufferGeometry &&
+          geometry.attributes.position
+        ) {
           vertices += geometry.attributes.position.count;
         }
       }
@@ -189,18 +200,21 @@ export class Tool {
    * @param {Object3D} model 模型
    * @returns {*}  {number} 三角面数
    */
-  public getModelFaceCount(model: Object3D):number {
+  public getModelFaceCount(model: Object3D): number {
     if (!model) {
       console.warn("获取信息失败，物体不存在");
       return;
     }
-    let triangles  = 0; //模型面数
+    let triangles = 0; //模型面数
     model.traverseVisible(function (object) {
       if (object instanceof Mesh) {
         let geometry = object.geometry;
         if (geometry instanceof Geometry) {
           triangles += geometry.faces.length;
-        } else if (geometry instanceof BufferGeometry && geometry.attributes.position) {
+        } else if (
+          geometry instanceof BufferGeometry &&
+          geometry.attributes.position
+        ) {
           if (geometry.index !== null) {
             triangles += geometry.index.count / 3;
           } else {
@@ -218,7 +232,7 @@ export class Tool {
    * @date 2023/5/16
    * @param {Object3D} model 模型
    */
-  public fullScreen(model: Object3D):void {
+  public fullScreen(model: Object3D): void {
     if (!model) {
       console.warn("获取信息失败，物体不存在");
       return;
@@ -233,13 +247,13 @@ export class Tool {
     function num() {
       var max;
       if (v3.x > v3.y) {
-        max = v3.x
+        max = v3.x;
       } else {
-        max = v3.y
+        max = v3.y;
       }
       if (max > v3.z) {
       } else {
-        max = v3.z
+        max = v3.z;
       }
       return max;
     }
