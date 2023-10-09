@@ -59,7 +59,7 @@ export class TScene extends Scene {
   public eDispatcher: TEventDispatcher = new TEventDispatcher();
   /** 导出 */
   public exporters: TExporters = new TExporters();
-
+  /** 场景参数 */
   public sceneParam: ThingOriginParams = sceneData;
 
   public stats: Stats;
@@ -68,8 +68,8 @@ export class TScene extends Scene {
    * @description 创建一个场景
    * @author LL
    * @date 2021/10/15
-   * @param {HTMLElement} container dom容器
-   * @param {ThingOriginParams} userSceneParam 场景参数
+   * @param {HTMLElement} container 用于生成场景的dom容器
+   * @param {ThingOriginParams} userSceneParam 场景描述参数（可不传，使用默认参数）
    */
   public createScene(
     container: HTMLElement,
@@ -217,6 +217,13 @@ export class TScene extends Scene {
     }
   }
 
+  /**
+   * @description 显示性能监控器
+   * @author LL
+   * @date 2022/07/28
+   * @private
+   * @param {ThingOriginParams} sceneParams
+   */
   private showStats(sceneParams: ThingOriginParams) {
     // @ts-ignore：
     this.stats = new Stats();
@@ -316,7 +323,7 @@ export class TScene extends Scene {
   /**
    * @description 播放模型内置动画(gltf)
    * @author LL
-   * @date 08/10/2023
+   * @date 2023/10/08
    * @param {GLTF} model
    * @param {(number[] | number)} index
    * @memberof TModel
