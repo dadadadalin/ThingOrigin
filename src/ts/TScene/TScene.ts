@@ -324,17 +324,25 @@ export class TScene extends Scene {
    * @description 播放模型内置动画(gltf)
    * @author LL
    * @date 2023/10/08
-   * @param {GLTF} model
-   * @param {(number[] | number)} index
+   * @param {GLTF} model 含动画模型
+   * @param {(number[] | number)} index 播放动画的下标
    * @memberof TModel
    */
-  public playAnimation(model: GLTF, index: number[] | number) {
+  public playAnimation(
+    model: GLTF,
+    index: number[] | number,
+    animationParams: AnimationParams
+  ) {
     this.mixer = new AnimationMixer(model.scene);
 
     if (ThingOrigin.tool.isArray(index)) {
       console.log("数组类型,要求播放多个动画");
     } else {
-      this.mixer.clipAction(model.animations[index as number]).play();
+      if (model.animations[index as number]) {
+        this.mixer.clipAction(model.animations[index as number]).play();
+      } else {
+        console.warn("模型不存在下标为" + index + "的动画");
+      }
     }
   }
 

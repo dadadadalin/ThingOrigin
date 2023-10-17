@@ -190,3 +190,7 @@ interface skyConfigsParams {
   heightSegments?: number;
   skyCenter?: number[];
 }
+
+interface AnimationParams {
+  loop: boolean;
+}
