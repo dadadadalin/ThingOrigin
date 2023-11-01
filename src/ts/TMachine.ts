@@ -60,7 +60,8 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      if (jointData["joint" + (i + 1)]) {
+      // if (jointData["joint" + (i + 1)]) {
+      if ("joint" + (i + 1) in jointData) {
         robot.getObjectByName(joints[i].name).rotation[joints[i].axis] =
           joints[i].reverse * Number(jointData["joint" + (i + 1)]);
       } else {
