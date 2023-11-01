@@ -391,7 +391,11 @@ export class TScene extends Scene {
             div.className = "css2dStyle css2d_" + item.domTypeIndex;
             div.setAttribute(
               "style",
-              "width:" + item.css2dForm[0].content + "px"
+              "width:" + item.css2dForm[0].content + "px",
+            );
+            div.setAttribute(
+              "style",
+              "opacity: 1",
             );
             div.innerHTML = ` 
             <div class="css2d_title">${item.css2dForm[1].content}</div>

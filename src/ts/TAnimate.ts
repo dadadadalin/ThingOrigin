@@ -1,8 +1,9 @@
-import { Object3D } from "three";
+import {Mesh, Object3D} from "three";
 // import { Flow } from "";
 // import { Flow } from "three/examples/jsm/modifiers/CurveModifier";
 import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../ThingOrigin";
+import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
 export class TAnimate {
     /**
@@ -130,4 +131,98 @@ export class TAnimate {
     // public alongPoints(model: Object3D, points: number[][]) {
     //     let flow = new Flow(objectToCurve);
     // }
+
+    /**
+     * @description 模型淡入效果
+     * @author gj
+     * @date 2023/10/25
+     * @param {Object3D} model 模型
+     * @param {number} time 完成时间（毫秒）
+     * @returns  {*}
+     */
+    public modelFadeIn(model: Object3D, time: number){
+        if (!model) {
+            console.warn("物体不存在");
+            return;
+        }
+        model.traverse((child) => {
+            if (child instanceof Mesh) {
+                if (child.material) {
+                    new TWEEN.Tween(child.material)
+                    .to({ opacity: 1.0 }, time)
+                    .start()
+                }
+            }
+        })
+       
+    }
+
+     /**
+     * @description 模型淡出效果
+     * @author gj
+     * @date 2023/10/25
+     * @param {Object3D} model 模型
+     * @param {number} time 完成时间（毫秒）
+     * @returns  {*}
+     */
+    public modelFadeOut(model: Object3D, time: number){
+        if (!model) {
+            console.warn("物体不存在");
+            return;
+        }
+        model.traverse((child) => {
+            if (child instanceof Mesh) {
+                if (child.material) {
+                    new TWEEN.Tween(child.material)
+                    .to({ opacity: 0 }, time)
+                    .start()
+                }
+            }
+        })
+    }
+
+     /**
+     * @description 2d元素标签淡入效果
+     * @author gj
+     * @date 2023/10/25
+     * @param {CSS2DObject} tag 2d元素
+     * @param {number} time 完成时间（毫秒）
+     * @returns  {*}
+     */
+    public tagFadeIn(tag: CSS2DObject, time: number){
+        if (!tag) {
+            console.warn("标签元素不存在");
+            return;
+        }
+        let styleOpacity = { opacity: '0.0' };
+        new TWEEN.Tween(styleOpacity).to({ opacity: '1.0' }, time)
+        .onUpdate(function(){
+            //动态更新元素透明度
+            tag.element.style.opacity = styleOpacity.opacity;
+        })
+        .start()
+    }
+
+    /**
+     * @description 2d元素标签淡出效果
+     * @author gj
+     * @date 2023/10/25
+     * @param {CSS2DObject} tag 2d元素
+     * @param {number} time 完成时间（毫秒）
+     * @returns  {*}
+     */
+    public tagFadeOut(tag: CSS2DObject, time: number){
+        if (!tag) {
+            console.warn("标签元素不存在");
+            return;
+        }
+        let styleOpacity = { opacity: '1.0' };
+        new TWEEN.Tween(styleOpacity).to({ opacity: '0.0' }, time)
+        .onUpdate(function() {
+          //动态更新元素透明度
+          tag.element.style.opacity = styleOpacity.opacity;
+        })
+        .start();
+    }
+
 }
