@@ -121,7 +121,11 @@ export class TScene extends Scene {
    */
   private initRender(sceneParams: ThingOriginParams) {
     //渲染器
-    this.renderer = new WebGLRenderer(sceneParams.scene.webglrenderer);
+    let renderParams: renderQualityParam = {};
+    if (sceneParams.scene.renderQuality.antialias) {
+      renderParams.antialias = true;
+    }
+    this.renderer = new WebGLRenderer(renderParams);
 
     if (sceneParams.scene.background.type == "sky") {
       this.initSky({
@@ -144,8 +148,9 @@ export class TScene extends Scene {
       this.container.clientWidth,
       this.container.clientHeight
     );
-    if (sceneParams && sceneParams.shadow) {
-      this.renderer.shadowMap.enabled = sceneParams.shadow;
+    if (sceneParams && sceneParams.scene.renderQuality.shadowMap.enabled) {
+      this.renderer.shadowMap.enabled =
+        sceneParams.scene.renderQuality.shadowMap.enabled;
     }
     this.renderer.domElement.style.position = "absolute";
     this.renderer.domElement.style.bottom = "0";
@@ -391,12 +396,9 @@ export class TScene extends Scene {
             div.className = "css2dStyle css2d_" + item.domTypeIndex;
             div.setAttribute(
               "style",
-              "width:" + item.css2dForm[0].content + "px",
+              "width:" + item.css2dForm[0].content + "px"
             );
-            div.setAttribute(
-              "style",
-              "opacity: 1",
-            );
+            div.setAttribute("style", "opacity: 1");
             div.innerHTML = ` 
             <div class="css2d_title">${item.css2dForm[1].content}</div>
            ${item.css2dForm[2].content}`;

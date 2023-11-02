@@ -94,6 +94,7 @@ interface gridParams {
 
 interface sceneParam {
   webglrenderer?: webglrendererParams;
+  renderQuality?: renderQualityParam;
   background?: backgroundParams;
   stats?: statsParams;
   fog?: fogParams;
@@ -102,6 +103,14 @@ interface webglrendererParams {
   gammaFactor?: number;
   alpha?: boolean;
   antialias?: boolean;
+}
+interface renderQualityParam {
+  antialias?: boolean;
+  shadowMap?: shadowMapParams;
+}
+
+interface shadowMapParams {
+  enabled: boolean;
 }
 interface backgroundParams {
   type?: string;

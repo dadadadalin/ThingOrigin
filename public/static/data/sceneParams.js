@@ -5,6 +5,12 @@ export default {
       alpha: true,
       antialias: true,
     },
+    renderQuality: {
+      antialias: true, //抗锯齿
+      shadowMap: {
+        enabled: true, //启用阴影
+      },
+    },
     stats: {
       show: false,
       //监控模式 0:画面每秒传输帧数（fps）  1：画面渲染的时间
