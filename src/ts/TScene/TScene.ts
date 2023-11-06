@@ -9,6 +9,7 @@ import {
   Group,
   Mesh,
   Object3D,
+  ReinhardToneMapping,
   Scene,
   ShaderMaterial,
   SphereBufferGeometry,
@@ -127,8 +128,15 @@ export class TScene extends Scene {
       renderParams.antialias = true;
     }
     this.renderer = new WebGLRenderer(renderParams);
+    // WebGL 2.0
+    // this.renderer.capabilities.antialias = true;
 
     console.log(sceneParams.scene.background.type);
+
+    //色调映射
+    if (sceneParams.scene.renderQuality.toneMapping) {
+      this.renderer.toneMapping = ReinhardToneMapping;
+    }
 
     //天空盒
     if (sceneParams.scene.background.type == "sky") {

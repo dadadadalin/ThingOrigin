@@ -10,6 +10,7 @@ export default {
       shadowMap: {
         enabled: true, //启用阴影
       },
+      toneMapping: true, //色调映射
     },
     stats: {
       show: false,

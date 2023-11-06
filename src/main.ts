@@ -5,23 +5,30 @@ import { ThingOrigin } from "./ThingOrigin";
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 
 ThingOrigin.model
-  .initFileModel("gltf", "/static/three/animate/scene.gltf", {
-    scale: [4, 4, 4],
-  })
+  .initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] })
   .then((model) => {
-    //@ts-ignore
+    console.log(model);
     mainScene.add(model.scene);
-
-    //@ts-ignore
-    mainScene.playAnimation(model, 0);
   });
 
-//indexedDB缓存模型
+// ThingOrigin.model
+//   .initFileModel("gltf", "/static/three/animate/scene.gltf", {
+//     scale: [4, 4, 4],
+//   })
+//   .then((model) => {
+//     //@ts-ignore
+//     mainScene.add(model.scene);
+
+//     //@ts-ignore
+//     mainScene.playAnimation(model, 0);
+//   });
+
+// indexedDB缓存模型
 // let modelInfo = {
 //   id: 1,
 //   type: "gltf",
 //   name: "测试模型",
-//   url: "/static/three/factory3.glb",
+//   url: "/static/three/factory.glb",
 // };
 // ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
 //   console.log(res);

@@ -104,9 +104,18 @@ interface webglrendererParams {
   alpha?: boolean;
   antialias?: boolean;
 }
+/**
+ * @description
+ * @author LL
+ * @date 2023/11/06
+ * @param {boolean} antialias 抗锯齿
+ * @param {boolean} toneMapping 景深
+ * @interface renderQualityParam
+ */
 interface renderQualityParam {
-  antialias?: boolean;
+  antialias?: boolean; //
   shadowMap?: shadowMapParams;
+  toneMapping?: boolean;
 }
 
 interface shadowMapParams {
