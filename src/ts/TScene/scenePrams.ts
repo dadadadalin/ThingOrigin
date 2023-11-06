@@ -117,6 +117,7 @@ interface backgroundParams {
   sky?: skyParams;
   color?: colorParams;
   img?: imgParams;
+  cubeMap?: cubeMapParams;
 }
 interface skyParams {
   color?: skyColorParams;
@@ -140,6 +141,10 @@ interface colorParams {
 
 interface imgParams {
   url?: string;
+}
+
+interface cubeMapParams {
+  url?: string[];
 }
 
 interface statsParams {

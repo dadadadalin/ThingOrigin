@@ -17,7 +17,7 @@ export default {
       mode: 0,
     },
     background: {
-      type: "sky",
+      type: "cubeMap",
       color: {
         alpha: 0, //透明度 取值范围0~1
         color: "#944",
@@ -33,6 +33,16 @@ export default {
           heightSegments: 15,
           skyCenter: [0, 0, 0],
         },
+      },
+      cubeMap: {
+        url: [
+          "/static/img/SwedishRoyalCastle/px.jpg",
+          "/static/img/SwedishRoyalCastle/nx.jpg",
+          "/static/img/SwedishRoyalCastle/py.jpg",
+          "/static/img/SwedishRoyalCastle/ny.jpg",
+          "/static/img/SwedishRoyalCastle/pz.jpg",
+          "/static/img/SwedishRoyalCastle/nz.jpg",
+        ],
       },
     },
     fog: {

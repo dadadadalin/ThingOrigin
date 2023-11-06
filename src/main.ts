@@ -4,7 +4,6 @@ import { ThingOrigin } from "./ThingOrigin";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 
-let mixer;
 ThingOrigin.model
   .initFileModel("gltf", "/static/three/animate/scene.gltf", {
     scale: [4, 4, 4],

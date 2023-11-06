@@ -3,6 +3,7 @@ import {
   AnimationMixer,
   BackSide,
   Color,
+  CubeTextureLoader,
   Fog,
   FogExp2,
   Group,
@@ -127,13 +128,18 @@ export class TScene extends Scene {
     }
     this.renderer = new WebGLRenderer(renderParams);
 
+    console.log(sceneParams.scene.background.type);
+
+    //天空盒
     if (sceneParams.scene.background.type == "sky") {
       this.initSky({
         top: sceneParams.scene.background.sky.color.top,
         line: sceneParams.scene.background.sky.color.line,
         bottom: sceneParams.scene.background.sky.color.bottom,
       });
-    } else if (sceneParams.scene.background.type == "color") {
+    }
+    //颜色
+    else if (sceneParams.scene.background.type == "color") {
       if (sceneParams.scene.webglrenderer.alpha) {
         this.renderer.setClearColor(
           sceneParams.scene.background.color.color,
@@ -142,6 +148,13 @@ export class TScene extends Scene {
       } else {
         this.background = new Color(sceneParams.scene.background.color.color);
       }
+    }
+    //环境贴图
+    else if (sceneParams.scene.background.type == "cubeMap") {
+      const envMap = new CubeTextureLoader().load(
+        sceneParams.scene.background.cubeMap.url
+      );
+      this.background = envMap;
     }
 
     this.renderer.setSize(
