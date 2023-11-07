@@ -1,13 +1,17 @@
 import merge from "lodash.merge";
 import {
+  ACESFilmicToneMapping,
   AnimationMixer,
   BackSide,
+  CineonToneMapping,
   Color,
   CubeTextureLoader,
   Fog,
   FogExp2,
   Group,
+  LinearToneMapping,
   Mesh,
+  NoToneMapping,
   Object3D,
   ReinhardToneMapping,
   Scene,
@@ -128,14 +132,27 @@ export class TScene extends Scene {
       renderParams.antialias = true;
     }
     this.renderer = new WebGLRenderer(renderParams);
+
     // WebGL 2.0
     // this.renderer.capabilities.antialias = true;
 
-    console.log(sceneParams.scene.background.type);
-
     //色调映射
-    if (sceneParams.scene.renderQuality.toneMapping) {
-      this.renderer.toneMapping = ReinhardToneMapping;
+    switch (sceneParams.scene.renderQuality.toneMapping.type) {
+      case "NoToneMapping":
+        this.renderer.toneMapping = NoToneMapping;
+        break;
+      case "LinearToneMapping":
+        this.renderer.toneMapping = LinearToneMapping;
+        break;
+      case "ReinhardToneMapping":
+        this.renderer.toneMapping = ReinhardToneMapping;
+        break;
+      case "CineonToneMapping":
+        this.renderer.toneMapping = CineonToneMapping;
+        break;
+      case "ACESFilmicToneMapping":
+        this.renderer.toneMapping = ACESFilmicToneMapping;
+        break;
     }
 
     //天空盒

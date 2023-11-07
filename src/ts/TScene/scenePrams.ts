@@ -115,11 +115,15 @@ interface webglrendererParams {
 interface renderQualityParam {
   antialias?: boolean; //
   shadowMap?: shadowMapParams;
-  toneMapping?: boolean;
+  toneMapping?: toneMappingParams;
 }
-
 interface shadowMapParams {
   enabled: boolean;
+}
+
+interface toneMappingParams {
+  type: string;
+  typeList: string[];
 }
 interface backgroundParams {
   type?: string;
