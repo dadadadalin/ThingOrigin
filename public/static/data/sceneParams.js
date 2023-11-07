@@ -4,8 +4,11 @@ export default {
       //是否支持背景透明
       alpha: true,
       antialias: true,
+      autoClear: true,
     },
     renderQuality: {
+      alpha: true,
+      autoClear: true,
       antialias: true, //抗锯齿
       shadowMap: {
         enabled: true, //启用阴影

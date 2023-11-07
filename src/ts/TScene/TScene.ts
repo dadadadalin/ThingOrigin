@@ -133,6 +133,9 @@ export class TScene extends Scene {
     }
     this.renderer = new WebGLRenderer(renderParams);
 
+    //性能优化  自动清除
+    this.renderer.autoClear = sceneParams.scene.renderQuality.autoClear;
+
     // WebGL 2.0
     // this.renderer.capabilities.antialias = true;
 
@@ -165,7 +168,7 @@ export class TScene extends Scene {
     }
     //颜色
     else if (sceneParams.scene.background.type == "color") {
-      if (sceneParams.scene.webglrenderer.alpha) {
+      if (sceneParams.scene.renderQuality.alpha) {
         this.renderer.setClearColor(
           sceneParams.scene.background.color.color,
           sceneParams.scene.background.color.alpha
