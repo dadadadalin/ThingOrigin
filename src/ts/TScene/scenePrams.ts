@@ -96,6 +96,7 @@ interface sceneParam {
   webglrenderer?: webglrendererParams;
   renderQuality?: renderQualityParam;
   background?: backgroundParams;
+  environment?: environmentParams;
   stats?: statsParams;
   fog?: fogParams;
 }
@@ -127,6 +128,9 @@ interface backgroundParams {
   color?: colorParams;
   img?: imgParams;
   cubeMap?: cubeMapParams;
+}
+interface environmentParams{
+  mapping?: string;
 }
 interface skyParams {
   color?: skyColorParams;

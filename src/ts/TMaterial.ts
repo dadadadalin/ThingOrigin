@@ -1,4 +1,9 @@
-import { BackSide, DoubleSide, FrontSide, LinearFilter, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, RGBFormat, SpriteMaterial, TextureLoader, VideoTexture } from "three";
+import { BackSide, DoubleSide, FrontSide, LinearFilter,
+     Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
+     MeshDepthMaterial,MeshMatcapMaterial,MeshNormalMaterial,MeshLambertMaterial,MeshPhongMaterial,MeshToonMaterial,
+     LineBasicMaterial, LineDashedMaterial, MeshDistanceMaterial, PointsMaterial, ShadowMaterial,
+      RGBFormat, SpriteMaterial, TextureLoader, CubeTextureLoader, VideoTexture 
+    } from "three";
 import { ThingOrigin } from "./../ThingOrigin";
 
 export class TMaterial {
@@ -20,19 +25,21 @@ export class TMaterial {
     }
 
     /**
-     * @description 切换几何体纹理贴图
+     * @description 切换模型材质贴图
      * @author gj
-     * @param {string} sceneName
-     * @param {string} uuid
-     * @param {textureParams} options
+     * @date 2023/11/3
+     * @param {string} sceneName 场景名称
+     * @param {string} uuid 模型uuid
+     * @param {textureParams} options 材质贴图参数集合
      */
-    public changeGeometryTexture(sceneName: string, uuid: string, options: textureParams): void {
+    public changeTextureMap(sceneName: string, uuid: string, options: textureParams): void {
         let obj = ThingOrigin.getScene(sceneName).getObjectByProperty("uuid", uuid);
         if (!obj) {
-            console.warn("切换贴图失败，物体不存在");
+            console.warn("切换材质贴图失败，物体不存在");
             return;
         }
 
+        //金属材质，漫反射，金属漆，涂料，塑料，绒布，发光，半透明，玻璃，电介质，通用，基础PBR
         obj.traverse((child) => {
             if (child instanceof Mesh) {
                 if (child.material) {
@@ -44,27 +51,48 @@ export class TMaterial {
                         child.material.dispose();
                     }
                 }
-                // switch(materialType){
-                // case 'physical':
-                child.material = new MeshPhysicalMaterial({
-                    color: options.color, //三维里的颜色
-                    emissive: options.emissive, //自发光
-                    wireframe: options.wireframe, //网格
-                    roughness: options.roughness, //粗糙度
-                    metalness: options.metalness, //金属度
-                    transparent: options.transparent, //是否透明
-                    opacity: options.opacity, //透明度
-                    side: options.side == "FrontSide" ? FrontSide : options.side == "BackSide" ? BackSide : DoubleSide, //side
-                    map: options.map == "" ? null : new TextureLoader().load(options.map), //贴图
-                    normalMap: options.normalMap == "" ? null : new TextureLoader().load(options.normalMap), //法线贴图
-                    roughnessMap: options.roughnessMap == "" ? null : new TextureLoader().load(options.roughnessMap), //粗糙贴图
-                    metalnessMap: options.metalnessMap == "" ? null : new TextureLoader().load(options.metalnessMap), //金属贴图
-                    envMap: options.envMap == "" ? null : new TextureLoader().load(options.envMap), //环境贴图
-                    lightMap: options.lightMap == "" ? null : new TextureLoader().load(options.lightMap), //光照贴图
-                    aoMap: options.aoMap == "" ? null : new TextureLoader().load(options.aoMap), //AO贴图
-                });
-                // break;
-                // }
+
+                let materialObj = {};
+                for(let key in options){
+                    if(options.hasOwnProperty(key)){
+                        if(!['img', 'materialType','side'].includes(key)){
+                            materialObj[key] = options[key];
+                        }
+                        if('side' === key){
+                            switch(options[key]){
+                                case 'FrontSide': materialObj[key] =  FrontSide; break;
+                                case 'BackSide': materialObj[key] =  BackSide; break;
+                                case 'DoubleSide': materialObj[key] =  DoubleSide; break;
+                            }
+                        }
+                        if(['map','normalMap','roughnessMap','metalnessMap','lightMap','aoMap'].includes(key)){
+                            materialObj[key] = new TextureLoader().load(options[key])
+                        }
+                        if('envMap' === key){
+                            materialObj[key] =  new CubeTextureLoader().load(options[key]);
+                        }
+                    }
+                }
+
+                let keyName = options.materialType;
+                const modeMap = {
+                    LineBasicMaterial: () => new LineBasicMaterial({ ...materialObj }), //基础线条材质
+                    LineDashedMaterial: () => new LineDashedMaterial({ ...materialObj }), //虚线材质
+                    MeshBasicMaterial: () => new MeshBasicMaterial({ ...materialObj }), //基础网格材质
+                    MeshDepthMaterial: () => new MeshDepthMaterial({ ...materialObj }), // 深度网格材质
+                    MeshDistanceMaterial:() => new MeshDistanceMaterial({ ...materialObj }), //距离材质
+                    MeshLambertMaterial: () => new MeshLambertMaterial({ ...materialObj }), // (Lambert网格)兰伯特材质
+                    MeshMatcapMaterial: () => new MeshMatcapMaterial({ ...materialObj }), //捕捉材质
+                    MeshNormalMaterial: () => new MeshNormalMaterial({ ...materialObj }), //法线网格材质
+                    MeshPhongMaterial: () => new MeshPhongMaterial({ ...materialObj }), //Phong网格材质
+                    MeshPhysicalMaterial: () => new MeshPhysicalMaterial({ ...materialObj }), //物理网格材质
+                    MeshStandardMaterial: () => new MeshStandardMaterial({ ...materialObj }), //标准网格材质
+                    MeshToonMaterial: () => new MeshToonMaterial({ ...materialObj }), //卡通着色材质
+                    PointsMaterial: () => new PointsMaterial({ ...materialObj }), //点材质
+                    ShadowMaterial: () => new ShadowMaterial({ ...materialObj }) //阴影材质
+                }
+                
+                child.material = modeMap[keyName] ? modeMap[keyName]() : {};
             }
         });
     }
@@ -83,7 +111,6 @@ export class TMaterial {
 
         return texture;
     }
-
     public initPicMaterial(url: string): MeshBasicMaterial {
         const texture = new TextureLoader().load(url);
         let material = new MeshBasicMaterial();

@@ -1,4 +1,5 @@
 interface textureParams {
+    materialType: string;
     color: string;
     emissive: string;
     wireframe: boolean;
@@ -12,7 +13,7 @@ interface textureParams {
     normalMap: string;
     roughnessMap: string;
     metalnessMap: string;
-    envMap: string;
+    envMap: string[];
     lightMap: string;
     aoMap: string;
 }

@@ -16,13 +16,12 @@ import {
   TextureLoader,
   Vector3,
   WebGLRenderer,
+  EquirectangularReflectionMapping
 } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
-import {
-  CSS2DObject,
-  CSS2DRenderer,
-} from "three/examples/jsm/renderers/CSS2DRenderer";
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { CSS2DObject, CSS2DRenderer} from "three/examples/jsm/renderers/CSS2DRenderer";
 import sceneData from "../../../public/static/data/sceneParams.js";
 import { TEventDispatcher } from "../controls/TEventDispatcher";
 import { TExporters } from "../exporters/TExporters";
@@ -197,16 +196,27 @@ export class TScene extends Scene {
    */
   private initLight(sceneParams: ThingOriginParams) {
     for (let i = 0; i < sceneParams.lights.length; i++) {
-      const light = this.light.addDirectionalLight(
-        sceneParams.lights[i].name,
-        sceneParams.lights[i].color,
-        sceneParams.lights[i].intensity
-      );
-      light.position.set(
-        sceneParams.lights[i].position.x,
-        sceneParams.lights[i].position.y,
-        sceneParams.lights[i].position.z
-      );
+      let lightInfo = sceneParams.lights[i];
+      switch(lightInfo.type){
+        case "DirectionalLight":
+          const light = this.light.addDirectionalLight(
+            lightInfo.name,
+            lightInfo.color,
+            lightInfo.intensity
+          );
+          light.position.set(
+            lightInfo.position.x,
+            lightInfo.position.y,
+            lightInfo.position.z
+          );
+          break;
+        case "ambientLight":
+            this.light.addAmbientLight(
+              lightInfo.color,
+              lightInfo.intensity
+            )
+            break;
+      }
     }
   }
 
@@ -373,13 +383,26 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 修改背景图片
+   * @description 设置背景图片
    * @author LL
    * @date 2021/08/26
    * @param {string} url
    */
   public setBackgroundImg(url: string) {
     this.background = new TextureLoader().load(url);
+  }
+
+  /**
+   * @description 设置全景环境
+   * @author gj
+   * @date 2023/10/31
+   * @param {string} url 
+   */
+  public setSceneViewImage(url: string){
+    new RGBELoader().load(url, (texture)=>{
+      texture.mapping = EquirectangularReflectionMapping;
+      this.environment = texture;
+    });
   }
 
   /**
