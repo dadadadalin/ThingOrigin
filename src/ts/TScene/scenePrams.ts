@@ -93,17 +93,11 @@ interface gridParams {
 }
 
 interface sceneParam {
-  webglrenderer?: webglrendererParams;
   renderQuality?: renderQualityParam;
   background?: backgroundParams;
   environment?: environmentParams;
   stats?: statsParams;
   fog?: fogParams;
-}
-interface webglrendererParams {
-  gammaFactor?: number;
-  alpha?: boolean;
-  antialias?: boolean;
 }
 /**
  * @description
@@ -114,13 +108,19 @@ interface webglrendererParams {
  * @interface renderQualityParam
  */
 interface renderQualityParam {
+  alpha?: boolean;
+  autoClear?: boolean;
   antialias?: boolean; //
   shadowMap?: shadowMapParams;
-  toneMapping?: boolean;
+  toneMapping?: toneMappingParams;
 }
-
 interface shadowMapParams {
   enabled: boolean;
+}
+
+interface toneMappingParams {
+  type: string;
+  typeList: string[];
 }
 interface backgroundParams {
   type?: string;

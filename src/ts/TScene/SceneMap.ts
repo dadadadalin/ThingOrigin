@@ -4,8 +4,7 @@ import { ThingOrigin } from "../../ThingOrigin";
 import { TScene } from "./TScene";
 
 let clock = new Clock();
-// import sceneParams from "../../../public/static/data/sceneParams.js";
-// var i = 0;
+
 /** 帧循环 */
 function animate() {
   ThingOrigin.scenes.scenes.forEach(function (item, key, mapObj) {

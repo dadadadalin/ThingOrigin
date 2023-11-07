@@ -4,13 +4,26 @@ export default {
       //是否支持背景透明
       alpha: true,
       antialias: true,
+      autoClear: true,
     },
     renderQuality: {
+      alpha: true,
+      autoClear: true,
       antialias: true, //抗锯齿
       shadowMap: {
         enabled: true, //启用阴影
       },
-      toneMapping: true, //色调映射
+      toneMapping: {
+        //色调映射
+        type: "ReinhardToneMapping",
+        typeList: [
+          "NoToneMapping", //无色调映射，直接输出线性颜色。
+          "LinearToneMapping", //线性色调映射，将线性颜色映射到显示器的范围。
+          "ReinhardToneMapping", //Reinhard色调映射，模拟人眼对亮度的感知。
+          "CineonToneMapping", //Cineon色调映射，模拟电影胶片的色调映射。
+          "ACESFilmicToneMapping", //ACES Filmic色调映射，模拟电影和电视的色调映射。
+        ],
+      },
     },
     stats: {
       show: false,
