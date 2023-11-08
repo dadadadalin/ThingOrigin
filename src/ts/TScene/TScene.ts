@@ -81,7 +81,15 @@ export class TScene extends Scene {
     container: HTMLElement,
     userSceneParam?: ThingOriginParams
   ): void {
+    //处理合并场景数据
     this.sceneParam = merge(this.sceneParam, userSceneParam);
+    if (userSceneParam.lights) this.sceneParam.lights = userSceneParam.lights;
+    if (userSceneParam.models) this.sceneParam.models = userSceneParam.models;
+    if (userSceneParam.css2d) this.sceneParam.css2d = userSceneParam.css2d;
+    // if (userSceneParam.animations)
+    //   this.sceneParam.animations = userSceneParam.animations;
+    // if (userSceneParam.handles)
+    //   this.sceneParam.handles = userSceneParam.handles;
 
     this.container = container;
     this.initCamera(this.sceneParam);
@@ -90,16 +98,14 @@ export class TScene extends Scene {
     this.effect.initEffect(this.sceneParam);
     this.initControl(this.sceneParam);
 
-    if (this.sceneParam.scene.fog && this.sceneParam.scene.fog.show) {
-      if (this.sceneParam.scene.fog.cameraView) {
-        this.fog = new FogExp2(this.sceneParam.scene.fog.color);
-      } else {
-        this.fog = new Fog(this.sceneParam.scene.fog.color);
-      }
-    }
+    if (this.sceneParam.scene.fog.show)
+      this.sceneParam.scene.fog.cameraView
+        ? (this.fog = new FogExp2(this.sceneParam.scene.fog.color))
+        : (this.fog = new Fog(this.sceneParam.scene.fog.color));
+
     if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
-    if (this.sceneParam.models) this.loadModel(this.sceneParam);
-    if (this.sceneParam.css2d) this.loadCSS2D(this.sceneParam);
+    if (this.sceneParam.models.length != 0) this.loadModel(this.sceneParam);
+    if (this.sceneParam.css2d.length != 0) this.loadCSS2D(this.sceneParam);
   }
 
   /**
@@ -157,7 +163,6 @@ export class TScene extends Scene {
         this.renderer.toneMapping = ACESFilmicToneMapping;
         break;
     }
-
     //天空盒
     if (sceneParams.scene.background.type == "sky") {
       this.initSky({
