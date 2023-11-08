@@ -31,7 +31,7 @@ export default {
       mode: 0,
     },
     background: {
-      type: "cubeMap",
+      type: "sky",
       color: {
         alpha: 0, //透明度 取值范围0~1
         color: "#944",

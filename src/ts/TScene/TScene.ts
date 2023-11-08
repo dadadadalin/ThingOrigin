@@ -283,7 +283,7 @@ export class TScene extends Scene {
 
   /**
    * @description 加载渲染模型
-   * @author LL gj
+   * @author LL
    * @date 2021/07/26
    * @private
    * @param {ThingOriginParams} sceneParams 场景参数
@@ -308,11 +308,12 @@ export class TScene extends Scene {
             modelConfigs
           )
           .then((model) => {
-            //初始元素uuid存在，则使用初始的，否则重新生成
-            if (item["uuid"]) {
-              model.uuid = item["uuid"];
+            if (item["objInfo"].fileType == "gltf") {
+              //@ts-ignore
+              this.add(model.scene);
+            } else {
+              this.add(model);
             }
-            this.add(model);
           });
       } else if (item["objInfo"].objType == "sphere") {
         let sphere = ThingOrigin.model.initSphere(
