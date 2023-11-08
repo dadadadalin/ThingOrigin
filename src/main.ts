@@ -3,7 +3,7 @@ import { AnimationMixer, Clock, LoopOnce, Vector3 } from "three";
 import { ThingOrigin } from "./ThingOrigin";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
-
+mainScene.setSceneViewImage('/static/three/animate/textures/venice_sunset_1k.hdr')
 ThingOrigin.model
   .initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] })
   .then((model) => {

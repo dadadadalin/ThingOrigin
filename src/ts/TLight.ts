@@ -1,4 +1,4 @@
-import { Color, DirectionalLight, Light } from "three";
+import { Color, DirectionalLight, Light, AmbientLight } from "three";
 import { TScene } from "./TScene/TScene";
 
 /** 自定义光源的基类，用于 */
@@ -53,6 +53,19 @@ export class TLight {
         light.name = name;
         this.tScene.add(light);
         return light;
+    }
+
+    /**
+     * @description 添加环境光
+     * @author gj
+     * @date 2023/10/27
+     * @param {(Color | string | number)} [color]
+     * @param {number} [intensity]
+     * @return {*}  
+     */
+    public addAmbientLight(color?: Color | string | number, intensity?: number) {
+        const ambientLight = new AmbientLight(color, intensity);
+        this.tScene.add(ambientLight);
     }
 
     /**
