@@ -43,7 +43,7 @@ export class SceneMap {
     sceneParams?: ThingOriginParams
   ) {
     this.scenes.set(sceneName, new TScene());
-    this.scenes.get(sceneName).createScene(container, sceneParams);
+    this.scenes.get(sceneName).createScene(sceneName, container, sceneParams);
 
     if (this.scenes.size == 1) {
       animate();

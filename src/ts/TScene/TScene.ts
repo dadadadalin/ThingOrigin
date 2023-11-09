@@ -44,6 +44,7 @@ import { TEffect } from "./../TEffect";
 
 //用一个group来放模型
 export class TScene extends Scene {
+  public sceneName: string;
   /** 光源管理 */
   public light: TLight = new TLight(this);
   /** 当前场景的dom容器 */
@@ -60,18 +61,17 @@ export class TScene extends Scene {
   public CSS2DRenderer: CSS2DRenderer;
   /** 效果 */
   public effect: TEffect = new TEffect(this);
-
+  /** 工具 */
   public tool: TTool = new TTool(this);
   /** 动画播放器 */
   public mixer: AnimationMixer;
-
   /** 事件捕捉器 */
   public eDispatcher: TEventDispatcher = new TEventDispatcher();
   /** 导出 */
   public exporters: TExporters = new TExporters();
   /** 场景参数 */
-  public sceneParam: ThingOriginParams = sceneData;
-
+  public sceneParam: ThingOriginParams = JSON.parse(JSON.stringify(sceneData));
+  /** 性能 */
   public stats: Stats;
 
   /**
@@ -82,17 +82,32 @@ export class TScene extends Scene {
    * @param {ThingOriginParams} userSceneParam 场景描述参数（可不传，使用默认参数）
    */
   public createScene(
+    sceneName: string,
     container: HTMLElement,
     userSceneParam?: ThingOriginParams
   ): void {
+    console.log("用户传入参数", JSON.stringify(userSceneParam));
+    this.sceneName = sceneName;
     //处理合并场景数据
     this.sceneParam = merge(this.sceneParam, userSceneParam);
-    console.log(userSceneParam);
-    if (userSceneParam && userSceneParam.lights.length != 0)
+
+    if (
+      userSceneParam &&
+      userSceneParam.lights &&
+      userSceneParam.lights.length != 0
+    )
       this.sceneParam.lights = userSceneParam.lights;
-    if (userSceneParam && userSceneParam.models)
+    if (
+      userSceneParam &&
+      userSceneParam.models &&
+      userSceneParam.models.length != 0
+    )
       this.sceneParam.models = userSceneParam.models;
-    if (userSceneParam && userSceneParam.css2d)
+    if (
+      userSceneParam &&
+      userSceneParam.css2d &&
+      userSceneParam.css2d.length != 0
+    )
       this.sceneParam.css2d = userSceneParam.css2d;
     // if (userSceneParam.animations)
     //   this.sceneParam.animations = userSceneParam.animations;
@@ -342,9 +357,6 @@ export class TScene extends Scene {
   public setEquirectangularReflectionMapping(
     config: EquirectangularReflectionMappingConfigParams
   ) {
-    //将引用图片记录到场景数据里
-    this.sceneParam.scene.environment.EquirectangularReflectionMappingConfig.url =
-      config.url;
     new RGBELoader().load(config.url, (texture) => {
       texture.mapping = EquirectangularReflectionMapping;
       this.environment = texture;
@@ -377,6 +389,7 @@ export class TScene extends Scene {
    * @param {ThingOriginParams} sceneParams 场景参数
    */
   private loadModel(sceneParams: ThingOriginParams) {
+    console.log(this.sceneName, sceneParams.models);
     for (let i = 0; i < sceneParams.models.length; i++) {
       let item = sceneParams.models[i];
       if (item["objInfo"].objType == "modelFile") {
