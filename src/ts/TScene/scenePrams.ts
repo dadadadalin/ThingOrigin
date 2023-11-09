@@ -129,8 +129,14 @@ interface backgroundParams {
   img?: imgParams;
   cubeMap?: cubeMapParams;
 }
-interface environmentParams{
-  mapping?: string;
+interface environmentParams {
+  type: string;
+  typeList: string[];
+  EquirectangularReflectionMappingConfig: EquirectangularReflectionMappingConfigParams;
+}
+
+interface EquirectangularReflectionMappingConfigParams {
+  url: string;
 }
 interface skyParams {
   color?: skyColorParams;

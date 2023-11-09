@@ -6,6 +6,7 @@ import {
   CineonToneMapping,
   Color,
   CubeTextureLoader,
+  EquirectangularReflectionMapping,
   Fog,
   FogExp2,
   Group,
@@ -13,6 +14,7 @@ import {
   Mesh,
   NoToneMapping,
   Object3D,
+  PMREMGenerator,
   ReinhardToneMapping,
   Scene,
   ShaderMaterial,
@@ -20,12 +22,15 @@ import {
   TextureLoader,
   Vector3,
   WebGLRenderer,
-  EquirectangularReflectionMapping
 } from "three";
 import Stats from "three/examples/jsm/libs/stats.module";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
 import { GLTF } from "three/examples/jsm/loaders/GLTFLoader.js";
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
-import { CSS2DObject, CSS2DRenderer} from "three/examples/jsm/renderers/CSS2DRenderer";
+import {
+  CSS2DObject,
+  CSS2DRenderer,
+} from "three/examples/jsm/renderers/CSS2DRenderer";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import sceneData from "../../../public/static/data/sceneParams.js";
 import { TEventDispatcher } from "../controls/TEventDispatcher";
 import { TExporters } from "../exporters/TExporters";
@@ -82,9 +87,13 @@ export class TScene extends Scene {
   ): void {
     //处理合并场景数据
     this.sceneParam = merge(this.sceneParam, userSceneParam);
-    if (userSceneParam.lights) this.sceneParam.lights = userSceneParam.lights;
-    if (userSceneParam.models) this.sceneParam.models = userSceneParam.models;
-    if (userSceneParam.css2d) this.sceneParam.css2d = userSceneParam.css2d;
+    console.log(userSceneParam);
+    if (userSceneParam && userSceneParam.lights.length != 0)
+      this.sceneParam.lights = userSceneParam.lights;
+    if (userSceneParam && userSceneParam.models)
+      this.sceneParam.models = userSceneParam.models;
+    if (userSceneParam && userSceneParam.css2d)
+      this.sceneParam.css2d = userSceneParam.css2d;
     // if (userSceneParam.animations)
     //   this.sceneParam.animations = userSceneParam.animations;
     // if (userSceneParam.handles)
@@ -97,14 +106,14 @@ export class TScene extends Scene {
     this.effect.initEffect(this.sceneParam);
     this.initControl(this.sceneParam);
 
+    if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
+    if (this.sceneParam.models.length != 0) this.loadModel(this.sceneParam);
+    if (this.sceneParam.css2d) this.loadCSS2D(this.sceneParam);
+
     if (this.sceneParam.scene.fog.show)
       this.sceneParam.scene.fog.cameraView
         ? (this.fog = new FogExp2(this.sceneParam.scene.fog.color))
         : (this.fog = new Fog(this.sceneParam.scene.fog.color));
-
-    if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
-    if (this.sceneParam.models.length != 0) this.loadModel(this.sceneParam);
-    if (this.sceneParam.css2d.length != 0) this.loadCSS2D(this.sceneParam);
   }
 
   /**
@@ -162,33 +171,41 @@ export class TScene extends Scene {
         this.renderer.toneMapping = ACESFilmicToneMapping;
         break;
     }
-    //天空盒
-    if (sceneParams.scene.background.type == "sky") {
-      this.initSky({
-        top: sceneParams.scene.background.sky.color.top,
-        line: sceneParams.scene.background.sky.color.line,
-        bottom: sceneParams.scene.background.sky.color.bottom,
-      });
-    }
-    //颜色
-    else if (sceneParams.scene.background.type == "color") {
-      if (sceneParams.scene.renderQuality.alpha) {
-        this.renderer.setClearColor(
-          sceneParams.scene.background.color.color,
-          sceneParams.scene.background.color.alpha
-        ); //default
-      } else {
-        this.background = new Color(sceneParams.scene.background.color.color);
-      }
-    }
-    //环境贴图
-    else if (sceneParams.scene.background.type == "cubeMap") {
-      const envMap = new CubeTextureLoader().load(
-        sceneParams.scene.background.cubeMap.url
-      );
-      this.background = envMap;
+
+    //设置背景
+    switch (sceneParams.scene.background.type) {
+      case "sky":
+        this.initSky({
+          top: sceneParams.scene.background.sky.color.top,
+          line: sceneParams.scene.background.sky.color.line,
+          bottom: sceneParams.scene.background.sky.color.bottom,
+        });
+        break;
+      case "color":
+        this.setBackgroundColor(sceneParams.scene);
+        break;
+      case "cubeMap": //环境贴图
+        this.setBackgroundCubeMap(sceneParams.scene.background.cubeMap);
+        break;
+      default:
+        break;
     }
 
+    //设置环境
+    switch (sceneParams.scene.environment.type) {
+      case "roomEnvironment":
+        this.setRoomEnvironment();
+        break;
+      case "EquirectangularReflectionMapping":
+        this.setEquirectangularReflectionMapping(
+          sceneParams.scene.environment.EquirectangularReflectionMappingConfig
+        );
+        break;
+      default:
+        break;
+    }
+
+    //渲染器配置
     this.renderer.setSize(
       this.container.clientWidth,
       this.container.clientHeight
@@ -222,25 +239,18 @@ export class TScene extends Scene {
   private initLight(sceneParams: ThingOriginParams) {
     for (let i = 0; i < sceneParams.lights.length; i++) {
       let lightInfo = sceneParams.lights[i];
-      switch(lightInfo.type){
+      switch (lightInfo.type) {
         case "DirectionalLight":
           const light = this.light.addDirectionalLight(
             lightInfo.name,
             lightInfo.color,
-            lightInfo.intensity
-          );
-          light.position.set(
-            lightInfo.position.x,
-            lightInfo.position.y,
-            lightInfo.position.z
+            lightInfo.intensity,
+            { position: lightInfo.position }
           );
           break;
         case "ambientLight":
-            this.light.addAmbientLight(
-              lightInfo.color,
-              lightInfo.intensity
-            )
-            break;
+          this.light.addAmbientLight(lightInfo.color, lightInfo.intensity);
+          break;
       }
     }
   }
@@ -276,6 +286,69 @@ export class TScene extends Scene {
     if (sceneParams.controls.transform.active) {
       this.controls.initTransform();
     }
+  }
+
+  /**
+   * @description 将背景设置为颜色
+   * @author LL
+   * @date 2023/11/09
+   * @param {sceneParam} scene
+   * @memberof TScene
+   */
+  public setBackgroundColor(scene: sceneParam) {
+    if (scene.renderQuality.alpha) {
+      this.renderer.setClearColor(
+        scene.background.color.color,
+        scene.background.color.alpha
+      ); //default
+    } else {
+      this.background = new Color(scene.background.color.color);
+    }
+  }
+
+  /**
+   * @description 将背景设置为环境贴图
+   * @author LL
+   * @date 2023/11/09
+   * @param {cubeMapParams} cubeMap
+   * @memberof TScene
+   */
+  public setBackgroundCubeMap(cubeMap: cubeMapParams) {
+    const envMap = new CubeTextureLoader().load(cubeMap.url);
+    this.background = envMap;
+  }
+
+  /**
+   * @description 将环境设置为环境光
+   * @author LL
+   * @date 2023/11/08
+   * @memberof TScene
+   */
+  public setRoomEnvironment() {
+    const pmremGenerator = new PMREMGenerator(this.renderer);
+    this.environment = pmremGenerator.fromScene(
+      new RoomEnvironment(),
+      0.04
+    ).texture;
+  }
+
+  /**
+   * @description 将环境设置为经纬线映射贴图
+   * @author gj
+   * @date 2023/11/07
+   * @param {EquirectangularReflectionMappingConfigParams} config
+   * @memberof TScene
+   */
+  public setEquirectangularReflectionMapping(
+    config: EquirectangularReflectionMappingConfigParams
+  ) {
+    //将引用图片记录到场景数据里
+    this.sceneParam.scene.environment.EquirectangularReflectionMappingConfig.url =
+      config.url;
+    new RGBELoader().load(config.url, (texture) => {
+      texture.mapping = EquirectangularReflectionMapping;
+      this.environment = texture;
+    });
   }
 
   /**
@@ -409,26 +482,13 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 设置背景图片
+   * @description 修改背景图片
    * @author LL
    * @date 2021/08/26
    * @param {string} url
    */
   public setBackgroundImg(url: string) {
     this.background = new TextureLoader().load(url);
-  }
-
-  /**
-   * @description 设置全景环境
-   * @author gj
-   * @date 2023/10/31
-   * @param {string} url 
-   */
-  public setSceneViewImage(url: string){
-    new RGBELoader().load(url, (texture)=>{
-      texture.mapping = EquirectangularReflectionMapping;
-      this.environment = texture;
-    });
   }
 
   /**

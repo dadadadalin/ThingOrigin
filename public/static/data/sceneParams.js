@@ -1,11 +1,5 @@
 export default {
   scene: {
-    webglrenderer: {
-      //是否支持背景透明
-      alpha: true,
-      antialias: true,
-      autoClear: true,
-    },
     renderQuality: {
       alpha: true,
       autoClear: true,
@@ -13,8 +7,8 @@ export default {
       shadowMap: {
         enabled: true, //启用阴影
       },
+      //色调映射
       toneMapping: {
-        //色调映射
         type: "ReinhardToneMapping",
         typeList: [
           "NoToneMapping", //无色调映射，直接输出线性颜色。
@@ -25,11 +19,25 @@ export default {
         ],
       },
     },
+    //性能监控
     stats: {
       show: false,
       //监控模式 0:画面每秒传输帧数（fps）  1：画面渲染的时间
       mode: 0,
     },
+    //环境光
+    environment: {
+      type: "roomEnvironment",
+      typeList: [
+        "roomEnvironment", //环境光
+        "EquirectangularReflectionMapping", //经纬线映射贴图
+      ],
+      RoomEnvironmentConfig: {},
+      EquirectangularReflectionMappingConfig: {
+        url: "",
+      },
+    },
+    //背景
     background: {
       type: "sky",
       color: {
@@ -59,6 +67,7 @@ export default {
         ],
       },
     },
+    //雾
     fog: {
       show: false,
       cameraView: false, //相机附近视野清晰
