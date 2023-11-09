@@ -2,7 +2,8 @@ import { BackSide, DoubleSide, FrontSide, LinearFilter,
      Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
      MeshDepthMaterial,MeshMatcapMaterial,MeshNormalMaterial,MeshLambertMaterial,MeshPhongMaterial,MeshToonMaterial,
      LineBasicMaterial, LineDashedMaterial, MeshDistanceMaterial, PointsMaterial, ShadowMaterial,
-      RGBFormat, SpriteMaterial, TextureLoader, CubeTextureLoader, VideoTexture 
+      RGBFormat, SpriteMaterial,
+    TextureLoader, CubeTextureLoader, VideoTexture, Texture, CanvasTexture, CubeTexture
     } from "three";
 import { ThingOrigin } from "./../ThingOrigin";
 
@@ -24,78 +25,6 @@ export class TMaterial {
         return materialB;
     }
 
-    /**
-     * @description 切换模型材质贴图
-     * @author gj
-     * @date 2023/11/3
-     * @param {string} sceneName 场景名称
-     * @param {string} uuid 模型uuid
-     * @param {textureParams} options 材质贴图参数集合
-     */
-    public changeTextureMap(sceneName: string, uuid: string, options: textureParams): void {
-        let obj = ThingOrigin.getScene(sceneName).getObjectByProperty("uuid", uuid);
-        if (!obj) {
-            console.warn("切换材质贴图失败，物体不存在");
-            return;
-        }
-
-        //金属材质，漫反射，金属漆，涂料，塑料，绒布，发光，半透明，玻璃，电介质，通用，基础PBR
-        obj.traverse((child) => {
-            if (child instanceof Mesh) {
-                if (child.material) {
-                    if (child.material instanceof Array) {
-                        for (let i = 0; i < child.material.length; i++) {
-                            child.material[i].dispose();
-                        }
-                    } else {
-                        child.material.dispose();
-                    }
-                }
-
-                let materialObj = {};
-                for(let key in options){
-                    if(options.hasOwnProperty(key)){
-                        if(!['img', 'materialType','side'].includes(key)){
-                            materialObj[key] = options[key];
-                        }
-                        if('side' === key){
-                            switch(options[key]){
-                                case 'FrontSide': materialObj[key] =  FrontSide; break;
-                                case 'BackSide': materialObj[key] =  BackSide; break;
-                                case 'DoubleSide': materialObj[key] =  DoubleSide; break;
-                            }
-                        }
-                        if(['map','normalMap','roughnessMap','metalnessMap','lightMap','aoMap'].includes(key)){
-                            materialObj[key] = new TextureLoader().load(options[key])
-                        }
-                        if('envMap' === key){
-                            materialObj[key] =  new CubeTextureLoader().load(options[key]);
-                        }
-                    }
-                }
-
-                let keyName = options.materialType;
-                const modeMap = {
-                    LineBasicMaterial: () => new LineBasicMaterial({ ...materialObj }), //基础线条材质
-                    LineDashedMaterial: () => new LineDashedMaterial({ ...materialObj }), //虚线材质
-                    MeshBasicMaterial: () => new MeshBasicMaterial({ ...materialObj }), //基础网格材质
-                    MeshDepthMaterial: () => new MeshDepthMaterial({ ...materialObj }), // 深度网格材质
-                    MeshDistanceMaterial:() => new MeshDistanceMaterial({ ...materialObj }), //距离材质
-                    MeshLambertMaterial: () => new MeshLambertMaterial({ ...materialObj }), // (Lambert网格)兰伯特材质
-                    MeshMatcapMaterial: () => new MeshMatcapMaterial({ ...materialObj }), //捕捉材质
-                    MeshNormalMaterial: () => new MeshNormalMaterial({ ...materialObj }), //法线网格材质
-                    MeshPhongMaterial: () => new MeshPhongMaterial({ ...materialObj }), //Phong网格材质
-                    MeshPhysicalMaterial: () => new MeshPhysicalMaterial({ ...materialObj }), //物理网格材质
-                    MeshStandardMaterial: () => new MeshStandardMaterial({ ...materialObj }), //标准网格材质
-                    MeshToonMaterial: () => new MeshToonMaterial({ ...materialObj }), //卡通着色材质
-                    PointsMaterial: () => new PointsMaterial({ ...materialObj }), //点材质
-                    ShadowMaterial: () => new ShadowMaterial({ ...materialObj }) //阴影材质
-                }
-                
-                child.material = modeMap[keyName] ? modeMap[keyName]() : {};
-            }
-        });
-    }
 
     /**
      * @description 生成视频材质
@@ -117,4 +46,140 @@ export class TMaterial {
         material.map = texture;
         return material;
     }
+
+    /**
+     * @description 创建物理网格材质
+     * @author gj
+     * @date 2023/11/09
+     * @param configParams 物理网格材质配置项
+     * @return {*} {MeshPhysicalMaterial} 物理网格材质
+     */
+    public initPhysicalMaterial(configParams?: object): MeshPhysicalMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            color: 0xffffff,
+            map: null,
+            metalness: 0.5,
+            roughness: 0.5,
+            clearcoat: 0.5,
+            clearcoatRoughness: 0.5,
+            envMapIntensity: 1,
+            side: FrontSide
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        // 创建MeshPhysicalMaterial材质
+        const material = new MeshPhysicalMaterial(materialParameters);
+        return material;
+    }
+
+    /**
+     * @description 创建基础纹理贴图
+     * @author gj
+     * @date 2023/11/09
+     * @param {url} url 图片路径
+     * @return {*}  {Texture}  基础纹理贴图
+     */
+    public initBasicTexture(url: string): Texture {
+        return new TextureLoader().load(url);
+    }
+
+    /**
+     * @description 从Canvas元素中创建纹理贴图
+     * @author gj
+     * @date 2023/11/09
+     * @param {canvasDom} canvasDom 画布元素
+     * @return {*}  {CanvasTexture} Canvas纹理贴图
+     */
+    public initCanvasTexture(canvasDom: HTMLCanvasElement): CanvasTexture {
+        return new CanvasTexture(canvasDom);
+    }
+
+    /**
+     * @description 创建一个由6张图片组成的立方纹理
+     * @author gj
+     * @date 2023/11/09
+     * @param {pathPrefix} pathPrefix 图片路径前缀
+     * @param {picNameList} picNameList 图片名称集合
+     * @return {*}  {CubeTexture} 立方纹理
+     */
+    public initCubeTexture(pathPrefix: string, picNameList: string[]): CubeTexture {
+        const loader = new CubeTextureLoader();
+        loader.setPath( pathPrefix );
+        return loader.load(picNameList);
+    }
+
+    // /**
+    //  * @description 切换模型材质贴图
+    //  * @author gj
+    //  * @date 2023/11/3
+    //  * @param {string} sceneName 场景名称
+    //  * @param {string} uuid 模型uuid
+    //  * @param {textureParams} options 材质贴图参数集合
+    //  */
+    // public changeTextureMap(sceneName: string, uuid: string, options: textureParams): void {
+    //     let obj = ThingOrigin.getScene(sceneName).getObjectByProperty("uuid", uuid);
+    //     if (!obj) {
+    //         console.warn("切换材质贴图失败，物体不存在");
+    //         return;
+    //     }
+    //
+    //     //金属材质，漫反射，金属漆，涂料，塑料，绒布，发光，半透明，玻璃，电介质，通用，基础PBR
+    //     obj.traverse((child) => {
+    //         if (child instanceof Mesh) {
+    //             if (child.material) {
+    //                 if (child.material instanceof Array) {
+    //                     for (let i = 0; i < child.material.length; i++) {
+    //                         child.material[i].dispose();
+    //                     }
+    //                 } else {
+    //                     child.material.dispose();
+    //                 }
+    //             }
+    //
+    //             let materialObj = {};
+    //             for(let key in options){
+    //                 if(options.hasOwnProperty(key)){
+    //                     if(!['img', 'materialType','side'].includes(key)){
+    //                         materialObj[key] = options[key];
+    //                     }
+    //                     if('side' === key){
+    //                         switch(options[key]){
+    //                             case 'FrontSide': materialObj[key] =  FrontSide; break;
+    //                             case 'BackSide': materialObj[key] =  BackSide; break;
+    //                             case 'DoubleSide': materialObj[key] =  DoubleSide; break;
+    //                         }
+    //                     }
+    //                     if(['map','normalMap','roughnessMap','metalnessMap','lightMap','aoMap'].includes(key)){
+    //                         materialObj[key] = new TextureLoader().load(options[key])
+    //                     }
+    //                     if('envMap' === key){
+    //                         materialObj[key] =  new CubeTextureLoader().load(options[key]);
+    //                     }
+    //                 }
+    //             }
+    //
+    //             let keyName = options.materialType;
+    //             const modeMap = {
+    //                 LineBasicMaterial: () => new LineBasicMaterial({ ...materialObj }), //基础线条材质
+    //                 LineDashedMaterial: () => new LineDashedMaterial({ ...materialObj }), //虚线材质
+    //                 MeshBasicMaterial: () => new MeshBasicMaterial({ ...materialObj }), //基础网格材质
+    //                 MeshDepthMaterial: () => new MeshDepthMaterial({ ...materialObj }), // 深度网格材质
+    //                 MeshDistanceMaterial:() => new MeshDistanceMaterial({ ...materialObj }), //距离材质
+    //                 MeshLambertMaterial: () => new MeshLambertMaterial({ ...materialObj }), // (Lambert网格)兰伯特材质
+    //                 MeshMatcapMaterial: () => new MeshMatcapMaterial({ ...materialObj }), //捕捉材质
+    //                 MeshNormalMaterial: () => new MeshNormalMaterial({ ...materialObj }), //法线网格材质
+    //                 MeshPhongMaterial: () => new MeshPhongMaterial({ ...materialObj }), //Phong网格材质
+    //                 MeshPhysicalMaterial: () => new MeshPhysicalMaterial({ ...materialObj }), //物理网格材质
+    //                 MeshStandardMaterial: () => new MeshStandardMaterial({ ...materialObj }), //标准网格材质
+    //                 MeshToonMaterial: () => new MeshToonMaterial({ ...materialObj }), //卡通着色材质
+    //                 PointsMaterial: () => new PointsMaterial({ ...materialObj }), //点材质
+    //                 ShadowMaterial: () => new ShadowMaterial({ ...materialObj }) //阴影材质
+    //             }
+    //
+    //             child.material = modeMap[keyName] ? modeMap[keyName]() : {};
+    //         }
+    //     });
+    // }
+
 }
