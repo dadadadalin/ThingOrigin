@@ -86,7 +86,6 @@ export class TScene extends Scene {
     container: HTMLElement,
     userSceneParam?: ThingOriginParams
   ): void {
-    console.log("用户传入参数", JSON.stringify(userSceneParam));
     this.sceneName = sceneName;
     //处理合并场景数据
     this.sceneParam = merge(this.sceneParam, userSceneParam);
@@ -389,7 +388,6 @@ export class TScene extends Scene {
    * @param {ThingOriginParams} sceneParams 场景参数
    */
   private loadModel(sceneParams: ThingOriginParams) {
-    console.log(this.sceneName, sceneParams.models);
     for (let i = 0; i < sceneParams.models.length; i++) {
       let item = sceneParams.models[i];
       if (item["objInfo"].objType == "modelFile") {
@@ -492,6 +490,7 @@ export class TScene extends Scene {
         console.warn("模型不存在下标为" + index + "的动画");
       }
     }
+    d;
   }
 
   /**
@@ -748,7 +747,6 @@ export class TScene extends Scene {
     // div.innerHTML = html;
 
     let CSSLabel = new CSS2DObject(html);
-    console.log("2d元素", CSSLabel);
     //初始元素uuid存在，则使用初始的，否则重新生成
     if (css2dBoxUuid) {
       CSSLabel.uuid = css2dBoxUuid;

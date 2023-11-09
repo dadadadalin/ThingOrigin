@@ -106,8 +106,6 @@ export class TModel {
           break;
         case "obj":
           this.OBJLoader.load(url, (object: Object3D) => {
-            console.log(object);
-
             if (modelConfigs) {
               if (modelConfigs.scale)
                 object.scale.set(
@@ -206,8 +204,6 @@ export class TModel {
           break;
         case "json":
           this.ObjectLoader.load(url, (object: Object3D) => {
-            console.log(object);
-
             if (modelConfigs) {
               if (modelConfigs.scale)
                 object.scale.set(
