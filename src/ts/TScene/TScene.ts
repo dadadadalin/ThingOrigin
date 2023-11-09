@@ -490,7 +490,6 @@ export class TScene extends Scene {
         console.warn("模型不存在下标为" + index + "的动画");
       }
     }
-    d;
   }
 
   /**
