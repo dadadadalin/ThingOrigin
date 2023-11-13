@@ -19,6 +19,13 @@ function animate() {
       if (cScene.controls.pointerLock) cScene.controls.updatePointerLock();
       if (cScene.stats) cScene.stats.update();
       if (cScene.mixer) cScene.mixer.update(clock.getDelta());
+
+      if (cScene.toUpdate.material.length > 0) {
+        for (let index = 0; index < cScene.toUpdate.material.length; index++) {
+          const material = cScene.toUpdate.material[index];
+          material.uniforms["time"].value += 1.0 / 60.0;
+        }
+      }
     })(item);
   });
 

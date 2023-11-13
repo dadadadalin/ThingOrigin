@@ -1,6 +1,16 @@
 import * as CANNON from "cannon";
-import { AnimationMixer, Clock, LoopOnce, Vector3 } from "three";
+import {
+  AnimationMixer,
+  Clock,
+  LoopOnce,
+  Mesh,
+  PlaneGeometry,
+  RepeatWrapping,
+  TextureLoader,
+  Vector3,
+} from "three";
 import { ThingOrigin } from "./ThingOrigin";
+import { Water } from "three/examples/jsm/objects/Water.js";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 // mainScene.setSceneViewImage('/static/three/animate/textures/venice_sunset_1k.hdr')

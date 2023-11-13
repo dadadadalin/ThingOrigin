@@ -20,16 +20,26 @@ import {
   ShadowMaterial,
   RGBFormat,
   SpriteMaterial,
-    RawShaderMaterial,ShaderMaterial,
+  RawShaderMaterial,
+  ShaderMaterial,
   TextureLoader,
   CubeTextureLoader,
   VideoTexture,
   Texture,
   CanvasTexture,
   CubeTexture,
-    DataTexture,
-    RGBFormat,TypedArray, PixelFormat, TextureDataType
+  Color,
+  Geometry,
+  BufferGeometry,
+  RepeatWrapping,
+  Vector3,
+  DataTexture,
+  TypedArray,
+  PixelFormat,
+  TextureDataType,
 } from "three";
+import { Water } from "three/examples/jsm/objects/Water";
+import { ThingOrigin } from "./../ThingOrigin";
 
 export class TMaterial {
   /**
@@ -74,102 +84,108 @@ export class TMaterial {
     return material;
   }
 
-    /**
-     * @description 创建物理网格材质
-     * @author gj
-     * @date 2023/11/09
-     * @param configParams 物理网格材质配置项
-     * @return {*} {MeshPhysicalMaterial} 物理网格材质
-     */
-    public initPhysicalMaterial(configParams?: object): MeshPhysicalMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            color: 0xffffff,
-            map: null,
-            metalness: 0.5,
-            roughness: 0.5,
-            clearcoat: 0.5,
-            clearcoatRoughness: 0.5,
-            envMapIntensity: 1,
-            side: FrontSide
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new MeshPhysicalMaterial(materialParameters);
-    }
+  /**
+   * @description 创建物理网格材质
+   * @author gj
+   * @date 2023/11/09
+   * @param configParams 物理网格材质配置项
+   * @return {*} {MeshPhysicalMaterial} 物理网格材质
+   */
+  public initPhysicalMaterial(configParams?: object): MeshPhysicalMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      color: 0xffffff,
+      map: null,
+      metalness: 0.5,
+      roughness: 0.5,
+      clearcoat: 0.5,
+      clearcoatRoughness: 0.5,
+      envMapIntensity: 1,
+      side: FrontSide,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new MeshPhysicalMaterial(materialParameters);
+  }
 
-    /**
-     * @description 创建点材质
-     * @author gj
-     * @date 2023/11/10
-     * @param configParams 点材质配置项
-     * @return {*} {PointsMaterial} 点材质
-     */
-    public initPointsMaterial(configParams?: object): PointsMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            color: 0x00aa00
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new PointsMaterial(materialParameters);
-    }
+  /**
+   * @description 创建点材质
+   * @author gj
+   * @date 2023/11/10
+   * @param configParams 点材质配置项
+   * @return {*} {PointsMaterial} 点材质
+   */
+  public initPointsMaterial(configParams?: object): PointsMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      color: 0x00aa00,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new PointsMaterial(materialParameters);
+  }
 
-    /**
-     * @description 创建卡通材质
-     * @author gj
-     * @date 2023/11/10
-     * @param configParams 卡通材质配置项
-     * @return {*} {MeshToonMaterial} 卡通材质
-     */
-    public initToonMaterial(configParams?: object): MeshToonMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            color: 0x00aa00
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new MeshToonMaterial(materialParameters);
-    }
+  /**
+   * @description 创建卡通材质
+   * @author gj
+   * @date 2023/11/10
+   * @param configParams 卡通材质配置项
+   * @return {*} {MeshToonMaterial} 卡通材质
+   */
+  public initToonMaterial(configParams?: object): MeshToonMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      color: 0x00aa00,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new MeshToonMaterial(materialParameters);
+  }
 
-    /**
-     * @description 创建原始着色器材质
-     * @author gj
-     * @date 2023/11/13
-     * @param configParams 原始着色器材质配置项
-     * @return {*} {RawShaderMaterial} 原始着色器材质
-     */
-     public initRawShaderMaterial(configParams: object): RawShaderMaterial {
-        return new RawShaderMaterial(configParams);
-    }
+  /**
+   * @description 创建原始着色器材质
+   * @author gj
+   * @date 2023/11/13
+   * @param configParams 原始着色器材质配置项
+   * @return {*} {RawShaderMaterial} 原始着色器材质
+   */
+  public initRawShaderMaterial(configParams: object): RawShaderMaterial {
+    return new RawShaderMaterial(configParams);
+  }
 
-    /**
-     * @description 创建着色器材质
-     * @author gj
-     * @date 2023/11/13
-     * @param configParams 着色器材质配置项
-     * @return {*} {ShaderMaterial} 着色器材质
-     */
-    public initShaderMaterial(configParams: object): ShaderMaterial {
-        return new ShaderMaterial(configParams);
-    }
+  /**
+   * @description 创建着色器材质
+   * @author gj
+   * @date 2023/11/13
+   * @param configParams 着色器材质配置项
+   * @return {*} {ShaderMaterial} 着色器材质
+   */
+  public initShaderMaterial(configParams: object): ShaderMaterial {
+    return new ShaderMaterial(configParams);
+  }
 
-    /**
-     * @description 从原始数据创建一个纹理贴图
-     * @author gj
-     * @date 2023/11/10
-     * @param data 包含纹理数据的数组或类型化数组
-     * @param width 纹理的宽度
-     * @param height 纹理的高度
-     * @param format 纹理的格式
-     * @param type 纹理的数据类型
-     * @return {*} {DataTexture} 原始数据纹理贴图
-     */
-    public initDataTexture(data: TypedArray, width: number, height: number, format?: PixelFormat, type?: TextureDataType): DataTexture{
-        const texture = new DataTexture(data, width, height, format, type );
-        texture.needsUpdate = true;
-        return texture;
-    }
+  /**
+   * @description 从原始数据创建一个纹理贴图
+   * @author gj
+   * @date 2023/11/10
+   * @param data 包含纹理数据的数组或类型化数组
+   * @param width 纹理的宽度
+   * @param height 纹理的高度
+   * @param format 纹理的格式
+   * @param type 纹理的数据类型
+   * @return {*} {DataTexture} 原始数据纹理贴图
+   */
+  public initDataTexture(
+    data: TypedArray,
+    width: number,
+    height: number,
+    format?: PixelFormat,
+    type?: TextureDataType
+  ): DataTexture {
+    const texture = new DataTexture(data, width, height, format, type);
+    texture.needsUpdate = true;
+    return texture;
+  }
 
   /**
    * @description 创建基础纹理贴图
@@ -193,19 +209,22 @@ export class TMaterial {
     return new CanvasTexture(canvasDom);
   }
 
-    /**
-     * @description 创建一个由6张图片组成的立方纹理
-     * @author gj
-     * @date 2023/11/09
-     * @param {pathPrefix} pathPrefix 图片路径地址前缀
-     * @param {picNameList} picNameList 图片名称集合
-     * @return {*}  {CubeTexture} 立方纹理
-     */
-    public initCubeTexture(pathPrefix: string, picNameList: string[]): CubeTexture {
-        const loader = new CubeTextureLoader();
-        loader.setPath( pathPrefix );
-        return loader.load(picNameList);
-    }
+  /**
+   * @description 创建一个由6张图片组成的立方纹理
+   * @author gj
+   * @date 2023/11/09
+   * @param {pathPrefix} pathPrefix 图片路径前缀
+   * @param {picNameList} picNameList 图片名称集合
+   * @return {*}  {CubeTexture} 立方纹理
+   */
+  public initCubeTexture(
+    pathPrefix: string,
+    picNameList: string[]
+  ): CubeTexture {
+    const loader = new CubeTextureLoader();
+    loader.setPath(pathPrefix);
+    return loader.load(picNameList);
+  }
 
   /**
    * @description 阴影材质; 此材质可以接收阴影，但在其他方面完全透明。
@@ -214,105 +233,142 @@ export class TMaterial {
    * @returns {*}
    * @memberof TMaterial
    */
-  public initShadowMaterial() {
+  public initShadowMaterial(): ShadowMaterial {
     const material = new ShadowMaterial();
     return material;
   }
 
-    /**
-     * @description 创建基础线条材质
-     * @author my
-     * @date 2023/11/13
-     * @param configParams 线条材质配置项
-     * @return {*} {LineBasicMaterial} 基础线条材质
-     */
-    public initLineBasicMaterial(configParams?: object): LineBasicMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            color: 0xffffff,
-            linewidth: 1,
-            linecap: 'round',
-            linejoin: 'round',
-            map: null,
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new LineBasicMaterial(materialParameters);
-    }
+  /**
+   * @description 给模型设置水波纹材质（需要将色调映射 设置为 NoToneMapping）
+   * @author LL
+   * @date 2023/11/13
+   * @param {(Geometry | BufferGeometry)} geometry 模型
+   * @param {number} width
+   * @param {number} height
+   * @param {string} url
+   * @param {(string | number | Color)} [waterColor] 水颜色
+   * @param {Vector3} [sunDirection] 太阳方向
+   * @param {(string | number | Color)} [sunColor] 太阳颜色
+   * @returns {*}
+   * @memberof TMaterial
+   */
+  public setWaterSkin(
+    geometry: Geometry | BufferGeometry,
+    width: number,
+    height: number,
+    url: string,
+    waterColor?: string | number | Color,
+    sunDirection?: Vector3,
+    sunColor?: string | number | Color
+  ): Water {
+    let water = new Water(geometry, {
+      textureWidth: width,
+      textureHeight: height,
+      waterNormals: new TextureLoader().load(url, function (texture) {
+        texture.wrapS = texture.wrapT = RepeatWrapping;
+      }),
+      sunDirection: sunDirection,
+      sunColor: sunColor,
+      waterColor: waterColor,
+      //   distortionScale: 0,
+    });
+    return water;
+  }
 
-    /**
-     * @description 创建虚线材质
-     * @author my
-     * @date 2023/11/13
-     * @param configParams 虚线材质配置项
-     * @return {*} {LineDashedMaterial} 虚线材质
-     */
-    public initLineDashedMaterial(configParams?: object): LineDashedMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            color: 0xffffff,
-            linewidth: 1,
-            scale: 1,
-            dashSize: 3,
-            gapSize: 1,
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new LineDashedMaterial(materialParameters);
-    }
+  /**
+   * @description 创建基础线条材质
+   * @author my
+   * @date 2023/11/13
+   * @param configParams 线条材质配置项
+   * @return {*} {LineBasicMaterial} 基础线条材质
+   */
+  public initLineBasicMaterial(configParams?: object): LineBasicMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      color: 0xffffff,
+      linewidth: 1,
+      linecap: "round",
+      linejoin: "round",
+      map: null,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new LineBasicMaterial(materialParameters);
+  }
 
-    /**
-     * @description 创建基础网格材质
-     * @author my
-     * @date 2023/11/13
-     * @param configParams 基础网格材质配置项
-     * @return {*} {MeshBasicMaterial} 基础网格材质
-     */
-    public initMeshBasicMaterial(configParams?: object): MeshBasicMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            color: 0xffffff,
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new MeshBasicMaterial(materialParameters);
-    }
+  /**
+   * @description 创建虚线材质
+   * @author my
+   * @date 2023/11/13
+   * @param configParams 虚线材质配置项
+   * @return {*} {LineDashedMaterial} 虚线材质
+   */
+  public initLineDashedMaterial(configParams?: object): LineDashedMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      color: 0xffffff,
+      linewidth: 1,
+      scale: 1,
+      dashSize: 3,
+      gapSize: 1,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new LineDashedMaterial(materialParameters);
+  }
 
-    /**
-     * @description 创建深度网格材质
-     * @author my
-     * @date 2023/11/13
-     * @param configParams 深度网格材质配置项
-     * @return {*} {MeshBasicMaterial} 深度网格材质
-     */
-    public initMeshDepthMaterial(configParams?: object): MeshDepthMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            alphaMap: null,
-            map: null
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new MeshDepthMaterial(materialParameters);
-    }
+  /**
+   * @description 创建基础网格材质
+   * @author my
+   * @date 2023/11/13
+   * @param configParams 基础网格材质配置项
+   * @return {*} {MeshBasicMaterial} 基础网格材质
+   */
+  public initMeshBasicMaterial(configParams?: object): MeshBasicMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      color: 0xffffff,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new MeshBasicMaterial(materialParameters);
+  }
 
-    /**
-     * @description 创建MeshDistanceMaterial
-     * @author my
-     * @date 2023/11/13
-     * @param configParams MeshDistanceMaterial配置项
-     * @return {*} {MeshDistanceMaterial} MeshDistanceMaterial材质
-     */
-    public initMeshDistanceMaterial(configParams?: object): MeshDistanceMaterial {
-        // 创建默认的材质参数
-        const defaultParams = {
-            alphaMap: null,
-            map: null
-        };
-        // 合并默认参数和传递的参数
-        const materialParameters = Object.assign({}, defaultParams, configParams);
-        return new MeshDistanceMaterial(materialParameters);
-    }
+  /**
+   * @description 创建深度网格材质
+   * @author my
+   * @date 2023/11/13
+   * @param configParams 深度网格材质配置项
+   * @return {*} {MeshBasicMaterial} 深度网格材质
+   */
+  public initMeshDepthMaterial(configParams?: object): MeshDepthMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      alphaMap: null,
+      map: null,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new MeshDepthMaterial(materialParameters);
+  }
+
+  /**
+   * @description 创建MeshDistanceMaterial
+   * @author my
+   * @date 2023/11/13
+   * @param configParams MeshDistanceMaterial配置项
+   * @return {*} {MeshDistanceMaterial} MeshDistanceMaterial材质
+   */
+  public initMeshDistanceMaterial(configParams?: object): MeshDistanceMaterial {
+    // 创建默认的材质参数
+    const defaultParams = {
+      alphaMap: null,
+      map: null,
+    };
+    // 合并默认参数和传递的参数
+    const materialParameters = Object.assign({}, defaultParams, configParams);
+    return new MeshDistanceMaterial(materialParameters);
+  }
 
   // /**
   //  * @description 切换模型材质贴图

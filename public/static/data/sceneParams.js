@@ -9,7 +9,7 @@ export default {
       },
       //色调映射
       toneMapping: {
-        type: "ReinhardToneMapping",
+        type: "NoToneMapping",
         typeList: [
           "NoToneMapping", //无色调映射，直接输出线性颜色。
           "LinearToneMapping", //线性色调映射，将线性颜色映射到显示器的范围。
