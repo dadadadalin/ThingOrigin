@@ -1,13 +1,15 @@
 import { BackSide, DoubleSide, FrontSide, LinearFilter,
-     Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
-     MeshDepthMaterial,MeshMatcapMaterial,MeshNormalMaterial,MeshLambertMaterial,MeshPhongMaterial,MeshToonMaterial,
-     LineBasicMaterial, LineDashedMaterial, MeshDistanceMaterial, PointsMaterial, ShadowMaterial,
-      RGBFormat, SpriteMaterial,
-    TextureLoader, CubeTextureLoader, VideoTexture, Texture, CanvasTexture, CubeTexture
+        Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial,
+        MeshDepthMaterial,MeshMatcapMaterial,MeshNormalMaterial,MeshLambertMaterial,MeshPhongMaterial,MeshToonMaterial,
+        LineBasicMaterial, LineDashedMaterial, MeshDistanceMaterial, PointsMaterial, ShadowMaterial, SpriteMaterial,
+        RawShaderMaterial,ShaderMaterial,
+        TextureLoader, CubeTextureLoader, VideoTexture, Texture, CanvasTexture, CubeTexture, DataTexture,
+        RGBFormat,TypedArray, PixelFormat, TextureDataType
     } from "three";
-import { ThingOrigin } from "./../ThingOrigin";
 
 export class TMaterial {
+   
+
     /**
      * @description 创建精灵材质
      * @author LL
@@ -68,9 +70,80 @@ export class TMaterial {
         };
         // 合并默认参数和传递的参数
         const materialParameters = Object.assign({}, defaultParams, configParams);
-        // 创建MeshPhysicalMaterial材质
-        const material = new MeshPhysicalMaterial(materialParameters);
-        return material;
+        return new MeshPhysicalMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建点材质
+     * @author gj
+     * @date 2023/11/10
+     * @param configParams 点材质配置项
+     * @return {*} {PointsMaterial} 点材质
+     */
+    public initPointsMaterial(configParams?: object): PointsMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            color: 0x00aa00
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new PointsMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建卡通材质
+     * @author gj
+     * @date 2023/11/10
+     * @param configParams 卡通材质配置项
+     * @return {*} {MeshToonMaterial} 卡通材质
+     */
+    public initToonMaterial(configParams?: object): MeshToonMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            color: 0x00aa00
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new MeshToonMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建原始着色器材质
+     * @author gj
+     * @date 2023/11/13
+     * @param configParams 原始着色器材质配置项
+     * @return {*} {RawShaderMaterial} 原始着色器材质
+     */
+     public initRawShaderMaterial(configParams: object): RawShaderMaterial {
+        return new RawShaderMaterial(configParams);
+    }
+
+    /**
+     * @description 创建着色器材质
+     * @author gj
+     * @date 2023/11/13
+     * @param configParams 着色器材质配置项
+     * @return {*} {ShaderMaterial} 着色器材质
+     */
+    public initShaderMaterial(configParams: object): ShaderMaterial {
+        return new ShaderMaterial(configParams);
+    }
+  
+    /**
+     * @description 从原始数据创建一个纹理贴图
+     * @author gj
+     * @date 2023/11/10
+     * @param data 包含纹理数据的数组或类型化数组
+     * @param width 纹理的宽度
+     * @param height 纹理的高度
+     * @param format 纹理的格式
+     * @param type 纹理的数据类型
+     * @return {*} {DataTexture} 原始数据纹理贴图
+     */
+    public initDataTexture(data: TypedArray, width: number, height: number, format?: PixelFormat, type?: TextureDataType): DataTexture{
+        const texture = new DataTexture(data, width, height, format, type );
+        texture.needsUpdate = true;
+        return texture;
     }
 
     /**
@@ -99,7 +172,7 @@ export class TMaterial {
      * @description 创建一个由6张图片组成的立方纹理
      * @author gj
      * @date 2023/11/09
-     * @param {pathPrefix} pathPrefix 图片路径前缀
+     * @param {pathPrefix} pathPrefix 图片路径地址前缀
      * @param {picNameList} picNameList 图片名称集合
      * @return {*}  {CubeTexture} 立方纹理
      */
