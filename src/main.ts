@@ -23,19 +23,6 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 //     mainScene.playAnimation(model, 0);
 //   });
 
-let a = ThingOrigin.model.initSphere('sphere1', { radius: 50,
-    widthSegments: 15,
-    heightSegments: 15,},{scale: [1, 1, 1]})
-let material1 = ThingOrigin.material.initPhysicalMaterial(
-    {
-        color: '#00aa00',
-        map: ThingOrigin.material.initBasicTexture('/static/img/ground.jpg'),
-        envMap: ThingOrigin.material.initBasicTexture('/static/img/ground.jpg')
-    }
-);
-a.material = material1;
-console.log(a)
-mainScene.add(a);
 // indexedDB缓存模型
 // let modelInfo = {
 //   id: 1,
