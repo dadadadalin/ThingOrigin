@@ -182,6 +182,101 @@ export class TMaterial {
         return loader.load(picNameList);
     }
 
+    /**
+     * @description 创建基础线条材质
+     * @author my
+     * @date 2023/11/13
+     * @param configParams 线条材质配置项
+     * @return {*} {LineBasicMaterial} 基础线条材质
+     */
+    public initLineBasicMaterial(configParams?: object): LineBasicMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            color: 0xffffff,
+            linewidth: 1,
+            linecap: 'round',
+            linejoin: 'round',
+            map: null,
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new LineBasicMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建虚线材质
+     * @author my
+     * @date 2023/11/13
+     * @param configParams 虚线材质配置项
+     * @return {*} {LineDashedMaterial} 虚线材质
+     */
+    public initLineDashedMaterial(configParams?: object): LineDashedMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            color: 0xffffff,
+            linewidth: 1,
+            scale: 1,
+            dashSize: 3,
+            gapSize: 1,
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new LineDashedMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建基础网格材质
+     * @author my
+     * @date 2023/11/13
+     * @param configParams 基础网格材质配置项
+     * @return {*} {MeshBasicMaterial} 基础网格材质
+     */
+    public initMeshBasicMaterial(configParams?: object): MeshBasicMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            color: 0xffffff,
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new MeshBasicMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建深度网格材质
+     * @author my
+     * @date 2023/11/13
+     * @param configParams 深度网格材质配置项
+     * @return {*} {MeshBasicMaterial} 深度网格材质
+     */
+    public initMeshDepthMaterial(configParams?: object): MeshDepthMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            alphaMap: null,
+            map: null
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new MeshDepthMaterial(materialParameters);
+    }
+
+    /**
+     * @description 创建MeshDistanceMaterial
+     * @author my
+     * @date 2023/11/13
+     * @param configParams MeshDistanceMaterial配置项
+     * @return {*} {MeshDistanceMaterial} MeshDistanceMaterial材质
+     */
+    public initMeshDistanceMaterial(configParams?: object): MeshDistanceMaterial {
+        // 创建默认的材质参数
+        const defaultParams = {
+            alphaMap: null,
+            map: null
+        };
+        // 合并默认参数和传递的参数
+        const materialParameters = Object.assign({}, defaultParams, configParams);
+        return new MeshDistanceMaterial(materialParameters);
+    }
+
     // /**
     //  * @description 切换模型材质贴图
     //  * @author gj
