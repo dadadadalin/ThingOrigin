@@ -73,6 +73,10 @@ export class TScene extends Scene {
   public sceneParam: ThingOriginParams = JSON.parse(JSON.stringify(sceneData));
   /** 性能 */
   public stats: Stats;
+  /** 需要在循环中更新的内容 */
+  public toUpdate = {
+    material: [],
+  };
 
   /**
    * @description 创建一个场景

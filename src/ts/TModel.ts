@@ -35,6 +35,7 @@ import {
   Texture,
   TextureLoader,
   Vector3,
+  RepeatWrapping,
 } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
@@ -43,6 +44,7 @@ import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import { ThingOrigin } from "../ThingOrigin";
+import { Water } from "three/examples/jsm/objects/Water";
 
 export class TModel {
   FBXLoader: FBXLoader = new FBXLoader();
@@ -516,6 +518,20 @@ export class TModel {
     const helper = new PlaneHelper(plane, size, new Color(color).getHex());
     helper.name = name;
     return helper;
+  }
+
+  /**
+   * @description 创建平面缓冲几何体
+   * @author LL
+   * @date 2023/11/13
+   * @param {number} width
+   * @param {number} height
+   * @returns {*}  {PlaneGeometry}
+   * @memberof TModel
+   */
+  public initPlaneGeometry(width: number, height: number): PlaneGeometry {
+    const planeGeometry = new PlaneGeometry(width, height);
+    return planeGeometry;
   }
 
   /**
