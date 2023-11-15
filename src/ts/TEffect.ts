@@ -27,7 +27,6 @@ export class TEffect {
   /** 效果合成器 */
   public effectComposer: EffectComposer;
   public bloomComposer: EffectComposer;
-  public finalComposer: EffectComposer;
   public outlinePass: OutlinePass;
   // public finalPass: ShaderPass;
   private effectFXAA: ShaderPass;
@@ -144,9 +143,7 @@ export class TEffect {
     'baseTexture'
     );
     finalPass.needsSwap = true;
-    this.finalComposer = new EffectComposer(this.tScene.renderer);
-    this.finalComposer.addPass(this.renderPass);
-    this.finalComposer.addPass(finalPass);
+    this.effectComposer.addPass(finalPass);
     
 
   }
@@ -276,7 +273,7 @@ export class TEffect {
   }
   /**
    * @description 给模型添加发光效果
-   * @author LL
+   * @author MY
    * @param {Object3D} model 模型
    */
   public initBloom(model: Object3D) {
@@ -291,29 +288,6 @@ export class TEffect {
         (child as Mesh).layers.enable(TEffect.BLOOM_SCENE);
       }
     })
-    
-    const darkMaterial = new MeshBasicMaterial({ color: 'black' });
-    const materials = {};
-    const darkenNonBloomed = (obj) => {
-      if (obj.isMesh && this.tScene.effect.bloomLayer.test(obj.layers) === false) {
-        materials[obj.uuid] = obj.material;
-        obj.material = darkMaterial;
-      }
-    }
-    const restoreMaterial = (obj) => {
-      if (materials[obj.uuid]) {
-        obj.material = materials[obj.uuid];
-        delete materials[obj.uuid];
-      }
-    }
-    const render1 = () => {
-      this.tScene.traverse(darkenNonBloomed);
-      this.tScene.effect.bloomComposer.render();
-      this.tScene.traverse(restoreMaterial);
-      this.tScene.effect.finalComposer.render();
-      requestAnimationFrame(render1);
-    }
-    render1();
   }
 
     /**
