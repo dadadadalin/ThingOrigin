@@ -32,9 +32,11 @@
       water.rotation.x = -Math.PI / 2;
       mainScene.add(water);
 
-      //   setInterval(() => {
-      //     water.material.uniforms["time"].value += 1.0 / 60.0;
-      //   });
+      mainScene.toUpdate.material.push(water.material);
+
+      // setInterval(() => {
+      //   water.material.uniforms["time"].value += 1.0 / 60.0;
+      // });
     </script>
   </body>
 </html>

@@ -77,6 +77,15 @@ export class TMaterial {
 
     return texture;
   }
+
+  /**
+   * @description 图片材质
+   * @author LL
+   * @date 2022/5/24
+   * @param {string} url
+   * @returns {*}  {MeshBasicMaterial}
+   * @memberof TMaterial
+   */
   public initPicMaterial(url: string): MeshBasicMaterial {
     const texture = new TextureLoader().load(url);
     let material = new MeshBasicMaterial();
