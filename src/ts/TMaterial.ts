@@ -92,30 +92,36 @@ export class TMaterial {
    * @date 2023/11/09
    * @param color 材质的颜色
    * @param map 颜色贴图
+   * @param envMap 环境贴图
    * @param metalness 金属度  非金属材质0.0，金属使用1.0 范围从0.0-1.0
    * @param roughness 粗糙度 0.0表示平滑的镜面反射，1.0表示完全漫反射。默认值为1.0
    * @param clearcoat 表示clear coat层的强度 范围从0.0到1.0m,默认为0.0
    * @param clearcoatRoughness clear coat层的粗糙度，由0.0到1.0。 默认为0.0
-   * @param side 定义将要渲染哪一面 - 正面，背面或两者 默认为THREE.FrontSide
+   * @param envMapIntensity 通过乘以环境贴图的颜色来缩放环境贴图的效果
+   * @param side 定义将要渲染哪一面  正面0，背面1, 双面2 默认为正面
    * @return {*} {MeshPhysicalMaterial} 物理网格材质
    */
   public initPhysicalMaterial(
       color: string | Color,
-      map?: Texture,
+      map?: string,
+      envMap?: string,
       metalness?: number,
       roughness?: number,
       clearcoat?: number,
       clearcoatRoughness?: number,
-      side?:Side
+      envMapIntensity?: number,
+      side?: number
   ): MeshPhysicalMaterial {
     return new MeshPhysicalMaterial({
       color: color,
-      map: map,
+      map: map ? this.initBasicTexture(map) : null,
+      envMap: envMap ? this.initBasicTexture(envMap) : null,
       metalness: metalness,
       roughness: roughness,
       clearcoat: clearcoat,
       clearcoatRoughness: clearcoatRoughness,
-      side: side
+      envMapIntensity: envMapIntensity,
+      side: (side === 0 || side == null) ? FrontSide : (side === 1 ? BackSide : DoubleSide)
     });
   }
 
@@ -130,12 +136,12 @@ export class TMaterial {
    */
   public initPointsMaterial(
       color: string | Color,
-      map?: Texture,
+      map?: string,
       size?: number
   ): PointsMaterial {
     return new PointsMaterial({
       color: color,
-      map: map,
+      map: map ? this.initBasicTexture(map) : null,
       size: size
     });
   }
@@ -153,14 +159,14 @@ export class TMaterial {
   public initToonMaterial(
       color: string | Color,
       emissive?: string | Color,
-      map?: Texture,
-      gradientMap? : Texture
+      map?: string,
+      gradientMap? : object
   ): MeshToonMaterial {
     return new MeshToonMaterial({
       color: color,
       emissive: emissive,
-      map: map,
-      gradientMap: gradientMap
+      map: map ? this.initBasicTexture(map) : null,
+      gradientMap: gradientMap ? this.initDataTexture(new Uint8Array(64),15,15) : null
     });
   }
 
