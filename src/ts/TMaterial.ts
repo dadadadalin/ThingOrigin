@@ -102,9 +102,9 @@ export class TMaterial {
    * @return {*} {MeshPhysicalMaterial} 物理网格材质
    */
   public initPhysicalMaterial(
-      color: string | Color,
-      map?: string,
-      envMap?: string,
+      color: string | number | Color,
+      map?: Texture,
+      envMap?: Texture,
       metalness?: number,
       roughness?: number,
       clearcoat?: number,
@@ -114,8 +114,8 @@ export class TMaterial {
   ): MeshPhysicalMaterial {
     return new MeshPhysicalMaterial({
       color: color,
-      map: map ? this.initBasicTexture(map) : null,
-      envMap: envMap ? this.initBasicTexture(envMap) : null,
+      map: map,
+      envMap: envMap,
       metalness: metalness,
       roughness: roughness,
       clearcoat: clearcoat,
@@ -130,19 +130,22 @@ export class TMaterial {
    * @author gj
    * @date 2023/11/10
    * @param color 材质的颜色
-   * @param map 颜色贴图
+   * @param vertexColors 定义材料是否使用顶点颜色，默认false ---如果该选项设置为true，则color属性失效
    * @param size 设置点的大小 默认值为1.0
+   * @param map 颜色贴图
    * @return {*} {PointsMaterial} 点材质
    */
   public initPointsMaterial(
-      color: string | Color,
-      map?: string,
-      size?: number
+      color: string | number | Color,
+      vertexColors: boolean,
+      size?: number,
+      map?: Texture
   ): PointsMaterial {
     return new PointsMaterial({
       color: color,
-      map: map ? this.initBasicTexture(map) : null,
-      size: size
+      vertexColors: vertexColors,
+      size: size,
+      map: map
     });
   }
 
@@ -151,22 +154,22 @@ export class TMaterial {
    * @author gj
    * @date 2023/11/10
    * @param color 材质的颜色
-   * @param emissive 材料的发射（光）颜色
+   * @param emissive 发射（光）颜色
    * @param map 颜色贴图
    * @param gradientMap 卡通着色的渐变贴图
    * @return {*} {MeshToonMaterial} 卡通材质
    */
   public initToonMaterial(
-      color: string | Color,
-      emissive?: string | Color,
-      map?: string,
-      gradientMap? : object
+      color: string | number | Color,
+      emissive?: string | number | Color,
+      map?: Texture,
+      gradientMap? : Texture
   ): MeshToonMaterial {
     return new MeshToonMaterial({
       color: color,
       emissive: emissive,
-      map: map ? this.initBasicTexture(map) : null,
-      gradientMap: gradientMap ? this.initDataTexture(new Uint8Array(64),15,15) : null
+      map: map,
+      gradientMap: gradientMap
     });
   }
 

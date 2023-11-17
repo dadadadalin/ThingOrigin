@@ -395,7 +395,7 @@ export class TModel {
    * @author LL
    * @date 2021/08/19
    * @param {string} name 圆柱体名称
-   * @param {cubeParams} [cubeParams]
+   * @param {cylinderParams} [cylinderParams]
    * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
    * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
@@ -544,10 +544,10 @@ export class TModel {
    * @param {object} [userData] 自定义数据
    */
   public initPoints(
-    GroupName: string,
-    positions: pointsData[],
-    pointConfigs: pointConfigsParams,
-    userData?: object
+      GroupName: string,
+      positions: pointsData[],
+      pointConfigs: pointConfigsParams,
+      userData?: object
   ): Points {
     var geometry = new Geometry(); //声明一个几何体对象Geometry
     for (var i = 0; i < positions.length; i++) {
@@ -559,11 +559,7 @@ export class TModel {
       // geometry.colors.push(new Color(pointConfigs.color));
     }
 
-    var pointMaterial = new PointsMaterial({
-      color: pointConfigs.color, //设置颜色，默认 0xFFFFFF
-      vertexColors: false, //定义材料是否使用顶点颜色，默认false ---如果该选项设置为true，则color属性失效
-      size: pointConfigs.size, //定义粒子的大小。默认为1.0
-    });
+    var pointMaterial = ThingOrigin.material.initPointsMaterial(pointConfigs.color,false, pointConfigs.size);
 
     //生成点模型
     var points = new Points(geometry, pointMaterial);

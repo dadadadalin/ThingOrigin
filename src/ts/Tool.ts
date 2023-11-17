@@ -18,8 +18,8 @@ export class Tool {
    * @description 创建Three.js颜色
    * @author LL
    */
-  public Color(color: string): Color {
-    return new Color(color);
+  public Color(color?: string): Color {
+    return color ? new Color(color) : new Color();
   }
 
   /**
