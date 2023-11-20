@@ -235,6 +235,71 @@ export class TModel {
   }
 
   /**
+   * @description 创建平面
+   * @author gj
+   * @date 2023/11/20
+   * @param {string} name 平面几何体名称
+   * @param {planeParams} [planeParams] 默认为{ width: 10, height: 10, widthSegments: 32,  heightSegments: 32}
+   * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
+   * @param {object} [userData] 填入模型的userData
+   * @returns {*}  {Object3D}
+   */
+  public initPlane(
+    name: string,
+    planeParams: planeParams = {
+      width: 10,
+      height: 10,
+      widthSegments: 32,
+      heightSegments: 32,
+    },
+    geometryConfigs: geometryConfigs = {
+      color: "#f00",
+      position: [0, 0, 0],
+      scale: [1, 1, 1],
+      rotation: [0, 0, 0],
+    },
+    userData?: object
+  ): Object3D {
+    let plane: PlaneGeometry;
+    if (planeParams) {
+      plane = this.initPlaneGeometry(planeParams.width, planeParams.height);
+    } else {
+      plane = this.initPlaneGeometry();
+    }
+
+    let material: MeshBasicMaterial = new MeshBasicMaterial({
+      color: geometryConfigs.color,
+    });
+    const geometryObject = new Mesh(plane, material);
+    geometryObject.name = name;
+    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  }
+
+  /**
+   * @description 创建面板
+   * @author LL
+   * @date 24/12/2021
+   * @param {string} name
+   * @param {number[]} face
+   * @param {number} distance
+   * @param {number} [size]
+   * @param {string} [color]
+   * @returns {*}  {PlaneHelper}
+   */
+  public initPlaneHelper(
+    name: string,
+    face: number[],
+    distance: number,
+    size?: number,
+    color?: string
+  ): PlaneHelper {
+    const plane = new Plane(new Vector3(face[0], face[1], face[2]), distance);
+    const helper = new PlaneHelper(plane, size, new Color(color).getHex());
+    helper.name = name;
+    return helper;
+  }
+
+  /**
    * @description 新建group
    * @author LL
    * @date 2021/10/26
@@ -497,30 +562,6 @@ export class TModel {
   }
 
   /**
-   * @description 创建面板
-   * @author LL
-   * @date 24/12/2021
-   * @param {string} name
-   * @param {number[]} face
-   * @param {number} distance
-   * @param {number} [size]
-   * @param {string} [color]
-   * @returns {*}  {PlaneHelper}
-   */
-  public initPlaneHelper(
-    name: string,
-    face: number[],
-    distance: number,
-    size?: number,
-    color?: string
-  ): PlaneHelper {
-    const plane = new Plane(new Vector3(face[0], face[1], face[2]), distance);
-    const helper = new PlaneHelper(plane, size, new Color(color).getHex());
-    helper.name = name;
-    return helper;
-  }
-
-  /**
    * @description 创建平面缓冲几何体
    * @author LL
    * @date 2023/11/13
@@ -532,47 +573,6 @@ export class TModel {
   public initPlaneGeometry(width?: number, height?: number): PlaneGeometry {
     const planeGeometry = new PlaneGeometry(width, height);
     return planeGeometry;
-  }
-
-  /**
-   * @description 创建平面缓冲几何体
-   * @author gj
-   * @date 2023/11/20
-   * @param {string} name 平面几何体名称
-   * @param {planeParams} [planeParams] 默认为{ width: 10, height: 10, widthSegments: 32,  heightSegments: 32}
-   * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
-   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
-   */
-  public initPlane(
-    name: string,
-    planeParams: planeParams = {
-      width: 10,
-      height: 10,
-      widthSegments: 32,
-      heightSegments: 32,
-    },
-    geometryConfigs: geometryConfigs = {
-      color: "#f00",
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
-    let plane: PlaneGeometry;
-    if (planeParams) {
-      plane = this.initPlaneGeometry(planeParams.width, planeParams.height);
-    } else {
-      plane = this.initPlaneGeometry();
-    }
-
-    let material: MeshBasicMaterial = new MeshBasicMaterial({
-      color: geometryConfigs.color,
-    });
-    const geometryObject = new Mesh(plane, material);
-    geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
   }
 
   /**
