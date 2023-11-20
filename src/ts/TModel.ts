@@ -507,7 +507,7 @@ export class TModel {
    * @param {string} [color]
    * @returns {*}  {PlaneHelper}
    */
-  public initPlane(
+  public initPlaneHelper(
     name: string,
     face: number[],
     distance: number,
@@ -544,20 +544,26 @@ export class TModel {
    * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
    */
-  public initPlaneMesh(
-       name: string,
-       planeParams: planeParams = { width: 10, height: 10, widthSegments: 32,  heightSegments: 32},
-       geometryConfigs: geometryConfigs = {
-         color: "#f00",
-         position: [0, 0, 0],
-         scale: [1, 1, 1],
-         rotation: [0, 0, 0],
-       },
-       userData?: object): Object3D {
+  public initPlane(
+    name: string,
+    planeParams: planeParams = {
+      width: 10,
+      height: 10,
+      widthSegments: 32,
+      heightSegments: 32,
+    },
+    geometryConfigs: geometryConfigs = {
+      color: "#f00",
+      position: [0, 0, 0],
+      scale: [1, 1, 1],
+      rotation: [0, 0, 0],
+    },
+    userData?: object
+  ): Object3D {
     let plane: PlaneGeometry;
     if (planeParams) {
       plane = this.initPlaneGeometry(planeParams.width, planeParams.height);
-    }else {
+    } else {
       plane = this.initPlaneGeometry();
     }
 
@@ -579,10 +585,10 @@ export class TModel {
    * @param {object} [userData] 自定义数据
    */
   public initPoints(
-      GroupName: string,
-      positions: pointsData[],
-      pointConfigs: pointConfigsParams,
-      userData?: object
+    GroupName: string,
+    positions: pointsData[],
+    pointConfigs: pointConfigsParams,
+    userData?: object
   ): Points {
     var geometry = new Geometry(); //声明一个几何体对象Geometry
     for (var i = 0; i < positions.length; i++) {
@@ -594,7 +600,11 @@ export class TModel {
       // geometry.colors.push(new Color(pointConfigs.color));
     }
 
-    var pointMaterial = ThingOrigin.material.initPointsMaterial(pointConfigs.color,false, pointConfigs.size);
+    var pointMaterial = ThingOrigin.material.initPointsMaterial(
+      pointConfigs.color,
+      false,
+      pointConfigs.size
+    );
 
     //生成点模型
     var points = new Points(geometry, pointMaterial);
