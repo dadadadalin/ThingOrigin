@@ -2,11 +2,15 @@ import {
   Box3,
   BufferGeometry,
   Color,
-  Geometry,
+  Geometry, Matrix4,
   Mesh,
   Object3D,
   Sphere,
   Vector3,
+  BufferAttribute,
+  Float32BufferAttribute,
+  Face3,
+  Clock
 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
@@ -31,7 +35,7 @@ export class Tool {
    * @param {number} z
    * @returns {*}  {Vector3}
    */
-  public vector3(x: number, y: number, z: number): Vector3 {
+  public vector3(x?: number, y?: number, z?: number): Vector3 {
     return new Vector3(x, y, x);
   }
 
@@ -319,5 +323,66 @@ export class Tool {
       typeof value.splice === "function" &&
       !value.propertyIsEnumerable("length")
     );
+  }
+
+  /**
+   * @description 创建4x4矩阵
+   * @author gj
+   * @date 2023/11/20
+   * @returns {*}  {Matrix4}
+   */
+  public Matrix4(): Matrix4 {
+    return new Matrix4();
+  }
+
+  /**
+   * @description 创建属性缓冲区对象
+   * @author gj
+   * @date 2023/11/20
+   * @param array 属性数组 （例如顶点位置向量，面片索引，法向量，颜色值，UV坐标以及任何自定义 attribute ）
+   * @param itemSize 表示几个为一组
+   * @param normalized 指明缓存中的数据如何与GLSL代码中的数据对应
+   * @returns {*}  {BufferAttribute}
+   */
+  public BufferAttribute(
+      array: ArrayLike<number>,
+      itemSize: number,
+      normalized?: boolean
+  ): BufferAttribute {
+    return  new BufferAttribute(array, itemSize, normalized );
+  }
+
+
+  /**
+   * @description 三角面片
+   * @author gj
+   * @date 2023/11/20
+   * @param a 顶点 A 的索引
+   * @param b 顶点 B 的索引
+   * @param c 顶点 C 的索引
+   * @param normal 面的法向量 - 矢量展示 Face3 的方向 默认值是 (0, 0, 0)
+   * @param color 面的颜色值
+   * @param materialIndex 材质队列中与该面相关的材质的索引。默认值为 0
+   * @returns {*}  {Face3}
+   */
+  public Face3(
+      a: number,
+      b: number,
+      c: number,
+      normal?: Vector3,
+      color?: Color,
+      materialIndex?: number
+  ): Face3 {
+    return new Face3(a, b, c, normal, color, materialIndex )
+  }
+
+  /**
+   * @description 用于跟踪时间
+   * @author gj
+   * @date 2023/11/20
+   * @returns {*}  {Clock}
+   */
+  public Clock(): Clock{
+    return new Clock();
   }
 }

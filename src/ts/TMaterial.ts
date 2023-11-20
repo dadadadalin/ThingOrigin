@@ -177,20 +177,26 @@ export class TMaterial {
    * @description 创建原始着色器材质
    * @author gj
    * @date 2023/11/13
-   * @param uniforms uniforms
    * @param vertexShader 顶点着色器的GLSL代码
    * @param fragmentShader 片元着色器的GLSL代码
+   * @param uniforms uniforms
+   * @param vertexColors 定义是否使用顶点着色。默认为false
+   * @param side 定义将要渲染哪一面  正面0，背面1, 双面2 默认为正面
    * @return {*} {RawShaderMaterial} 原始着色器材质
    */
   public initRawShaderMaterial(
-      uniforms: {[p: string]: IUniform},
       vertexShader: string,
       fragmentShader: string,
+      uniforms?: {[p: string]: IUniform},
+      vertexColors?: boolean,
+      side?: number
   ): RawShaderMaterial {
     return new RawShaderMaterial({
-      uniforms: uniforms,
       vertexShader: vertexShader,
-      fragmentShader: fragmentShader
+      fragmentShader: fragmentShader,
+      uniforms: uniforms ?? null,
+      vertexColors: vertexColors ? vertexColors : false,
+      side: (side === 0 || side == null) ? FrontSide : (side === 1 ? BackSide : DoubleSide)
     });
   }
 
