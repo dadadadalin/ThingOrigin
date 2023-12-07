@@ -7,7 +7,7 @@ import {
   Plane,
   Vector2,
   Vector3,
-  MeshBasicMaterial
+  MeshBasicMaterial,
 } from "three";
 import * as THREE from "three";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer";
@@ -94,9 +94,6 @@ export class TEffect {
     this.effectFXAA.needsSwap = true;
     this.effectComposer.addPass(this.effectFXAA);
 
-    
-
-
     //创建辉光效果
     this.bloomPass = new UnrealBloomPass(
       new Vector2(
@@ -109,7 +106,7 @@ export class TEffect {
     );
     this.bloomPass.threshold = sceneParams.effectComposer.bloomPass.threshold;
     this.bloomPass.strength = sceneParams.effectComposer.bloomPass.strength;
-    this.bloomPass.radius = sceneParams.effectComposer.bloomPass.radius;//炫光的阈值（场景中的光强大于该值才会产生炫光效果）0.85
+    this.bloomPass.radius = sceneParams.effectComposer.bloomPass.radius; //炫光的阈值（场景中的光强大于该值才会产生炫光效果）0.85
     this.bloomPass.renderToScreen = true;
     this.bloomComposer = new EffectComposer(this.tScene.renderer);
     this.bloomComposer.addPass(this.renderPass);
@@ -117,12 +114,12 @@ export class TEffect {
 
     this.bloomLayer = new Layers();
     this.bloomLayer.set(TEffect.BLOOM_SCENE);
-    
+
     const finalPass = new ShaderPass(
       new THREE.ShaderMaterial({
         uniforms: {
-            baseTexture: { value: null },
-            bloomTexture: { value: this.bloomComposer.renderTarget2.texture },
+          baseTexture: { value: null },
+          bloomTexture: { value: this.bloomComposer.renderTarget2.texture },
         },
         vertexShader: `
         varying vec2 vUv;
@@ -140,15 +137,13 @@ export class TEffect {
         }
         `,
         defines: {},
-    }),
-    'baseTexture'
+      }),
+      "baseTexture"
     );
     finalPass.needsSwap = true;
     this.finalComposer = new EffectComposer(this.tScene.renderer);
     this.finalComposer.addPass(this.renderPass);
     this.finalComposer.addPass(finalPass);
-    
-
   }
 
   /**
@@ -264,16 +259,16 @@ export class TEffect {
       return;
     }
     this.outlinePass.selectedObjects = [model];
-    
   }
 
   /**
    * @description 取消呼吸效果
-   * @author LL
+   * @author MY
    */
   public disposeBreath() {
     this.outlinePass.selectedObjects = [];
   }
+
   /**
    * @description 给模型添加发光效果
    * @author LL
@@ -284,53 +279,56 @@ export class TEffect {
       console.warn("发光效果添加失败，物体不存在");
       return;
     }
-    console.log(this.tScene)
+    console.log(this.tScene);
     model.traverse((child) => {
       if (child instanceof Mesh) {
         console.log(child);
         (child as Mesh).layers.enable(TEffect.BLOOM_SCENE);
       }
-    })
-    
-    const darkMaterial = new MeshBasicMaterial({ color: 'black' });
+    });
+
+    const darkMaterial = new MeshBasicMaterial({ color: "black" });
     const materials = {};
     const darkenNonBloomed = (obj) => {
-      if (obj.isMesh && this.tScene.effect.bloomLayer.test(obj.layers) === false) {
+      if (
+        obj.isMesh &&
+        this.tScene.effect.bloomLayer.test(obj.layers) === false
+      ) {
         materials[obj.uuid] = obj.material;
         obj.material = darkMaterial;
       }
-    }
+    };
     const restoreMaterial = (obj) => {
       if (materials[obj.uuid]) {
         obj.material = materials[obj.uuid];
         delete materials[obj.uuid];
       }
-    }
+    };
     const render1 = () => {
       this.tScene.traverse(darkenNonBloomed);
       this.tScene.effect.bloomComposer.render();
       this.tScene.traverse(restoreMaterial);
       this.tScene.effect.finalComposer.render();
       requestAnimationFrame(render1);
-    }
+    };
     render1();
   }
 
-    /**
+  /**
    * @description 取消发光效果
    * @author MY
    * @param {Object3D} model 模型
    */
-    public disposeBloom(model: Object3D) {
-      if (!model) {
-        console.warn("发光效果取消失败，物体不存在");
-        return;
-      }
-      model.traverse((child) => {
-        if (child instanceof Mesh) {
-          console.log(child);
-          (child as Mesh).layers.disable(TEffect.BLOOM_SCENE);
-        }
-      })
+  public disposeBloom(model: Object3D) {
+    if (!model) {
+      console.warn("发光效果取消失败，物体不存在");
+      return;
     }
+    model.traverse((child) => {
+      if (child instanceof Mesh) {
+        console.log(child);
+        (child as Mesh).layers.disable(TEffect.BLOOM_SCENE);
+      }
+    });
+  }
 }
