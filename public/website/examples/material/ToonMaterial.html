@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>material-ToonMaterial</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #domId {
+            width: 100%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<div class="page-title">卡通材质效果</div>
+
+<div class="content-title">效果展示</div>
+
+<div id="domId"></div>
+
+<div class="content-title">案例代码</div>
+
+<pre id="codeShow"></pre>
+
+<script src="../../../js/thingorigin.js"></script>
+<!-- 案例代码 -->
+<script id="code">
+    let mainScene = ThingOrigin.addScene(
+        "start",
+        document.getElementById("domId")
+    );
+
+    const geometry = ThingOrigin.model.initBox('box',{
+        width: 50,
+        height: 50,
+        depth: 50
+    });
+    let map = ThingOrigin.material.initBasicTexture('../../../static/img/materials/waternormals.jpg');
+    let material = ThingOrigin.material.initToonMaterial(
+        0x1c78cb,
+        null,
+        map
+    );
+    geometry.material = material;
+    mainScene.add(geometry);
+</script>
+<!-- 其他 -->
+<script>
+    document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+</script>
+</body>
+</html>

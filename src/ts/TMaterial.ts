@@ -33,6 +33,8 @@ import {
   BufferGeometry,
   RepeatWrapping,
   Vector3,
+  IUniform,
+  Side,
   DataTexture,
   TypedArray,
   PixelFormat,
@@ -97,143 +99,137 @@ export class TMaterial {
    * @description 创建物理网格材质
    * @author gj
    * @date 2023/11/09
-   * @param configParams 物理网格材质配置项
+   * @param color 材质的颜色
+   * @param map 颜色贴图
+   * @param envMap 环境贴图
+   * @param metalness 金属度  非金属材质0.0，金属使用1.0 范围从0.0-1.0
+   * @param roughness 粗糙度 0.0表示平滑的镜面反射，1.0表示完全漫反射。默认值为1.0
+   * @param clearcoat 表示clear coat层的强度 范围从0.0到1.0m,默认为0.0
+   * @param clearcoatRoughness clear coat层的粗糙度，由0.0到1.0。 默认为0.0
+   * @param envMapIntensity 通过乘以环境贴图的颜色来缩放环境贴图的效果
+   * @param side 定义将要渲染哪一面  正面0，背面1, 双面2 默认为正面
    * @return {*} {MeshPhysicalMaterial} 物理网格材质
    */
-  public initPhysicalMaterial(configParams?: object): MeshPhysicalMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      color: 0xffffff,
-      map: null,
-      metalness: 0.5,
-      roughness: 0.5,
-      clearcoat: 0.5,
-      clearcoatRoughness: 0.5,
-      envMapIntensity: 1,
-      side: FrontSide,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new MeshPhysicalMaterial(materialParameters);
+  public initPhysicalMaterial(
+      color: string | number | Color,
+      map?: Texture,
+      envMap?: Texture,
+      metalness?: number,
+      roughness?: number,
+      clearcoat?: number,
+      clearcoatRoughness?: number,
+      envMapIntensity?: number,
+      side?: number
+  ): MeshPhysicalMaterial {
+    return new MeshPhysicalMaterial({
+      color: color,
+      map: map,
+      envMap: envMap,
+      metalness: metalness,
+      roughness: roughness,
+      clearcoat: clearcoat,
+      clearcoatRoughness: clearcoatRoughness,
+      envMapIntensity: envMapIntensity,
+      side: (side === 0 || side == null) ? FrontSide : (side === 1 ? BackSide : DoubleSide)
+    });
   }
 
   /**
    * @description 创建点材质
    * @author gj
    * @date 2023/11/10
-   * @param configParams 点材质配置项
+   * @param color 材质的颜色
+   * @param vertexColors 定义材料是否使用顶点颜色，默认false ---如果该选项设置为true，则color属性失效
+   * @param size 设置点的大小 默认值为1.0
+   * @param map 颜色贴图
    * @return {*} {PointsMaterial} 点材质
    */
-  public initPointsMaterial(configParams?: object): PointsMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      color: 0x00aa00,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new PointsMaterial(materialParameters);
+  public initPointsMaterial(
+      color: string | number | Color,
+      vertexColors: boolean,
+      size?: number,
+      map?: Texture
+  ): PointsMaterial {
+    return new PointsMaterial({
+      color: color,
+      vertexColors: vertexColors,
+      size: size,
+      map: map
+    });
   }
 
   /**
    * @description 创建卡通材质
    * @author gj
    * @date 2023/11/10
-   * @param configParams 卡通材质配置项
+   * @param color 材质的颜色
+   * @param emissive 发射（光）颜色
+   * @param map 颜色贴图
+   * @param gradientMap 卡通着色的渐变贴图
    * @return {*} {MeshToonMaterial} 卡通材质
    */
-  public initToonMaterial(configParams?: object): MeshToonMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      color: 0x00aa00,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new MeshToonMaterial(materialParameters);
+  public initToonMaterial(
+      color: string | number | Color,
+      emissive?: string | number | Color,
+      map?: Texture,
+      gradientMap? : Texture
+  ): MeshToonMaterial {
+    return new MeshToonMaterial({
+      color: color,
+      emissive: emissive,
+      map: map,
+      gradientMap: gradientMap
+    });
   }
 
   /**
    * @description 创建原始着色器材质
    * @author gj
    * @date 2023/11/13
-   * @param configParams 原始着色器材质配置项
+   * @param vertexShader 顶点着色器的GLSL代码
+   * @param fragmentShader 片元着色器的GLSL代码
+   * @param uniforms uniforms
+   * @param vertexColors 定义是否使用顶点着色。默认为false
+   * @param side 定义将要渲染哪一面  正面0，背面1, 双面2 默认为正面
    * @return {*} {RawShaderMaterial} 原始着色器材质
    */
-  public initRawShaderMaterial(configParams: object): RawShaderMaterial {
-    return new RawShaderMaterial(configParams);
+  public initRawShaderMaterial(
+      vertexShader: string,
+      fragmentShader: string,
+      uniforms?: {[p: string]: IUniform},
+      vertexColors?: boolean,
+      side?: number
+  ): RawShaderMaterial {
+    return new RawShaderMaterial({
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+      uniforms: uniforms ?? null,
+      vertexColors: vertexColors ? vertexColors : false,
+      side: (side === 0 || side == null) ? FrontSide : (side === 1 ? BackSide : DoubleSide)
+    });
   }
 
   /**
    * @description 创建着色器材质
    * @author gj
    * @date 2023/11/13
-   * @param configParams 着色器材质配置项
+   * @param uniforms uniforms
+   * @param vertexShader 顶点着色器的GLSL代码
+   * @param fragmentShader 片元着色器的GLSL代码
    * @return {*} {ShaderMaterial} 着色器材质
    */
-  public initShaderMaterial(configParams: object): ShaderMaterial {
-    return new ShaderMaterial(configParams);
+  public initShaderMaterial(
+      uniforms: {[p: string]: IUniform},
+      vertexShader: string,
+      fragmentShader: string,
+  ): ShaderMaterial {
+    return new ShaderMaterial({
+      uniforms: uniforms,
+      vertexShader: vertexShader,
+      fragmentShader: fragmentShader,
+    });
   }
 
-  /**
-   * @description 从原始数据创建一个纹理贴图
-   * @author gj
-   * @date 2023/11/10
-   * @param data 包含纹理数据的数组或类型化数组
-   * @param width 纹理的宽度
-   * @param height 纹理的高度
-   * @param format 纹理的格式
-   * @param type 纹理的数据类型
-   * @return {*} {DataTexture} 原始数据纹理贴图
-   */
-  public initDataTexture(
-    data: TypedArray,
-    width: number,
-    height: number,
-    format?: PixelFormat,
-    type?: TextureDataType
-  ): DataTexture {
-    const texture = new DataTexture(data, width, height, format, type);
-    texture.needsUpdate = true;
-    return texture;
-  }
-
-  /**
-   * @description 创建基础纹理贴图
-   * @author gj
-   * @date 2023/11/09
-   * @param {url} url 图片路径
-   * @return {*}  {Texture}  基础纹理贴图
-   */
-  public initBasicTexture(url: string): Texture {
-    return new TextureLoader().load(url);
-  }
-
-  /**
-   * @description 从Canvas元素中创建纹理贴图
-   * @author gj
-   * @date 2023/11/09
-   * @param {canvasDom} canvasDom 画布元素
-   * @return {*}  {CanvasTexture} Canvas纹理贴图
-   */
-  public initCanvasTexture(canvasDom: HTMLCanvasElement): CanvasTexture {
-    return new CanvasTexture(canvasDom);
-  }
-
-  /**
-   * @description 创建一个由6张图片组成的立方纹理
-   * @author gj
-   * @date 2023/11/09
-   * @param {pathPrefix} pathPrefix 图片路径前缀
-   * @param {picNameList} picNameList 图片名称集合
-   * @return {*}  {CubeTexture} 立方纹理
-   */
-  public initCubeTexture(
-    pathPrefix: string,
-    picNameList: string[]
-  ): CubeTexture {
-    const loader = new CubeTextureLoader();
-    loader.setPath(pathPrefix);
-    return loader.load(picNameList);
-  }
 
   /**
    * @description 阴影材质; 此材质可以接收阴影，但在其他方面完全透明。
@@ -379,76 +375,67 @@ export class TMaterial {
     return new MeshDistanceMaterial(materialParameters);
   }
 
-  // /**
-  //  * @description 切换模型材质贴图
-  //  * @author gj
-  //  * @date 2023/11/3
-  //  * @param {string} sceneName 场景名称
-  //  * @param {string} uuid 模型uuid
-  //  * @param {textureParams} options 材质贴图参数集合
-  //  */
-  // public changeTextureMap(sceneName: string, uuid: string, options: textureParams): void {
-  //     let obj = ThingOrigin.getScene(sceneName).getObjectByProperty("uuid", uuid);
-  //     if (!obj) {
-  //         console.warn("切换材质贴图失败，物体不存在");
-  //         return;
-  //     }
-  //
-  //     //金属材质，漫反射，金属漆，涂料，塑料，绒布，发光，半透明，玻璃，电介质，通用，基础PBR
-  //     obj.traverse((child) => {
-  //         if (child instanceof Mesh) {
-  //             if (child.material) {
-  //                 if (child.material instanceof Array) {
-  //                     for (let i = 0; i < child.material.length; i++) {
-  //                         child.material[i].dispose();
-  //                     }
-  //                 } else {
-  //                     child.material.dispose();
-  //                 }
-  //             }
-  //
-  //             let materialObj = {};
-  //             for(let key in options){
-  //                 if(options.hasOwnProperty(key)){
-  //                     if(!['img', 'materialType','side'].includes(key)){
-  //                         materialObj[key] = options[key];
-  //                     }
-  //                     if('side' === key){
-  //                         switch(options[key]){
-  //                             case 'FrontSide': materialObj[key] =  FrontSide; break;
-  //                             case 'BackSide': materialObj[key] =  BackSide; break;
-  //                             case 'DoubleSide': materialObj[key] =  DoubleSide; break;
-  //                         }
-  //                     }
-  //                     if(['map','normalMap','roughnessMap','metalnessMap','lightMap','aoMap'].includes(key)){
-  //                         materialObj[key] = new TextureLoader().load(options[key])
-  //                     }
-  //                     if('envMap' === key){
-  //                         materialObj[key] =  new CubeTextureLoader().load(options[key]);
-  //                     }
-  //                 }
-  //             }
-  //
-  //             let keyName = options.materialType;
-  //             const modeMap = {
-  //                 LineBasicMaterial: () => new LineBasicMaterial({ ...materialObj }), //基础线条材质
-  //                 LineDashedMaterial: () => new LineDashedMaterial({ ...materialObj }), //虚线材质
-  //                 MeshBasicMaterial: () => new MeshBasicMaterial({ ...materialObj }), //基础网格材质
-  //                 MeshDepthMaterial: () => new MeshDepthMaterial({ ...materialObj }), // 深度网格材质
-  //                 MeshDistanceMaterial:() => new MeshDistanceMaterial({ ...materialObj }), //距离材质
-  //                 MeshLambertMaterial: () => new MeshLambertMaterial({ ...materialObj }), // (Lambert网格)兰伯特材质
-  //                 MeshMatcapMaterial: () => new MeshMatcapMaterial({ ...materialObj }), //捕捉材质
-  //                 MeshNormalMaterial: () => new MeshNormalMaterial({ ...materialObj }), //法线网格材质
-  //                 MeshPhongMaterial: () => new MeshPhongMaterial({ ...materialObj }), //Phong网格材质
-  //                 MeshPhysicalMaterial: () => new MeshPhysicalMaterial({ ...materialObj }), //物理网格材质
-  //                 MeshStandardMaterial: () => new MeshStandardMaterial({ ...materialObj }), //标准网格材质
-  //                 MeshToonMaterial: () => new MeshToonMaterial({ ...materialObj }), //卡通着色材质
-  //                 PointsMaterial: () => new PointsMaterial({ ...materialObj }), //点材质
-  //                 ShadowMaterial: () => new ShadowMaterial({ ...materialObj }) //阴影材质
-  //             }
-  //
-  //             child.material = modeMap[keyName] ? modeMap[keyName]() : {};
-  //         }
-  //     });
-  // }
+
+  /**
+   * @description 从原始数据创建一个纹理贴图
+   * @author gj
+   * @date 2023/11/10
+   * @param data 包含纹理数据的数组或类型化数组
+   * @param width 纹理的宽度
+   * @param height 纹理的高度
+   * @param format 纹理的格式
+   * @param type 纹理的数据类型
+   * @return {*} {DataTexture} 原始数据纹理贴图
+   */
+  public initDataTexture(
+      data: TypedArray,
+      width: number,
+      height: number,
+      format?: PixelFormat,
+      type?: TextureDataType
+  ): DataTexture {
+    const texture = new DataTexture(data, width, height, format, type);
+    texture.needsUpdate = true;
+    return texture;
+  }
+
+  /**
+   * @description 创建基础纹理贴图
+   * @author gj
+   * @date 2023/11/09
+   * @param {url} url 图片路径
+   * @return {*}  {Texture}  基础纹理贴图
+   */
+  public initBasicTexture(url: string): Texture {
+    return new TextureLoader().load(url);
+  }
+
+  /**
+   * @description 从Canvas元素中创建纹理贴图
+   * @author gj
+   * @date 2023/11/09
+   * @param {canvasDom} canvasDom 画布元素
+   * @return {*}  {CanvasTexture} Canvas纹理贴图
+   */
+  public initCanvasTexture(canvasDom: HTMLCanvasElement): CanvasTexture {
+    return new CanvasTexture(canvasDom);
+  }
+
+  /**
+   * @description 创建一个由6张图片组成的立方纹理
+   * @author gj
+   * @date 2023/11/09
+   * @param {pathPrefix} pathPrefix 图片路径前缀
+   * @param {picNameList} picNameList 图片名称集合
+   * @return {*}  {CubeTexture} 立方纹理
+   */
+  public initCubeTexture(
+      pathPrefix: string,
+      picNameList: string[]
+  ): CubeTexture {
+    const loader = new CubeTextureLoader();
+    loader.setPath(pathPrefix);
+    return loader.load(picNameList);
+  }
+
 }

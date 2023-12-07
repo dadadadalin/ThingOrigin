@@ -231,3 +231,11 @@ interface LineParams {
     linecap?: string;
     linejoin?: string;
 }
+
+
+interface planeParams {
+    width?: number;
+    height?: number;
+    widthSegments?: number;
+    heightSegments?: number
+}
