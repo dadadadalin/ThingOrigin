@@ -283,43 +283,50 @@ export class TMaterial {
   /**
    * @description 创建基础线条材质
    * @author my
-   * @date 2023/11/13
-   * @param configParams 线条材质配置项
+   * @date 2023/12/08
+   * @param color 线条材质颜色
+   * @param linecap 线条两端样式，可选值为 'butt', 'round' 和 'square'。默认值为 'round'
+   * @param linejoin 线连接节点样式，可选值为 'round', 'bevel' 和 'miter'。默认值为 'round'
+   * @param map 纹理贴图
    * @return {*} {LineBasicMaterial} 基础线条材质
    */
-  public initLineBasicMaterial(configParams?: object): LineBasicMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      color: 0xffffff,
-      linewidth: 1,
-      linecap: "round",
-      linejoin: "round",
-      map: null,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new LineBasicMaterial(materialParameters);
+  public initLineBasicMaterial(
+      color: string | number | Color,
+      linecap?: string,
+      linejoin?: string,
+      map?: Texture,
+  ): LineBasicMaterial {
+    return new LineBasicMaterial({
+      color: color,
+      linecap: linecap,
+      linejoin: linejoin,
+      //@ts-ignore
+      map: map
+    });
   }
 
   /**
    * @description 创建虚线材质
    * @author my
-   * @date 2023/11/13
-   * @param configParams 虚线材质配置项
+   * @date 2023/12/08
+   * @param color 虚线材质颜色
+   * @param scale 虚线材质线条中虚线部分的占比，默认值为1
+   * @param dashSize 虚线材质虚线的大小，默认值为3
+   * @param gapSize 虚线材质间隙大小，默认值为1
    * @return {*} {LineDashedMaterial} 虚线材质
    */
-  public initLineDashedMaterial(configParams?: object): LineDashedMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      color: 0xffffff,
-      linewidth: 1,
-      scale: 1,
-      dashSize: 3,
-      gapSize: 1,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new LineDashedMaterial(materialParameters);
+  public initLineDashedMaterial(
+      color: string | number | Color,
+      scale?: number,
+      dashSize?: number,
+      gapSize?: number,
+  ): LineDashedMaterial {
+    return new LineDashedMaterial({
+      color: color,
+      scale: scale,
+      dashSize: dashSize,
+      gapSize: gapSize,
+    });
   }
 
   /**
