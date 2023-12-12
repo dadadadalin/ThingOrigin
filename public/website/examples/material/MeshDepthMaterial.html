@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>material-lineDashedMaterial</title>
+    <title>material-meshDepthMaterial</title>
     <link rel="stylesheet" href="../../css/examples.css" />
     <style>
         #domId {
@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-<div class="page-title">虚线材质效果</div>
+<div class="page-title">深度网格材质效果</div>
 
 <div class="content-title">效果展示</div>
 
@@ -30,15 +30,17 @@
         "start",
         document.getElementById("domId")
     );
-    let material = ThingOrigin.material.initLineDashedMaterial("#ff00ff")
-    const line = ThingOrigin.model.initLine([0,0,0],[50,0,50]);
-    line.material = material
-    line.computeLineDistances();
-    mainScene.add(line);
+
+    let material = ThingOrigin.material.initMeshDistanceMaterial()
+    let sphere = ThingOrigin.model.initSphere('sphere')
+    sphere.material = material
+
+    mainScene.add(sphere)
 </script>
 <!-- 其他 -->
 <script>
     document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
 </script>
+
 </body>
 </html>

@@ -332,54 +332,55 @@ export class TMaterial {
   /**
    * @description 创建基础网格材质
    * @author my
-   * @date 2023/11/13
-   * @param configParams 基础网格材质配置项
+   * @date 2023/12/12
+   * @param color 基础网格材质颜色
    * @return {*} {MeshBasicMaterial} 基础网格材质
    */
-  public initMeshBasicMaterial(configParams?: object): MeshBasicMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      color: 0xffffff,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new MeshBasicMaterial(materialParameters);
+  public initMeshBasicMaterial(
+      color: string | number | Color,
+  ): MeshBasicMaterial {
+    return new MeshBasicMaterial({
+      color:color
+    });
   }
 
   /**
    * @description 创建深度网格材质
    * @author my
    * @date 2023/11/13
-   * @param configParams 深度网格材质配置项
+   * @param alphaMap 灰度纹理贴图
+   * @param map 颜色贴图
+   * @param wireframe 将几何体渲染为线框。默认为false（即渲染为平滑着色）
    * @return {*} {MeshBasicMaterial} 深度网格材质
    */
-  public initMeshDepthMaterial(configParams?: object): MeshDepthMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      alphaMap: null,
-      map: null,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new MeshDepthMaterial(materialParameters);
+  public initMeshDepthMaterial(
+      alphaMap?: Texture,
+      map?: Texture,
+      wireframe?: boolean
+  ): MeshDepthMaterial {
+    return new MeshDepthMaterial({
+      alphaMap: alphaMap,
+      map: map,
+      wireframe: wireframe
+    });
   }
 
   /**
    * @description 创建MeshDistanceMaterial
    * @author my
-   * @date 2023/11/13
-   * @param configParams MeshDistanceMaterial配置项
+   * @date 2023/12/12
+   * @param alphaMap 灰度纹理贴图,默认为null
+   * @param map 颜色贴图
    * @return {*} {MeshDistanceMaterial} MeshDistanceMaterial材质
    */
-  public initMeshDistanceMaterial(configParams?: object): MeshDistanceMaterial {
-    // 创建默认的材质参数
-    const defaultParams = {
-      alphaMap: null,
-      map: null,
-    };
-    // 合并默认参数和传递的参数
-    const materialParameters = Object.assign({}, defaultParams, configParams);
-    return new MeshDistanceMaterial(materialParameters);
+  public initMeshDistanceMaterial(
+      alphaMap?: Texture,
+      map?: Texture,
+  ): MeshDistanceMaterial {
+    return new MeshDistanceMaterial({
+      alphaMap: alphaMap,
+      map: map,
+    });
   }
 
 
