@@ -12,7 +12,31 @@ import {
 import { ThingOrigin } from "./ThingOrigin";
 import { Water } from "three/examples/jsm/objects/Water.js";
 
-let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+// let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+//
+// let map = ThingOrigin.model.initMap("/static/data/china.json").then((map) => {
+//   mainScene.add(map);
+// });
+//
+// console.log(map);
+
+// 获取实时时间
+
+//
+
+// ThingOrigin.model
+//   .initFileModel("gltf", "/static/three/factory.glb", {
+//     scale: [4, 4, 4],
+//   })
+//   .then((model) => {
+//     //@ts-ignore
+//     mainScene.add(model.scene);
+
+//     // mainScene.effect.initBloom(model.scene);
+
+//     //@ts-ignore
+//   });
+
 // mainScene.setSceneViewImage('/static/three/animate/textures/venice_sunset_1k.hdr')
 // ThingOrigin.model
 //   .initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] })

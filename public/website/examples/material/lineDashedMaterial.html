@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>material-lineDashedMaterial</title>
+    <link rel="stylesheet" href="../../css/examples.css" />
+    <style>
+        #domId {
+            width: 100%;
+            height: 500px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+<div class="page-title">虚线材质效果</div>
+
+<div class="content-title">效果展示</div>
+
+<div id="domId"></div>
+
+<div class="content-title">案例代码</div>
+
+<pre id="codeShow"></pre>
+
+<script src="../../../js/thingorigin.js"></script>
+<!-- 案例代码 -->
+<script id="code">
+    let mainScene = ThingOrigin.addScene(
+        "start",
+        document.getElementById("domId")
+    );
+    let material = ThingOrigin.material.initLineDashedMaterial("#ff00ff")
+    const line = ThingOrigin.model.initLine([0,0,0],[50,0,50]);
+    line.material = material
+    line.computeLineDistances();
+    mainScene.add(line);
+</script>
+<!-- 其他 -->
+<script>
+    document.getElementById("codeShow").innerHTML = document.getElementById("code").innerHTML;
+</script>
+</body>
+</html>
