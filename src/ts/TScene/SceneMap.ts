@@ -1,18 +1,39 @@
-import { Clock } from "three";
+import {Clock, MeshBasicMaterial} from "three";
 import TWEEN from "tween.js/src/Tween.js";
 import { ThingOrigin } from "../../ThingOrigin";
 import { TScene } from "./TScene";
 
 let clock = new Clock();
+const darkMaterial = new MeshBasicMaterial({ color: 'black' });
+const materials = {};
 
 /** 帧循环 */
 function animate() {
   ThingOrigin.scenes.scenes.forEach(function (item, key, mapObj) {
     (function (item) {
       // item.camera.camera.updateProjectionMatrix();
+      const darkenNonBloomed = (obj) => {
+        if (obj.isMesh && cScene.effect.bloomLayer.test(obj.layers) === false) {
+          materials[obj.uuid] = obj.material;
+          obj.material = darkMaterial;
+        }
+      }
+      const restoreMaterial = (obj) => {
+        if (materials[obj.uuid]) {
+          obj.material = materials[obj.uuid];
+          delete materials[obj.uuid];
+        }
+      }
       let cScene = ThingOrigin.getScene(key);
       cScene.renderer.render(item, item.camera.camera);
       cScene.CSS2DRenderer.render(item, item.camera.camera);
+      //将不需要辉光的材质设置为黑色
+      cScene.traverse(darkenNonBloomed)
+      //先执行辉光效果器
+      if (cScene.effect.bloomComposer) cScene.effect.bloomComposer.render();
+      //在辉光渲染器执行完之后恢复材质原效果
+      cScene.traverse(restoreMaterial)
+      //执行场景效果器渲染
       if (cScene.effect.effectComposer) cScene.effect.effectComposer.render();
 
       if (cScene.helper.box) cScene.helper.updateBox();

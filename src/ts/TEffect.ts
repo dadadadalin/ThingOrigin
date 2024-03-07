@@ -27,7 +27,6 @@ export class TEffect {
   /** 效果合成器 */
   public effectComposer: EffectComposer;
   public bloomComposer: EffectComposer;
-  public finalComposer: EffectComposer;
   public outlinePass: OutlinePass;
   // public finalPass: ShaderPass;
   private effectFXAA: ShaderPass;
@@ -144,6 +143,7 @@ export class TEffect {
     this.finalComposer = new EffectComposer(this.tScene.renderer);
     this.finalComposer.addPass(this.renderPass);
     this.finalComposer.addPass(finalPass);
+
   }
 
   /**
@@ -271,7 +271,7 @@ export class TEffect {
 
   /**
    * @description 给模型添加发光效果
-   * @author LL
+   * @author MY
    * @param {Object3D} model 模型
    */
   public initBloom(model: Object3D) {
@@ -312,6 +312,7 @@ export class TEffect {
       requestAnimationFrame(render1);
     };
     render1();
+
   }
 
   /**
