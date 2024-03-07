@@ -345,13 +345,12 @@ export class Tool {
    * @returns {*}  {BufferAttribute}
    */
   public BufferAttribute(
-      array: ArrayLike<number>,
-      itemSize: number,
-      normalized?: boolean
+    array: ArrayLike<number>,
+    itemSize: number,
+    normalized?: boolean
   ): BufferAttribute {
-    return  new BufferAttribute(array, itemSize, normalized );
+    return new BufferAttribute(array, itemSize, normalized);
   }
-
 
   /**
    * @description 三角面片
@@ -366,14 +365,14 @@ export class Tool {
    * @returns {*}  {Face3}
    */
   public Face3(
-      a: number,
-      b: number,
-      c: number,
-      normal?: Vector3,
-      color?: Color,
-      materialIndex?: number
+    a: number,
+    b: number,
+    c: number,
+    normal?: Vector3,
+    color?: Color,
+    materialIndex?: number
   ): Face3 {
-    return new Face3(a, b, c, normal, color, materialIndex )
+    return new Face3(a, b, c, normal, color, materialIndex);
   }
 
   /**
@@ -382,7 +381,7 @@ export class Tool {
    * @date 2023/11/20
    * @returns {*}  {Clock}
    */
-  public Clock(): Clock{
+  public Clock(): Clock {
     return new Clock();
   }
 }
