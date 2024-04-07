@@ -36,12 +36,35 @@ export class TIndexedDB {
         var dataRequest = store.index("id").get(modelInfo.id);
 
         dataRequest.onsuccess = (e) => {
+          console.log("结果", e);
           //@ts-ignore
           if (e.target.result != undefined) {
             //创建blob对象路径。​
             //@ts-ignore
             let url = URL.createObjectURL(e.target.result.model);
-            resolve({ saved: true, url: url });
+            //@ts-ignore
+            let scale = e.target.result.scale;
+            //@ts-ignore
+            let type = e.target.result.type;
+            //@ts-ignore
+            let name = e.target.result.name;
+            //@ts-ignore
+            let position = e.target.result.position;
+            //@ts-ignore
+            let rotation = e.target.result.rotation;
+            //@ts-ignore
+            let custom = e.target.result.custom;
+
+            resolve({
+              saved: true,
+              url: url,
+              name: name,
+              type: type,
+              scale: scale,
+              position: position,
+              rotation: rotation,
+              custom: custom,
+            });
           } else {
             resolve({ saved: false });
           }
@@ -91,16 +114,13 @@ export class TIndexedDB {
       ajax.open("get", modelInfo.url);
       ajax.send();
       ajax.onreadystatechange = () => {
-        console.log(111,ajax);
-      // && ajax.responseText.substring(0, 9) == "<!DOCTYPE"
-        if (
-          ajax.readyState == 4 &&
-          ajax.status == 200
-        ) {
+        console.log(111, ajax);
+        // && ajax.responseText.substring(0, 9) == "<!DOCTYPE"
+        if (ajax.readyState == 4 && ajax.status == 200) {
           modelInfo.model = new Blob([ajax.responseText]);
 
-          console.log(222,modelInfo);
-          console.log(333,modelInfo.model);
+          console.log(222, modelInfo);
+          console.log(333, modelInfo.model);
           let db = this.DBs.get(dataBaseName);
 
           let indexedTable = db
@@ -112,12 +132,33 @@ export class TIndexedDB {
             console.log("数据写入成功", event);
 
             // try {
-              let dataRequest2 = indexedTable.index("id").get(modelInfo.id);
-              dataRequest2.onsuccess = (e2) => {
-                //@ts-ignore
-                let url = URL.createObjectURL(e2.target.result.model);
-                resolve({ saved: true, url: url });
-              };
+            let dataRequest2 = indexedTable.index("id").get(modelInfo.id);
+            dataRequest2.onsuccess = (e2) => {
+              //@ts-ignore
+              let url = URL.createObjectURL(e2.target.result.model);
+              //@ts-ignore
+              let scale = e2.target.result.scale;
+              //@ts-ignore
+              let type = e2.target.result.type;
+              //@ts-ignore
+              let name = e2.target.result.name;
+              //@ts-ignore
+              let position = e2.target.result.position;
+              //@ts-ignore
+              let rotation = e2.target.result.rotation;
+              //@ts-ignore
+              let custom = e2.target.result.custom;
+              resolve({
+                saved: true,
+                url: url,
+                scale: scale,
+                type: type,
+                name: name,
+                position: position,
+                rotation: rotation,
+                custom: custom,
+              });
+            };
             // } catch (error) {
             //   console.warn("写入失败，请检查文件路径");
             //   resolve({ saved: false, url: undefined });

@@ -19,7 +19,6 @@ export class THelper {
   public initAxes(len: number = 50) {
     //辅助工具
     this.axes = new AxesHelper(len);
-    this.axes.position.x += 0.02;
     this.tScene.add(this.axes);
   }
 
@@ -99,6 +98,7 @@ export class THelper {
       new Color(colorGrid)
     );
     this.grid.name = "gridHelper";
+    this.grid.position.y -= 1;
     this.tScene.add(this.grid);
   }
 

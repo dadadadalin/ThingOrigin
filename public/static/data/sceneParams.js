@@ -142,11 +142,11 @@ export default {
   },
   helper: {
     axes: {
-      active: false,
+      active: true,
       length: 60,
     },
     grid: {
-      active: false,
+      active: true,
       size: 150,
       divisions: 30,
       centerLineColor: "black",

@@ -12,30 +12,13 @@ import {
 import { ThingOrigin } from "./ThingOrigin";
 import { Water } from "three/examples/jsm/objects/Water.js";
 
-// let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 //
 // let map = ThingOrigin.model.initMap("/static/data/china.json").then((map) => {
 //   mainScene.add(map);
 // });
 //
 // console.log(map);
-
-// 获取实时时间
-
-//
-
-// ThingOrigin.model
-//   .initFileModel("gltf", "/static/three/factory.glb", {
-//     scale: [4, 4, 4],
-//   })
-//   .then((model) => {
-//     //@ts-ignore
-//     mainScene.add(model.scene);
-
-//     // mainScene.effect.initBloom(model.scene);
-
-//     //@ts-ignore
-//   });
 
 // mainScene.setSceneViewImage('/static/three/animate/textures/venice_sunset_1k.hdr')
 // ThingOrigin.model
@@ -57,31 +40,38 @@ import { Water } from "three/examples/jsm/objects/Water.js";
 //     mainScene.playAnimation(model, 0);
 //   });
 
-// indexedDB缓存模型
-// let modelInfo = {
-//   id: 1,
-//   type: "gltf",
-//   name: "测试模型",
-//   url: "/static/three/factory.glb",
-// };
-// ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
-//   console.log(res);
+//indexedDB缓存模型;
+let modelInfo = {
+  id: 1,
+  type: "gltf",
+  name: "测试模型",
+  url: "/static/three/test/scene.gltf",
+  configs: {
+    scale: [4, 4, 4],
+  },
+};
+ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
+  console.log(res);
 
-//   if (res.saved) {
-//     console.log("已缓存");
-//   } else {
-//     // ElMessage('模型首次加载缓存中，请稍后！')
-//     ThingOrigin.indexedDB
-//       .insertModel("ttt", "ttt", modelInfo)
-//       .then((modelParam) => {
-//         if (modelParam.saved == false) {
-//           console.log("缓存失败");
-//         } else {
-//           console.log("开始缓存", modelParam);
-//         }
-//       });
-//   }
-// });
+  if (res.saved) {
+    console.log("已缓存", res.type, res.url);
+    ThingOrigin.model.initFileModel(res.type, res.url).then((model) => {
+      console.log(model);
+      mainScene.add(model.scene);
+    });
+  } else {
+    // ElMessage('模型首次加载缓存中，请稍后！')
+    ThingOrigin.indexedDB
+      .insertModel("ttt", "ttt", modelInfo)
+      .then((modelParam) => {
+        if (modelParam.saved == false) {
+          console.log("缓存失败");
+        } else {
+          console.log("开始缓存", modelParam);
+        }
+      });
+  }
+});
 
 // demo2 物理引擎案例
 // var world,

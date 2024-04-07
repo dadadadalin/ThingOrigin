@@ -27,13 +27,12 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      if (jointData["joint" + (i + 1)]) {
+      let dataUrl = joints[i].dataSource.split("root.")[1];
+      if (jointData[dataUrl]) {
         robot.getObjectByName(joints[i].name).rotation[joints[i].axis] =
-          joints[i].reverse *
-          Number(jointData["joint" + (i + 1)] / 180) *
-          Math.PI;
+          joints[i].reverse * Number(jointData[dataUrl] / 180) * Math.PI;
       } else {
-        console.warn("重置数据异常：" + i + "=" + jointData["joint" + (i + 1)]);
+        console.warn("重置数据异常：" + i + "=" + jointData[dataUrl]);
       }
     }
   }
@@ -60,18 +59,13 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      // if (jointData["joint" + (i + 1)]) {
-      if ("joint" + (i + 1) in jointData) {
+      let dataUrl = joints[i].dataSource.split("root.")[1];
+      if (jointData[dataUrl]) {
         robot.getObjectByName(joints[i].name).rotation[joints[i].axis] =
-          joints[i].reverse * Number(jointData["joint" + (i + 1)]);
+          joints[i].reverse * Number(jointData[dataUrl]);
       } else {
         console.warn(
-          "【" +
-            robot.name +
-            "】数据异常：" +
-            i +
-            "=" +
-            jointData["joint" + (i + 1)]
+          "【" + robot.name + "】数据异常：" + i + "=" + jointData[dataUrl]
         );
       }
     }
@@ -99,16 +93,14 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      if (
-        preData["joint" + (i + 1)] != undefined &&
-        curData["joint" + (i + 1)] != undefined
-      ) {
-        if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
+      let dataUrl = joints[i].dataSource.split("root.")[1];
+      if (preData[dataUrl] != undefined && curData[dataUrl] != undefined) {
+        if (preData[dataUrl] != curData[dataUrl]) {
           ThingOrigin.animate.rotateAngle(
             robot.getObjectByName(joints[i].name),
             joints[i].axis,
-            joints[i].reverse * Number(preData["joint" + (i + 1)]),
-            joints[i].reverse * Number(curData["joint" + (i + 1)]),
+            joints[i].reverse * Number(preData[dataUrl]),
+            joints[i].reverse * Number(curData[dataUrl]),
             time
           );
         }
@@ -116,9 +108,9 @@ export class TMachine {
         console.warn(
           joints[i].name +
             "数据异常：pre=" +
-            preData["joint" + (i + 1)] +
+            preData[dataUrl] +
             ",cur=" +
-            curData["joint" + (i + 1)]
+            curData[dataUrl]
         );
       }
     }
@@ -145,17 +137,16 @@ export class TMachine {
       console.warn("旋转弧度失败，物体不存在");
       return;
     }
-    for (var i = 0; i < 6; i++) {
-      if (
-        preData["joint" + (i + 1)] != undefined &&
-        curData["joint" + (i + 1)] != undefined
-      ) {
-        if (preData["joint" + (i + 1)] != curData["joint" + (i + 1)]) {
+
+    for (var i = 0; i < joints.length; i++) {
+      let dataUrl = joints[i].dataSource.split("root.")[1];
+      if (preData[dataUrl] != undefined && curData[dataUrl] != undefined) {
+        if (preData[dataUrl] != curData[dataUrl]) {
           ThingOrigin.animate.rotateRadian(
             robot.getObjectByName(joints[i].name),
             joints[i].axis,
-            joints[i].reverse * Number(preData["joint" + (i + 1)]),
-            joints[i].reverse * Number(curData["joint" + (i + 1)]),
+            joints[i].reverse * Number(preData[dataUrl]),
+            joints[i].reverse * Number(curData[dataUrl]),
             time
           );
         }
@@ -163,9 +154,9 @@ export class TMachine {
         console.warn(
           joints[i].name +
             "数据异常：pre=" +
-            preData["joint" + (i + 1)] +
+            preData[dataUrl] +
             ",cur=" +
-            curData["joint" + (i + 1)]
+            curData[dataUrl]
         );
       }
     }
