@@ -19,4 +19,5 @@ interface modelResultParams {
   position?: number[];
   rotation?: number[];
   custom?: any;
+  modelName?: string;
 }

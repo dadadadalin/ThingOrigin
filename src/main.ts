@@ -57,6 +57,7 @@ ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
     console.log("已缓存", res.type, res.url);
     ThingOrigin.model.initFileModel(res.type, res.url).then((model) => {
       console.log(model);
+      //@ts-ignore
       mainScene.add(model.scene);
     });
   } else {

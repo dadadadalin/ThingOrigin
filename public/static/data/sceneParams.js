@@ -183,5 +183,6 @@ export default {
   models: [],
   animations: [],
   css2d: [],
+  attaches: [],
   handles: [],
 };

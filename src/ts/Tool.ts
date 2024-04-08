@@ -2,7 +2,8 @@ import {
   Box3,
   BufferGeometry,
   Color,
-  Geometry, Matrix4,
+  Geometry,
+  Matrix4,
   Mesh,
   Object3D,
   Sphere,
@@ -10,7 +11,7 @@ import {
   BufferAttribute,
   Float32BufferAttribute,
   Face3,
-  Clock
+  Clock,
 } from "three";
 import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
@@ -164,6 +165,7 @@ export class Tool {
     info["type"] = model.type;
     info["uuid"] = model.uuid;
     info["ownCSS2D"] = this.ifOwnCSS2D(model);
+    info["custom"] = model["userData"];
     info["objInfo"] = model["objInfo"];
 
     return info;

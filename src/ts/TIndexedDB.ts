@@ -2,7 +2,7 @@ export class TIndexedDB {
   public DBs: Map<string, IDBDatabase> = new Map<string, IDBDatabase>();
 
   /**
-   * @description 判断是否已缓存此模型，返回是否存储，若已缓存返回数据会包含存储路径
+   * @description 判断是否已缓存此模型，返回是否存储，若已缓存返回模型参数
    * @author LL
    * @date 2022-07-14
    * @param {string} dataBaseName
@@ -54,6 +54,8 @@ export class TIndexedDB {
             let rotation = e.target.result.rotation;
             //@ts-ignore
             let custom = e.target.result.custom;
+            //@ts-ignore
+            let modelName = e.target.result.modelName;
 
             resolve({
               saved: true,
@@ -64,6 +66,7 @@ export class TIndexedDB {
               position: position,
               rotation: rotation,
               custom: custom,
+              modelName: modelName,
             });
           } else {
             resolve({ saved: false });
@@ -88,6 +91,7 @@ export class TIndexedDB {
           objectStore.createIndex("scale", "scale");
           objectStore.createIndex("rotation", "rotation");
           objectStore.createIndex("custom", "custom");
+          objectStore.createIndex("modelName", "modelName");
         }
         console.log("数据库升级成功");
       };
@@ -118,14 +122,13 @@ export class TIndexedDB {
         // && ajax.responseText.substring(0, 9) == "<!DOCTYPE"
         if (ajax.readyState == 4 && ajax.status == 200) {
           modelInfo.model = new Blob([ajax.responseText]);
-
-          console.log(222, modelInfo);
-          console.log(333, modelInfo.model);
           let db = this.DBs.get(dataBaseName);
 
           let indexedTable = db
             .transaction([tableName], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
             .objectStore(tableName); //拿到IDBObjectStore 对象
+
+          console.log("insetModel", modelInfo);
 
           var request1 = indexedTable.add(modelInfo);
           request1.onsuccess = (event) => {
@@ -148,6 +151,8 @@ export class TIndexedDB {
               let rotation = e2.target.result.rotation;
               //@ts-ignore
               let custom = e2.target.result.custom;
+              //@ts-ignore
+              let modelName = e2.target.result.modelName;
               resolve({
                 saved: true,
                 url: url,
@@ -157,6 +162,7 @@ export class TIndexedDB {
                 position: position,
                 rotation: rotation,
                 custom: custom,
+                modelName: modelName,
               });
             };
             // } catch (error) {
