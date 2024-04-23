@@ -12,29 +12,39 @@
  * @sideColor number 文字侧边颜色
  */
 interface textParams {
-    color: string;
-    sideColor?: string;
-    size?: number;
-    height?: number;
-    curveSegments?: number;
-    bevelEnabled?: boolean;
-    bevelThickness?: number;
-    bevelSize?: number;
-    bevelSegments?: number;
+  color: string;
+  sideColor?: string;
+  size?: number;
+  height?: number;
+  curveSegments?: number;
+  bevelEnabled?: boolean;
+  bevelThickness?: number;
+  bevelSize?: number;
+  bevelSegments?: number;
 }
 
 interface textShapeParams {
-    color: string;
-    transparent: boolean;
-    opacity: number;
-    size: number;
+  color: string;
+  transparent: boolean;
+  opacity: number;
+  size: number;
 }
 
 interface textLineParams {
-    color: string;
-    size: number;
-    opacity?: number;
-    lineWidth?: number;
+  color: string;
+  size: number;
+  opacity?: number;
+  lineWidth?: number;
+}
+
+interface modelInfo {
+  modelName: string;
+  modelUrl: string;
+  position: number[];
+  scale: number[];
+  rotation: number[];
+  saved: boolean;
+  userData: object;
 }
 
 /**
@@ -45,9 +55,9 @@ interface textLineParams {
  * @scale number[] 缩放系数 例:[2,2,2]
  */
 interface modelConfigs {
-    position?: number[];
-    scale?: number[];
-    rotation?: number[];
+  position?: number[];
+  scale?: number[];
+  rotation?: number[];
 }
 
 /**
@@ -60,10 +70,10 @@ interface modelConfigs {
  * @scale rotation[] 缩放系数 例:[0.5,0,0]
  */
 interface geometryConfigs {
-    color?: string;
-    position?: number[];
-    scale?: number[];
-    rotation?: number[];
+  color?: string;
+  position?: number[];
+  scale?: number[];
+  rotation?: number[];
 }
 
 /**
@@ -79,13 +89,13 @@ interface geometryConfigs {
  * @thetaLength number 指定垂直（纬线）扫描角度大小，默认值为 Math.PI。
  */
 interface sphereParams {
-    radius?: number;
-    widthSegments?: number;
-    heightSegments?: number;
-    phiStart?: number;
-    phiLength?: number;
-    thetaStart?: number;
-    thetaLength?: number;
+  radius?: number;
+  widthSegments?: number;
+  heightSegments?: number;
+  phiStart?: number;
+  phiLength?: number;
+  thetaStart?: number;
+  thetaLength?: number;
 }
 
 /**
@@ -100,12 +110,12 @@ interface sphereParams {
  * @depthSegments number 深度的分段数，默认值是1。
  */
 interface cubeParams {
-    width?: number;
-    height?: number;
-    depth?: number;
-    widthSegments?: number;
-    heightSegments?: number;
-    depthSegments?: number;
+  width?: number;
+  height?: number;
+  depth?: number;
+  widthSegments?: number;
+  heightSegments?: number;
+  depthSegments?: number;
 }
 
 /**
@@ -121,13 +131,13 @@ interface cubeParams {
  * @thetaLength number 圆锥底面圆扇区的中心角，通常被称为“θ”（西塔）。默认值是2*Pi，这使其成为一个完整的圆锥。
  */
 interface coneParams {
-    radius?: number;
-    height?: number;
-    radialSegments?: number;
-    heightSegments?: number;
-    openEnded?: boolean;
-    thetaStart?: number;
-    thetaLength?: number;
+  radius?: number;
+  height?: number;
+  radialSegments?: number;
+  heightSegments?: number;
+  openEnded?: boolean;
+  thetaStart?: number;
+  thetaLength?: number;
 }
 
 /**
@@ -144,14 +154,14 @@ interface coneParams {
  * @thetaLength number 圆柱底面圆扇区的中心角，通常被称为“θ”（西塔）。默认值是2*Pi，这使其成为一个完整的圆柱。
  */
 interface cylinderParams {
-    radiusTop?: number;
-    radiusBottom?: number;
-    height?: number;
-    radialSegments?: number;
-    heightSegments?: number;
-    openEnded?: boolean;
-    thetaStart?: number;
-    thetaLength?: number;
+  radiusTop?: number;
+  radiusBottom?: number;
+  height?: number;
+  radialSegments?: number;
+  heightSegments?: number;
+  openEnded?: boolean;
+  thetaStart?: number;
+  thetaLength?: number;
 }
 
 /**
@@ -162,8 +172,8 @@ interface cylinderParams {
  * @size number 点大小 例: 10
  */
 interface pointConfigsParams {
-    color: string;
-    size: number;
+  color: string;
+  size: number;
 }
 
 /**
@@ -175,9 +185,9 @@ interface pointConfigsParams {
  * @radius number 半径 例:5
  */
 interface spriteShapeParams {
-    shape: string;
-    color: string;
-    radius: number;
+  shape: string;
+  color: string;
+  radius: number;
 }
 
 /**
@@ -188,8 +198,8 @@ interface spriteShapeParams {
  * @size number 尺寸大小 例: 10
  */
 interface spritePicParams {
-    url: string;
-    size: number;
+  url: string;
+  size: number;
 }
 
 /**
@@ -202,7 +212,7 @@ interface spritePicParams {
  * @name string
  */
 interface spriteData extends xyz {
-    name: string;
+  name: string;
 }
 
 /**
@@ -226,16 +236,15 @@ interface pointsData extends xyz {}
  * @linejoin 接节点的样式 例:'round'||'bevel'||'miter'
  */
 interface LineParams {
-    color?: string;
-    lineWidth?: number;
-    linecap?: string;
-    linejoin?: string;
+  color?: string;
+  lineWidth?: number;
+  linecap?: string;
+  linejoin?: string;
 }
 
-
 interface planeParams {
-    width?: number;
-    height?: number;
-    widthSegments?: number;
-    heightSegments?: number
+  width?: number;
+  height?: number;
+  widthSegments?: number;
+  heightSegments?: number;
 }

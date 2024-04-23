@@ -64,72 +64,23 @@ export class TModel {
    * @description 导入模型文件
    * @author LL
    * @date 2021/07/26
-   * @param {string} type 模型文件类型 例：'fbx'||'gltf'||'stl'
+   * @param {modelInfo} modelInfo 模型配置参数，位置和放大倍数  例：{position: [0, 0, 0], scale: [1, 1, 1] }
    * @param {string} url  文件读取地址
-   * @param {modelConfigs} modelConfigs 模型配置参数，位置和放大倍数  例：{position: [0, 0, 0], scale: [1, 1, 1] }
    * @returns {*}  {Promise<Object3D>}
    */
-  public initFileModel(
-    type: string,
-    url: string,
-    modelConfigs: modelConfigs = {
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    }
-  ): Promise<Object3D> {
+  public initFileModel(modelInfo: any, url: string): Promise<Object3D> {
     return new Promise((resolve) => {
-      switch (type) {
+      switch (modelInfo.type) {
         case "fbx":
           this.FBXLoader.load(url, (fbx: Group) => {
-            if (modelConfigs) {
-              if (modelConfigs.scale)
-                fbx.scale.set(
-                  modelConfigs.scale[0],
-                  modelConfigs.scale[1],
-                  modelConfigs.scale[2]
-                );
-              if (modelConfigs.rotation)
-                fbx.rotation.set(
-                  MathUtils.degToRad(modelConfigs.rotation[0]),
-                  MathUtils.degToRad(modelConfigs.rotation[1]),
-                  MathUtils.degToRad(modelConfigs.rotation[2])
-                );
-              if (modelConfigs.position)
-                fbx.position.set(
-                  modelConfigs.position[0],
-                  modelConfigs.position[1],
-                  modelConfigs.position[2]
-                );
-            }
-            fbx.updateMatrixWorld(true);
-            resolve(fbx);
+            let model = this.setModelConfig(fbx, modelInfo);
+            resolve(model);
           });
           break;
         case "obj":
-          this.OBJLoader.load(url, (object: Object3D) => {
-            if (modelConfigs) {
-              if (modelConfigs.scale)
-                object.scale.set(
-                  modelConfigs.scale[0],
-                  modelConfigs.scale[1],
-                  modelConfigs.scale[2]
-                );
-              if (modelConfigs.rotation)
-                object.rotation.set(
-                  MathUtils.degToRad(modelConfigs.rotation[0]),
-                  MathUtils.degToRad(modelConfigs.rotation[1]),
-                  MathUtils.degToRad(modelConfigs.rotation[2])
-                );
-              if (modelConfigs.position)
-                object.position.set(
-                  modelConfigs.position[0],
-                  modelConfigs.position[1],
-                  modelConfigs.position[2]
-                );
-            }
-            object.updateMatrixWorld(true);
-            resolve(object);
+          this.OBJLoader.load(url, (obj: Object3D) => {
+            let model = this.setModelConfig(obj, modelInfo);
+            resolve(model);
           });
           break;
         case "stl":
@@ -137,143 +88,94 @@ export class TModel {
             var material = new MeshLambertMaterial(); //材质对象Material
             material.side = DoubleSide;
             var mesh = new Mesh(geometry, material); //网格模型对象Mesh
-            if (modelConfigs) {
-              if (modelConfigs.scale)
-                mesh.scale.set(
-                  modelConfigs.scale[0],
-                  modelConfigs.scale[1],
-                  modelConfigs.scale[2]
-                );
-              if (modelConfigs.rotation)
-                mesh.rotation.set(
-                  MathUtils.degToRad(modelConfigs.rotation[0]),
-                  MathUtils.degToRad(modelConfigs.rotation[1]),
-                  MathUtils.degToRad(modelConfigs.rotation[2])
-                );
-              if (modelConfigs.position)
-                mesh.position.set(
-                  modelConfigs.position[0],
-                  modelConfigs.position[1],
-                  modelConfigs.position[2]
-                );
-            }
-            mesh.updateMatrixWorld(true);
-            resolve(mesh);
+
+            let model = this.setModelConfig(mesh, modelInfo);
+            resolve(model);
           });
           break;
         case "gltf":
-          // var manager = new LoadingManager();
-          // console.log(url.model);
-
-          // var blobs = { "fish.gltf": url.model };
-
-          // const objectURLs = [];
-          // manager.setURLModifier((url1) => {
-          //     url1 = URL.createObjectURL(blobs);
-
-          //     objectURLs.push(url1);
-
-          //     return url1;
-          // });
-
-          // this.GLTFLoader = new GLTFLoader(manager);
-
           this.GLTFLoader.load(url, (gltf) => {
-            if (modelConfigs) {
-              if (modelConfigs.scale)
-                gltf.scene.scale.set(
-                  modelConfigs.scale[0],
-                  modelConfigs.scale[1],
-                  modelConfigs.scale[2]
-                );
-              if (modelConfigs.rotation)
-                gltf.scene.rotation.set(
-                  MathUtils.degToRad(modelConfigs.rotation[0]),
-                  MathUtils.degToRad(modelConfigs.rotation[1]),
-                  MathUtils.degToRad(modelConfigs.rotation[2])
-                );
-              if (modelConfigs.position)
-                gltf.scene.position.set(
-                  modelConfigs.position[0],
-                  modelConfigs.position[1],
-                  modelConfigs.position[2]
-                );
-            }
-            gltf.scene.updateMatrixWorld(true);
+            let model = this.setModelConfig(gltf.scene, modelInfo);
             //@ts-ignore
-            resolve(gltf);
+            gltf.scene = model;
+            resolve(gltf as unknown as Object3D);
           });
           break;
         case "json":
           this.ObjectLoader.load(url, (object: Object3D) => {
-            if (modelConfigs) {
-              if (modelConfigs.scale)
-                object.scale.set(
-                  modelConfigs.scale[0],
-                  modelConfigs.scale[1],
-                  modelConfigs.scale[2]
-                );
-              if (modelConfigs.rotation)
-                object.rotation.set(
-                  MathUtils.degToRad(modelConfigs.rotation[0]),
-                  MathUtils.degToRad(modelConfigs.rotation[1]),
-                  MathUtils.degToRad(modelConfigs.rotation[2])
-                );
-              if (modelConfigs.position)
-                object.position.set(
-                  modelConfigs.position[0],
-                  modelConfigs.position[1],
-                  modelConfigs.position[2]
-                );
-            }
-            object.updateMatrixWorld(true);
-            resolve(object);
+            let model = this.setModelConfig(object, modelInfo);
+            resolve(model);
           });
           break;
       }
     });
   }
 
-  /**
-   * @description 创建平面
-   * @author gj
-   * @date 2023/11/20
-   * @param {string} name 平面几何体名称
-   * @param {planeParams} [planeParams] 默认为{ width: 10, height: 10, widthSegments: 32,  heightSegments: 32}
-   * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
-   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
-   */
-  public initPlane(
-    name: string,
-    planeParams: planeParams = {
-      width: 10,
-      height: 10,
-      widthSegments: 32,
-      heightSegments: 32,
-    },
-    geometryConfigs: geometryConfigs = {
-      color: "#f00",
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
-    let plane: PlaneGeometry;
-    if (planeParams) {
-      plane = this.initPlaneGeometry(planeParams.width, planeParams.height);
-    } else {
-      plane = this.initPlaneGeometry();
-    }
+  private setModelConfig(model: Object3D, modelInfo: any): Object3D {
+    if (modelInfo.scale)
+      model.scale.set(
+        modelInfo.scale[0],
+        modelInfo.scale[1],
+        modelInfo.scale[2]
+      );
+    if (modelInfo.rotation)
+      model.rotation.set(
+        MathUtils.degToRad(modelInfo.rotation[0]),
+        MathUtils.degToRad(modelInfo.rotation[1]),
+        MathUtils.degToRad(modelInfo.rotation[2])
+      );
+    if (modelInfo.position)
+      model.position.set(
+        modelInfo.position[0],
+        modelInfo.position[1],
+        modelInfo.position[2]
+      );
+    model.userData = modelInfo.userData;
 
-    let material: MeshBasicMaterial = new MeshBasicMaterial({
-      color: geometryConfigs.color,
-    });
-    const geometryObject = new Mesh(plane, material);
-    geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+    model.updateMatrixWorld(true);
+    return model;
   }
+
+  // /**
+  //  * @description 创建平面
+  //  * @author gj
+  //  * @date 2023/11/20
+  //  * @param {string} name 平面几何体名称
+  //  * @param {planeParams} [planeParams] 默认为{ width: 10, height: 10, widthSegments: 32,  heightSegments: 32}
+  //  * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
+  //  * @param {object} [userData] 填入模型的userData
+  //  * @returns {*}  {Object3D}
+  //  */
+  // public initPlane(
+  //   name: string,
+  //   planeParams: planeParams = {
+  //     width: 10,
+  //     height: 10,
+  //     widthSegments: 32,
+  //     heightSegments: 32,
+  //   },
+  //   geometryConfigs: geometryConfigs = {
+  //     color: "#f00",
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   },
+  //   userData?: object
+  // ): Object3D {
+  //   let plane: PlaneGeometry;
+  //   if (planeParams) {
+  //     plane = this.initPlaneGeometry(planeParams.width, planeParams.height);
+  //   } else {
+  //     plane = this.initPlaneGeometry();
+  //   }
+
+  //   let material: MeshBasicMaterial = new MeshBasicMaterial({
+  //     color: geometryConfigs.color,
+  //   });
+  //   const geometryObject = new Mesh(plane, material);
+  //   geometryObject.name = name;
+  //   return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  // }
 
   /**
    * @description 创建面板
@@ -299,76 +201,76 @@ export class TModel {
     return helper;
   }
 
-  /**
-   * @description 新建group
-   * @author LL
-   * @date 2021/10/26
-   * @param {string} name
-   * @param {geometryConfigs} [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
-   * @param {object} [userData]
-   * @returns {*}  {Object3D}
-   */
-  public initGroup(
-    name: string,
-    geometryConfigs: geometryConfigs = {
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
-    let group = new Group();
-    group.name = name;
-    return this.setObjectConfigs(group, geometryConfigs, userData);
-  }
+  // /**
+  //  * @description 新建group
+  //  * @author LL
+  //  * @date 2021/10/26
+  //  * @param {string} name
+  //  * @param {geometryConfigs} [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+  //  * @param {object} [userData]
+  //  * @returns {*}  {Object3D}
+  //  */
+  // public initGroup(
+  //   name: string,
+  //   geometryConfigs: geometryConfigs = {
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   },
+  //   userData?: object
+  // ): Object3D {
+  //   let group = new Group();
+  //   group.name = name;
+  //   return this.setObjectConfigs(group, geometryConfigs, userData);
+  // }
 
-  /**
-   * @description 添加球体
-   * @author LL
-   * @date 2021/07/23
-   * @param {string} name 新增球体名称
-   * @param {sphereParams}  [sphereParams] 球体参数 [sphereParams={ radius: 10, widthSegments: 10, heightSegments: 10 }]
-   * @param {geometryConfigs} [geometryConfigs] 几何通用参数 [geometryConfigs={ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
-   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
-   */
-  public initSphere(
-    name: string,
-    sphereParams: sphereParams = {
-      radius: 10,
-      widthSegments: 15,
-      heightSegments: 15,
-    },
-    geometryConfigs: geometryConfigs = {
-      color: "#f00",
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
-    let sphere: SphereBufferGeometry;
-    if (sphereParams) {
-      sphere = new SphereBufferGeometry(
-        sphereParams.radius,
-        sphereParams.widthSegments,
-        sphereParams.heightSegments,
-        sphereParams.phiStart,
-        sphereParams.phiLength,
-        sphereParams.thetaStart,
-        sphereParams.thetaLength
-      );
-    } else {
-      sphere = new SphereBufferGeometry();
-    }
+  // /**
+  //  * @description 添加球体
+  //  * @author LL
+  //  * @date 2021/07/23
+  //  * @param {string} name 新增球体名称
+  //  * @param {sphereParams}  [sphereParams] 球体参数 [sphereParams={ radius: 10, widthSegments: 10, heightSegments: 10 }]
+  //  * @param {geometryConfigs} [geometryConfigs] 几何通用参数 [geometryConfigs={ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+  //  * @param {object} [userData] 填入模型的userData
+  //  * @returns {*}  {Object3D}
+  //  */
+  // public initSphere(
+  //   name: string,
+  //   sphereParams: sphereParams = {
+  //     radius: 10,
+  //     widthSegments: 15,
+  //     heightSegments: 15,
+  //   },
+  //   geometryConfigs: geometryConfigs = {
+  //     color: "#f00",
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   },
+  //   userData?: object
+  // ): Object3D {
+  //   let sphere: SphereBufferGeometry;
+  //   if (sphereParams) {
+  //     sphere = new SphereBufferGeometry(
+  //       sphereParams.radius,
+  //       sphereParams.widthSegments,
+  //       sphereParams.heightSegments,
+  //       sphereParams.phiStart,
+  //       sphereParams.phiLength,
+  //       sphereParams.thetaStart,
+  //       sphereParams.thetaLength
+  //     );
+  //   } else {
+  //     sphere = new SphereBufferGeometry();
+  //   }
 
-    let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: geometryConfigs.color,
-    });
-    const geometryObject = new Mesh(sphere, material);
-    geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
-  }
+  //   let material: MeshLambertMaterial = new MeshLambertMaterial({
+  //     color: geometryConfigs.color,
+  //   });
+  //   const geometryObject = new Mesh(sphere, material);
+  //   geometryObject.name = name;
+  //   return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  // }
 
   /**
    * @description 添加几何体
@@ -380,125 +282,158 @@ export class TModel {
    * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
    */
-  public initBox(
-    name: string,
-    cubeParams: cubeParams = { width: 10, height: 10, depth: 10 },
-    geometryConfigs: geometryConfigs = {
-      color: "#f00",
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
+  public initCube(name: string, modelInfo: any): Object3D {
+    let defaultParams = {
+      base: {
+        width: 10,
+        height: 10,
+        depth: 10,
+        widthSegments: 1,
+        heightSegments: 1,
+        depthSegments: 1,
+      },
+      config: {
+        color: "#f00",
+      },
+    };
+    let param = Object.assign(defaultParams, modelInfo);
     let cube: BoxBufferGeometry;
-    if (cubeParams) {
-      cube = new BoxBufferGeometry(
-        cubeParams.width,
-        cubeParams.height,
-        cubeParams.depth,
-        cubeParams.widthSegments,
-        cubeParams.heightSegments,
-        cubeParams.depthSegments
-      );
-    } else {
-      cube = new BoxBufferGeometry();
-    }
+
+    cube = new BoxBufferGeometry(
+      param.base.width,
+      param.base.height,
+      param.base.depth,
+      param.base.widthSegments,
+      param.base.heightSegments,
+      param.base.depthSegments
+    );
+
     let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: geometryConfigs.color,
+      color: param.config.color,
     });
     const geometryObject = new Mesh(cube, material);
     geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+    return this.setObjectConfigs(geometryObject, param);
   }
+  // public initBox1(
+  //   name: string,
+  //   cubeParams: cubeParams = { width: 10, height: 10, depth: 10 },
+  //   geometryConfigs: geometryConfigs = {
+  //     color: "#f00",
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   },
+  //   userData?: object
+  // ): Object3D {
+  //   let cube: BoxBufferGeometry;
+  //   if (cubeParams) {
+  //     cube = new BoxBufferGeometry(
+  //       cubeParams.width,
+  //       cubeParams.height,
+  //       cubeParams.depth,
+  //       cubeParams.widthSegments,
+  //       cubeParams.heightSegments,
+  //       cubeParams.depthSegments
+  //     );
+  //   } else {
+  //     cube = new BoxBufferGeometry();
+  //   }
+  //   let material: MeshLambertMaterial = new MeshLambertMaterial({
+  //     color: geometryConfigs.color,
+  //   });
+  //   const geometryObject = new Mesh(cube, material);
+  //   geometryObject.name = name;
+  //   return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  // }
 
-  /**
-   * @description 添加圆锥
-   * @author LL
-   * @date 2021/08/19
-   * @param {string} name 圆锥名称
-   * @param {coneParams} [coneParams] 圆锥参数
-   * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
-   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
-   */
-  public initCone(
-    name: string,
-    coneParams: coneParams = { radius: 10, height: 20 },
-    geometryConfigs: geometryConfigs = {
-      color: "#f00",
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
-    let cone: ConeBufferGeometry;
-    if (coneParams) {
-      cone = new ConeBufferGeometry(
-        coneParams.radius,
-        coneParams.height,
-        coneParams.radialSegments,
-        coneParams.heightSegments,
-        coneParams.openEnded,
-        coneParams.thetaStart,
-        coneParams.thetaLength
-      );
-    } else {
-      cone = new ConeBufferGeometry();
-    }
-    let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: geometryConfigs.color,
-    });
-    const geometryObject = new Mesh(cone, material);
-    geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
-  }
+  // /**
+  //  * @description 添加圆锥
+  //  * @author LL
+  //  * @date 2021/08/19
+  //  * @param {string} name 圆锥名称
+  //  * @param {coneParams} [coneParams] 圆锥参数
+  //  * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
+  //  * @param {object} [userData] 填入模型的userData
+  //  * @returns {*}  {Object3D}
+  //  */
+  // public initCone(
+  //   name: string,
+  //   coneParams: coneParams = { radius: 10, height: 20 },
+  //   geometryConfigs: geometryConfigs = {
+  //     color: "#f00",
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   },
+  //   userData?: object
+  // ): Object3D {
+  //   let cone: ConeBufferGeometry;
+  //   if (coneParams) {
+  //     cone = new ConeBufferGeometry(
+  //       coneParams.radius,
+  //       coneParams.height,
+  //       coneParams.radialSegments,
+  //       coneParams.heightSegments,
+  //       coneParams.openEnded,
+  //       coneParams.thetaStart,
+  //       coneParams.thetaLength
+  //     );
+  //   } else {
+  //     cone = new ConeBufferGeometry();
+  //   }
+  //   let material: MeshLambertMaterial = new MeshLambertMaterial({
+  //     color: geometryConfigs.color,
+  //   });
+  //   const geometryObject = new Mesh(cone, material);
+  //   geometryObject.name = name;
+  //   return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  // }
 
-  /**
-   * @description 添加圆柱体
-   * @author LL
-   * @date 2021/08/19
-   * @param {string} name 圆柱体名称
-   * @param {cylinderParams} [cylinderParams]
-   * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
-   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
-   */
-  public initCylinder(
-    name: string,
-    cylinderParams: cylinderParams = { radiusTop: 10, radiusBottom: 10 },
-    geometryConfigs: geometryConfigs = {
-      color: "#f00",
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    },
-    userData?: object
-  ): Object3D {
-    let cylinder: CylinderBufferGeometry;
-    if (cylinderParams) {
-      cylinder = new CylinderBufferGeometry(
-        cylinderParams.radiusTop,
-        cylinderParams.radiusBottom,
-        cylinderParams.height,
-        cylinderParams.radialSegments,
-        cylinderParams.heightSegments,
-        cylinderParams.openEnded,
-        cylinderParams.thetaStart,
-        cylinderParams.thetaLength
-      );
-    } else {
-      cylinder = new CylinderBufferGeometry();
-    }
+  // /**
+  //  * @description 添加圆柱体
+  //  * @author LL
+  //  * @date 2021/08/19
+  //  * @param {string} name 圆柱体名称
+  //  * @param {cylinderParams} [cylinderParams]
+  //  * @param {geometryConfigs} [geometryConfigs] 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
+  //  * @param {object} [userData] 填入模型的userData
+  //  * @returns {*}  {Object3D}
+  //  */
+  // public initCylinder(
+  //   name: string,
+  //   cylinderParams: cylinderParams = { radiusTop: 10, radiusBottom: 10 },
+  //   geometryConfigs: geometryConfigs = {
+  //     color: "#f00",
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   },
+  //   userData?: object
+  // ): Object3D {
+  //   let cylinder: CylinderBufferGeometry;
+  //   if (cylinderParams) {
+  //     cylinder = new CylinderBufferGeometry(
+  //       cylinderParams.radiusTop,
+  //       cylinderParams.radiusBottom,
+  //       cylinderParams.height,
+  //       cylinderParams.radialSegments,
+  //       cylinderParams.heightSegments,
+  //       cylinderParams.openEnded,
+  //       cylinderParams.thetaStart,
+  //       cylinderParams.thetaLength
+  //     );
+  //   } else {
+  //     cylinder = new CylinderBufferGeometry();
+  //   }
 
-    let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: geometryConfigs.color,
-    });
-    const geometryObject = new Mesh(cylinder, material);
-    geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
-  }
+  //   let material: MeshLambertMaterial = new MeshLambertMaterial({
+  //     color: geometryConfigs.color,
+  //   });
+  //   const geometryObject = new Mesh(cylinder, material);
+  //   geometryObject.name = name;
+  //   return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  // }
 
   /**
    * @description
@@ -614,186 +549,186 @@ export class TModel {
     return points;
   }
 
-  /**
-   * @description 添加3d文字
-   * @author gj LL
-   * @date 2021/09/16
-   * @param {string} text 文字
-   * @param {string} fontUrl 字体json文件地址
-   * @param {textParams} textStyle 字体样式 [textStyle={ size: 100, height: 50, curveSegments: 12, bevelEnabled: false, bevelThickness: 20, bevelSize: 8, bevelSegments: 3 }]
-   * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
-   * @returns {*}  {Promise<Object3D>}
-   */
-  public initText(
-    text: string,
-    fontUrl: string,
-    textStyle: textParams = {
-      color: "#f00",
-      size: 100,
-      height: 50,
-      curveSegments: 12,
-      bevelEnabled: false,
-      bevelThickness: 20,
-      bevelSize: 8,
-      bevelSegments: 3,
-      sideColor: "#fff",
-    },
-    geometryConfigs: geometryConfigs = {
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    }
-  ): Promise<Object3D> {
-    const loader = new FontLoader();
-    return new Promise((resolve) =>
-      loader.load(fontUrl, (font) => {
-        const geometry = new TextGeometry(text, {
-          font: font,
-          size: textStyle.size,
-          height: textStyle.height,
-          curveSegments: textStyle.curveSegments,
-          bevelEnabled: textStyle.bevelEnabled,
-          bevelThickness: textStyle.bevelThickness,
-          bevelSize: textStyle.bevelSize,
-          bevelSegments: textStyle.bevelSegments,
-        });
+  // /**
+  //  * @description 添加3d文字
+  //  * @author gj LL
+  //  * @date 2021/09/16
+  //  * @param {string} text 文字
+  //  * @param {string} fontUrl 字体json文件地址
+  //  * @param {textParams} textStyle 字体样式 [textStyle={ size: 100, height: 50, curveSegments: 12, bevelEnabled: false, bevelThickness: 20, bevelSize: 8, bevelSegments: 3 }]
+  //  * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+  //  * @returns {*}  {Promise<Object3D>}
+  //  */
+  // public initText(
+  //   text: string,
+  //   fontUrl: string,
+  //   textStyle: textParams = {
+  //     color: "#f00",
+  //     size: 100,
+  //     height: 50,
+  //     curveSegments: 12,
+  //     bevelEnabled: false,
+  //     bevelThickness: 20,
+  //     bevelSize: 8,
+  //     bevelSegments: 3,
+  //     sideColor: "#fff",
+  //   },
+  //   geometryConfigs: geometryConfigs = {
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   }
+  // ): Promise<Object3D> {
+  //   const loader = new FontLoader();
+  //   return new Promise((resolve) =>
+  //     loader.load(fontUrl, (font) => {
+  //       const geometry = new TextGeometry(text, {
+  //         font: font,
+  //         size: textStyle.size,
+  //         height: textStyle.height,
+  //         curveSegments: textStyle.curveSegments,
+  //         bevelEnabled: textStyle.bevelEnabled,
+  //         bevelThickness: textStyle.bevelThickness,
+  //         bevelSize: textStyle.bevelSize,
+  //         bevelSegments: textStyle.bevelSegments,
+  //       });
 
-        var meshMaterial = [
-          new MeshPhongMaterial({ color: textStyle.color, flatShading: true }), // front
-          new MeshPhongMaterial({ color: textStyle.sideColor }), // side
-        ];
+  //       var meshMaterial = [
+  //         new MeshPhongMaterial({ color: textStyle.color, flatShading: true }), // front
+  //         new MeshPhongMaterial({ color: textStyle.sideColor }), // side
+  //       ];
 
-        const geometryObject = new Mesh(geometry, meshMaterial);
-        geometryObject.name = text;
+  //       const geometryObject = new Mesh(geometry, meshMaterial);
+  //       geometryObject.name = text;
 
-        resolve(
-          this.setObjectConfigs(geometryObject, geometryConfigs, {
-            fontUrl: fontUrl,
-          })
-        );
-      })
-    );
-  }
+  //       resolve(
+  //         this.setObjectConfigs(geometryObject, geometryConfigs, {
+  //           fontUrl: fontUrl,
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
 
-  /**
-   * @description 3D形状文字
-   * @author LL
-   * @date 2021/09/17
-   * @param {string} text 文字内容
-   * @param {string} fontUrl 字体文件
-   * @param {textShapeParams} textStyle 形状文字样式 [textStyle={ color: "#f00", transparent: true, opacity: 0.4, size: 100 }]
-   * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
-   * @returns {*}  {Promise<Object3D>}
-   */
-  public initTextShape(
-    text: string,
-    fontUrl: string,
-    textStyle: textShapeParams = {
-      color: "#f00",
-      transparent: true,
-      opacity: 0.4,
-      size: 100,
-    },
-    geometryConfigs: geometryConfigs = {
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    }
-  ): Promise<Object3D> {
-    const loader = new FontLoader();
-    return new Promise((resolve) =>
-      loader.load(fontUrl, (font) => {
-        var matLite = new MeshBasicMaterial({
-          color: textStyle.color,
-          transparent: textStyle.transparent,
-          opacity: textStyle.opacity,
-        });
+  // /**
+  //  * @description 3D形状文字
+  //  * @author LL
+  //  * @date 2021/09/17
+  //  * @param {string} text 文字内容
+  //  * @param {string} fontUrl 字体文件
+  //  * @param {textShapeParams} textStyle 形状文字样式 [textStyle={ color: "#f00", transparent: true, opacity: 0.4, size: 100 }]
+  //  * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+  //  * @returns {*}  {Promise<Object3D>}
+  //  */
+  // public initTextShape(
+  //   text: string,
+  //   fontUrl: string,
+  //   textStyle: textShapeParams = {
+  //     color: "#f00",
+  //     transparent: true,
+  //     opacity: 0.4,
+  //     size: 100,
+  //   },
+  //   geometryConfigs: geometryConfigs = {
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   }
+  // ): Promise<Object3D> {
+  //   const loader = new FontLoader();
+  //   return new Promise((resolve) =>
+  //     loader.load(fontUrl, (font) => {
+  //       var matLite = new MeshBasicMaterial({
+  //         color: textStyle.color,
+  //         transparent: textStyle.transparent,
+  //         opacity: textStyle.opacity,
+  //       });
 
-        var shapes = font.generateShapes(text, textStyle.size);
-        var geometry = new ShapeBufferGeometry(shapes);
-        geometry.computeBoundingBox();
+  //       var shapes = font.generateShapes(text, textStyle.size);
+  //       var geometry = new ShapeBufferGeometry(shapes);
+  //       geometry.computeBoundingBox();
 
-        const geometryObject = new Mesh(geometry, matLite);
-        geometryObject.name = text;
+  //       const geometryObject = new Mesh(geometry, matLite);
+  //       geometryObject.name = text;
 
-        resolve(
-          this.setObjectConfigs(geometryObject, geometryConfigs, {
-            fontUrl: fontUrl,
-          })
-        );
-      })
-    );
-  }
+  //       resolve(
+  //         this.setObjectConfigs(geometryObject, geometryConfigs, {
+  //           fontUrl: fontUrl,
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
 
-  /**
-   * @description 字体描线文字
-   * @author LL
-   * @date 2021/09/17
-   * @param {string} text 文字内容
-   * @param {string} fontUrl 字体文件
-   * @param {textLineParams} textStyle 描线文字样式 [textStyle={ color: "#f00", size: 100, lineWidth: 2, opacity: 1 }]
-   * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
-   * @returns {*}  {Promise<Object3D>}
-   */
-  public initTextLine(
-    text: string,
-    fontUrl: string,
-    textStyle: textLineParams = {
-      color: "#f00",
-      size: 100,
-      lineWidth: 2,
-      opacity: 1,
-    },
-    geometryConfigs: geometryConfigs = {
-      position: [0, 0, 0],
-      scale: [1, 1, 1],
-      rotation: [0, 0, 0],
-    }
-  ): Promise<Object3D> {
-    const loader = new FontLoader();
-    return new Promise((resolve) =>
-      loader.load(fontUrl, (font) => {
-        var matDark = new LineBasicMaterial({
-          color: textStyle.color,
-          transparent: true,
-          opacity: textStyle.opacity,
-          linewidth: textStyle.lineWidth,
-        });
+  // /**
+  //  * @description 字体描线文字
+  //  * @author LL
+  //  * @date 2021/09/17
+  //  * @param {string} text 文字内容
+  //  * @param {string} fontUrl 字体文件
+  //  * @param {textLineParams} textStyle 描线文字样式 [textStyle={ color: "#f00", size: 100, lineWidth: 2, opacity: 1 }]
+  //  * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+  //  * @returns {*}  {Promise<Object3D>}
+  //  */
+  // public initTextLine(
+  //   text: string,
+  //   fontUrl: string,
+  //   textStyle: textLineParams = {
+  //     color: "#f00",
+  //     size: 100,
+  //     lineWidth: 2,
+  //     opacity: 1,
+  //   },
+  //   geometryConfigs: geometryConfigs = {
+  //     position: [0, 0, 0],
+  //     scale: [1, 1, 1],
+  //     rotation: [0, 0, 0],
+  //   }
+  // ): Promise<Object3D> {
+  //   const loader = new FontLoader();
+  //   return new Promise((resolve) =>
+  //     loader.load(fontUrl, (font) => {
+  //       var matDark = new LineBasicMaterial({
+  //         color: textStyle.color,
+  //         transparent: true,
+  //         opacity: textStyle.opacity,
+  //         linewidth: textStyle.lineWidth,
+  //       });
 
-        var shapes = font.generateShapes(text, textStyle.size);
-        var geometry = new ShapeBufferGeometry(shapes);
-        geometry.computeBoundingBox();
+  //       var shapes = font.generateShapes(text, textStyle.size);
+  //       var geometry = new ShapeBufferGeometry(shapes);
+  //       geometry.computeBoundingBox();
 
-        var holeShapes = [];
-        for (var i = 0; i < shapes.length; i++) {
-          var shape = shapes[i];
-          if (shape.holes && shape.holes.length > 0) {
-            for (var j = 0; j < shape.holes.length; j++) {
-              var hole = shape.holes[j];
-              holeShapes.push(hole);
-            }
-          }
-        }
-        shapes.push.apply(shapes, holeShapes);
+  //       var holeShapes = [];
+  //       for (var i = 0; i < shapes.length; i++) {
+  //         var shape = shapes[i];
+  //         if (shape.holes && shape.holes.length > 0) {
+  //           for (var j = 0; j < shape.holes.length; j++) {
+  //             var hole = shape.holes[j];
+  //             holeShapes.push(hole);
+  //           }
+  //         }
+  //       }
+  //       shapes.push.apply(shapes, holeShapes);
 
-        var lineText = new Object3D();
-        lineText.name = text;
-        for (var i = 0; i < shapes.length; i++) {
-          var shape = shapes[i];
+  //       var lineText = new Object3D();
+  //       lineText.name = text;
+  //       for (var i = 0; i < shapes.length; i++) {
+  //         var shape = shapes[i];
 
-          var points = shape.getPoints();
-          var geometry = new BufferGeometry().setFromPoints(points);
+  //         var points = shape.getPoints();
+  //         var geometry = new BufferGeometry().setFromPoints(points);
 
-          var lineMesh = new Line(geometry, matDark);
-          lineText.add(lineMesh);
-        }
+  //         var lineMesh = new Line(geometry, matDark);
+  //         lineText.add(lineMesh);
+  //       }
 
-        resolve(
-          this.setObjectConfigs(lineText, geometryConfigs, { fontUrl: fontUrl })
-        );
-      })
-    );
-  }
+  //       resolve(
+  //         this.setObjectConfigs(lineText, geometryConfigs, { fontUrl: fontUrl })
+  //       );
+  //     })
+  //   );
+  // }
 
   /**
    * @description
@@ -996,43 +931,39 @@ export class TModel {
    * @param {object} userData
    * @returns {*}  {Object3D}
    */
-  private setObjectConfigs(
-    object: Object3D,
-    geometryConfigs: geometryConfigs,
-    userData?: object
-  ): Object3D {
-    if (geometryConfigs && geometryConfigs.scale) {
+  private setObjectConfigs(object: Object3D, modelInfo: any): Object3D {
+    if (modelInfo.config.scale) {
       object.scale.set(
-        geometryConfigs.scale[0],
-        geometryConfigs.scale[1],
-        geometryConfigs.scale[2]
+        modelInfo.configs.scale[0],
+        modelInfo.configs.scale[1],
+        modelInfo.configs.scale[2]
       );
     } else {
       object.scale.set(1, 1, 1);
     }
 
-    if (geometryConfigs && geometryConfigs.position) {
+    if (modelInfo.config.position) {
       object.position.set(
-        geometryConfigs.position[0],
-        geometryConfigs.position[1],
-        geometryConfigs.position[2]
+        modelInfo.configs.position[0],
+        modelInfo.configs.position[1],
+        modelInfo.configs.position[2]
       );
     } else {
       object.position.set(0, 0, 0);
     }
 
-    if (geometryConfigs && geometryConfigs.rotation) {
+    if (modelInfo.config.rotation) {
       object.rotation.set(
-        geometryConfigs.rotation[0],
-        geometryConfigs.rotation[1],
-        geometryConfigs.rotation[2]
+        modelInfo.configs.rotation[0],
+        modelInfo.configs.rotation[1],
+        modelInfo.configs.rotation[2]
       );
     } else {
       object.rotation.set(0, 0, 0);
     }
 
-    if (userData) {
-      object.userData = userData;
+    if (modelInfo.userData) {
+      object.userData = modelInfo.userData;
     }
 
     return object;

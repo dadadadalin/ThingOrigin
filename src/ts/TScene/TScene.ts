@@ -405,11 +405,7 @@ export class TScene extends Scene {
           scale: Object.values(item.scale),
         };
         ThingOrigin.model
-          .initFileModel(
-            item["objInfo"].fileType,
-            item["objInfo"].url,
-            modelConfigs
-          )
+          .initFileModel(item["objInfo"], item["objInfo"].url)
           .then((model) => {
             if (item["objInfo"].fileType == "gltf") {
               //@ts-ignore

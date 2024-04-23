@@ -53,7 +53,7 @@ export class TIndexedDB {
             //@ts-ignore
             let rotation = e.target.result.rotation;
             //@ts-ignore
-            let custom = e.target.result.custom;
+            let userData = e.target.result.userData;
             //@ts-ignore
             let modelName = e.target.result.modelName;
 
@@ -65,7 +65,7 @@ export class TIndexedDB {
               scale: scale,
               position: position,
               rotation: rotation,
-              custom: custom,
+              userData: userData,
               modelName: modelName,
             });
           } else {
@@ -90,7 +90,7 @@ export class TIndexedDB {
           objectStore.createIndex("position", "position");
           objectStore.createIndex("scale", "scale");
           objectStore.createIndex("rotation", "rotation");
-          objectStore.createIndex("custom", "custom");
+          objectStore.createIndex("userData", "userData");
           objectStore.createIndex("modelName", "modelName");
         }
         console.log("数据库升级成功");
@@ -150,7 +150,7 @@ export class TIndexedDB {
               //@ts-ignore
               let rotation = e2.target.result.rotation;
               //@ts-ignore
-              let custom = e2.target.result.custom;
+              let userData = e2.target.result.userData;
               //@ts-ignore
               let modelName = e2.target.result.modelName;
               resolve({
@@ -161,7 +161,7 @@ export class TIndexedDB {
                 name: name,
                 position: position,
                 rotation: rotation,
-                custom: custom,
+                userData: userData,
                 modelName: modelName,
               });
             };

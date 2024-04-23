@@ -3,7 +3,7 @@ interface IDBParams {
   name: string;
   type: string;
   url: string;
-  custom?: string;
+  userData?: string;
   position?: number[];
   rotation?: number[];
   scale?: number[];
@@ -18,6 +18,6 @@ interface modelResultParams {
   name?: string;
   position?: number[];
   rotation?: number[];
-  custom?: any;
+  userData?: any;
   modelName?: string;
 }
