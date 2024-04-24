@@ -419,7 +419,7 @@ export class TScene extends Scene {
             item.name,
             {
               base: {radius: item["objInfo"].radius},
-              configs: {
+              config: {
                 color: item["objInfo"].color,
                 position: [item.position.x, item.position.y, item.position.z],
               }
@@ -435,7 +435,7 @@ export class TScene extends Scene {
                 height: item["objInfo"].height,
                 depth: item["objInfo"].depth,
               },
-              configs: {
+              config: {
                 color: item["objInfo"].color,
                 position: [item.position.x, item.position.y, item.position.z],
               }
@@ -451,7 +451,7 @@ export class TScene extends Scene {
                 height: item["objInfo"].height,
                 radiusBottom: item["objInfo"].radiusBottom,
               },
-              configs: {
+              config: {
                 color: item["objInfo"].color,
                 position: [item.position.x, item.position.y, item.position.z],
               }
@@ -466,7 +466,7 @@ export class TScene extends Scene {
                 radius: item["objInfo"].radius,
                 height: item["objInfo"].height
               },
-              configs: {
+              config: {
                 color: item["objInfo"].color,
                 position: [item.position.x, item.position.y, item.position.z],
               }
