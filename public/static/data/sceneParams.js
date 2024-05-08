@@ -185,4 +185,6 @@ export default {
   css2d: [],
   attaches: [],
   handles: [],
+  //模型关联关系
+  attachList: [],
 };

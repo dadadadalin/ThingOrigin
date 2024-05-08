@@ -415,63 +415,52 @@ export class TScene extends Scene {
             }
           });
       } else if (item["objInfo"].objType == "sphere") {
-        let sphere = ThingOrigin.model.initSphere(
-            item.name,
-            {
-              base: {radius: item["objInfo"].radius},
-              config: {
-                color: item["objInfo"].color,
-                position: [item.position.x, item.position.y, item.position.z],
-              }
-            }
-        );
+        let sphere = ThingOrigin.model.initSphere(item.name, {
+          base: { radius: item["objInfo"].radius },
+          config: {
+            color: item["objInfo"].color,
+            position: [item.position.x, item.position.y, item.position.z],
+          },
+        });
         this.add(sphere);
       } else if (item["objInfo"].objType == "cube") {
-        let cube = ThingOrigin.model.initCube(
-            item.name,
-            {
-              base: {
-                width: item["objInfo"].width,
-                height: item["objInfo"].height,
-                depth: item["objInfo"].depth,
-              },
-              config: {
-                color: item["objInfo"].color,
-                position: [item.position.x, item.position.y, item.position.z],
-              }
-            },
-        );
+        let cube = ThingOrigin.model.initCube({
+          name: item.name,
+          base: {
+            width: item["objInfo"].width,
+            height: item["objInfo"].height,
+            depth: item["objInfo"].depth,
+          },
+          config: {
+            color: item["objInfo"].color,
+            position: [item.position.x, item.position.y, item.position.z],
+          },
+        });
         this.add(cube);
       } else if (item["objInfo"].objType == "cylinder") {
-        let cylinder = ThingOrigin.model.initCylinder(
-            item.name,
-            {
-              base: {
-                radiusTop: item["objInfo"].radiusTop,
-                height: item["objInfo"].height,
-                radiusBottom: item["objInfo"].radiusBottom,
-              },
-              config: {
-                color: item["objInfo"].color,
-                position: [item.position.x, item.position.y, item.position.z],
-              }
-            },
-        );
+        let cylinder = ThingOrigin.model.initCylinder(item.name, {
+          base: {
+            radiusTop: item["objInfo"].radiusTop,
+            height: item["objInfo"].height,
+            radiusBottom: item["objInfo"].radiusBottom,
+          },
+          config: {
+            color: item["objInfo"].color,
+            position: [item.position.x, item.position.y, item.position.z],
+          },
+        });
         this.add(cylinder);
       } else if (item["objInfo"].objType == "cone") {
-        let cone = ThingOrigin.model.initCone(
-            item.name,
-            {
-              base: {
-                radius: item["objInfo"].radius,
-                height: item["objInfo"].height
-              },
-              config: {
-                color: item["objInfo"].color,
-                position: [item.position.x, item.position.y, item.position.z],
-              }
-            },
-        );
+        let cone = ThingOrigin.model.initCone(item.name, {
+          base: {
+            radius: item["objInfo"].radius,
+            height: item["objInfo"].height,
+          },
+          config: {
+            color: item["objInfo"].color,
+            position: [item.position.x, item.position.y, item.position.z],
+          },
+        });
         this.add(cone);
       }
     }

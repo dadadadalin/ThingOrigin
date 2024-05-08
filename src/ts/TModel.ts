@@ -35,13 +35,13 @@ import {
   TextureLoader,
   Vector3,
 } from "three";
-import {DRACOLoader} from "three/examples/jsm/loaders/DRACOLoader";
-import {FBXLoader} from "three/examples/jsm/loaders/FBXLoader";
-import {GLTFLoader} from "three/examples/jsm/loaders/GLTFLoader";
-import {STLLoader} from "three/examples/jsm/loaders/STLLoader";
-import {OBJLoader} from "three/examples/jsm/loaders/OBJLoader";
-import {SVGLoader} from "three/examples/jsm/loaders/SVGLoader";
-import {ThingOrigin} from "../ThingOrigin";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
+import { ThingOrigin } from "../ThingOrigin";
 
 export class TModel {
   FBXLoader: FBXLoader = new FBXLoader();
@@ -141,7 +141,7 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 例：{ base:{width: 10, height: 10, widthSegments: 32,  heightSegments: 32},config：{color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]} }
    * @returns {*}  {Object3D}
    */
-  public initPlane(name: string, modelInfo :any,): Object3D {
+  public initPlane(name: string, modelInfo: any): Object3D {
     let defaultParams = {
       base: {
         width: 10,
@@ -153,12 +153,9 @@ export class TModel {
         color: "#f00",
       },
     };
-    let param = Object.assign(defaultParams, modelInfo); 
+    let param = Object.assign(defaultParams, modelInfo);
     let plane: PlaneGeometry;
-    plane = this.initPlaneGeometry(
-      param.base.width,
-      param.base.height,
-    )
+    plane = this.initPlaneGeometry(param.base.width, param.base.height);
 
     let material: MeshBasicMaterial = new MeshBasicMaterial({
       color: param.config.color,
@@ -200,10 +197,9 @@ export class TModel {
    * @param {any} modelInfo modelInfo={ base:{},config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
    * @returns {*}  {Object3D}
    */
-  public initGroup(name: string,modelInfo:any,): Object3D {
+  public initGroup(name: string, modelInfo: any): Object3D {
     let defaultParams = {
-      base: {
-      },
+      base: {},
       config: {
         position: [0, 0, 0],
         scale: [1, 1, 1],
@@ -237,15 +233,15 @@ export class TModel {
     };
     let param = Object.assign(defaultParams, modelInfo);
     let sphere: SphereBufferGeometry;
-      sphere = new SphereBufferGeometry(
-        param.base.radius,
-        param.base.widthSegments,
-        param.base.heightSegments,
-        param.base?.phiStart,
-        param.base?.phiLength,
-        param.base?.thetaStart,
-        param.base?.thetaLength
-      );
+    sphere = new SphereBufferGeometry(
+      param.base.radius,
+      param.base.widthSegments,
+      param.base.heightSegments,
+      param.base?.phiStart,
+      param.base?.phiLength,
+      param.base?.thetaStart,
+      param.base?.thetaLength
+    );
 
     let material: MeshLambertMaterial = new MeshLambertMaterial({
       color: param.config.color,
@@ -263,7 +259,7 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 modelInfo = { base:{width: 10, height: 10, depth: 10},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData   * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
    */
-  public initCube(name: string, modelInfo: any): Object3D {
+  public initCube(modelInfo?: any): Object3D {
     let defaultParams = {
       base: {
         width: 10,
@@ -293,7 +289,7 @@ export class TModel {
       color: param.config.color,
     });
     const geometryObject = new Mesh(cube, material);
-    geometryObject.name = name;
+    geometryObject.name = modelInfo.name;
     return this.setObjectConfigs(geometryObject, param);
   }
   // public initBox1(
@@ -336,7 +332,7 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radius: 10,height: 20,},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
    */
-  public initCone(name: string,modelInfo :any,): Object3D {
+  public initCone(name: string, modelInfo: any): Object3D {
     let defaultParams = {
       base: {
         radius: 10,
@@ -349,15 +345,15 @@ export class TModel {
     let param = Object.assign(defaultParams, modelInfo);
 
     let cone: ConeBufferGeometry;
-      cone = new ConeBufferGeometry(
-        param.base?.radius,
-        param.base?.height,
-        param.base?.radialSegments,
-        param.base?.heightSegments,
-        param.base?.openEnded,
-        param.base?.thetaStart,
-        param.base?.thetaLength
-      );
+    cone = new ConeBufferGeometry(
+      param.base?.radius,
+      param.base?.height,
+      param.base?.radialSegments,
+      param.base?.heightSegments,
+      param.base?.openEnded,
+      param.base?.thetaStart,
+      param.base?.thetaLength
+    );
     let material: MeshLambertMaterial = new MeshLambertMaterial({
       color: param.config.color,
     });
@@ -374,13 +370,13 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radiusTop: 10,radiusBottom: 10,},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }
    * @returns {*}  {Object3D}
    */
-  public initCylinder(name: string,modelInfo :any,): Object3D {
+  public initCylinder(name: string, modelInfo: any): Object3D {
     let defaultParams = {
       base: {
         radiusTop: 10,
         radiusBottom: 10,
-        height:20,
-        radialSegments:32
+        height: 20,
+        radialSegments: 32,
       },
       config: {
         color: "#f00",
@@ -398,7 +394,7 @@ export class TModel {
       param.base?.openEnded,
       param.base?.thetaStart,
       param.base?.thetaLength
-      );
+    );
 
     let material: MeshLambertMaterial = new MeshLambertMaterial({
       color: param.config.color,
@@ -530,8 +526,12 @@ export class TModel {
    * @param {any} modelInfo 描线文字样式+通用参数 modelInfo={ base:{color: "#f00", size: 100,height: 50 },config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}}   * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
    * @returns {*}  {Promise<Object3D>}
    */
-  public initText(text: string,fontUrl: string,modelInfo :any,): Promise<Object3D> {
-    console.log(fontUrl)
+  public initText(
+    text: string,
+    fontUrl: string,
+    modelInfo: any
+  ): Promise<Object3D> {
+    console.log(fontUrl);
     let defaultParams = {
       base: {
         color: "#f00",
@@ -573,10 +573,8 @@ export class TModel {
         const geometryObject = new Mesh(geometry, meshMaterial);
         geometryObject.name = text;
 
-        console.log(fontUrl)
-        resolve(
-          this.setObjectConfigs(geometryObject, param)
-        );
+        console.log(fontUrl);
+        resolve(this.setObjectConfigs(geometryObject, param));
       })
     );
   }
@@ -590,7 +588,11 @@ export class TModel {
    * @param {any} modelInfo 描线文字样式+通用参数 modelInfo={ base:{color: "#f00", transparent: true, opacity: 0.4, size: 100, },config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}}
    * @returns {*}  {Promise<Object3D>}
    */
-  public initTextShape(text: string, fontUrl: string, modelInfo:any,): Promise<Object3D> {
+  public initTextShape(
+    text: string,
+    fontUrl: string,
+    modelInfo: any
+  ): Promise<Object3D> {
     let defaultParams = {
       base: {
         color: "#f00",
@@ -621,9 +623,7 @@ export class TModel {
         const geometryObject = new Mesh(geometry, matLite);
         geometryObject.name = text;
 
-        resolve(
-          this.setObjectConfigs(geometryObject, param)
-        );
+        resolve(this.setObjectConfigs(geometryObject, param));
       })
     );
   }
@@ -637,7 +637,11 @@ export class TModel {
    * @param {any} modelInfo 描线文字样式+通用参数 modelInfo={ base:{color: "#f00", size: 100, lineWidth: 2, opacity: 1 },config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}}
    * @returns {*}  {Promise<Object3D>}
    */
-  public initTextLine(text: string, fontUrl: string, modelInfo:any,): Promise<Object3D> {
+  public initTextLine(
+    text: string,
+    fontUrl: string,
+    modelInfo: any
+  ): Promise<Object3D> {
     let defaultParams = {
       base: {
         color: "#f00",
@@ -690,9 +694,7 @@ export class TModel {
           lineText.add(lineMesh);
         }
 
-        resolve(
-          this.setObjectConfigs(lineText, param)
-        );
+        resolve(this.setObjectConfigs(lineText, param));
       })
     );
   }
@@ -898,7 +900,7 @@ export class TModel {
    * @returns {*}  {Object3D}
    */
   private setObjectConfigs(object: Object3D, modelInfo: any): Object3D {
-    console.log(object,modelInfo)
+    console.log(object, modelInfo);
     if (modelInfo.config.scale) {
       object.scale.set(
         modelInfo.config.scale[0],

@@ -13,6 +13,13 @@ import { ThingOrigin } from "./ThingOrigin";
 import { Water } from "three/examples/jsm/objects/Water.js";
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+
+let box = ThingOrigin.model.initCube("box");
+mainScene.add(box);
+
+mainScene.helper.initBox(box.uuid);
+
+mainScene.controls.setTransformMode(box.uuid, "translate");
 //
 // let map = ThingOrigin.model.initMap("/static/data/china.json").then((map) => {
 //   mainScene.add(map);
@@ -41,38 +48,38 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 //   });
 
 //indexedDB缓存模型;
-let modelInfo = {
-  id: 1,
-  type: "gltf",
-  name: "测试模型",
-  url: "/static/three/test/scene.gltf",
-  configs: {
-    scale: [4, 4, 4],
-  },
-};
-ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
-  console.log(res);
+// let modelInfo = {
+//   id: 1,
+//   type: "gltf",
+//   name: "测试模型",
+//   url: "/static/three/test/scene.gltf",
+//   configs: {
+//     scale: [4, 4, 4],
+//   },
+// };
+// ThingOrigin.indexedDB.accessModel("ttt", "ttt", modelInfo).then((res) => {
+//   console.log(res);
 
-  if (res.saved) {
-    console.log("已缓存", res.type, res.url);
-    ThingOrigin.model.initFileModel(res.type, res.url).then((model) => {
-      console.log(model);
-      //@ts-ignore
-      mainScene.add(model.scene);
-    });
-  } else {
-    // ElMessage('模型首次加载缓存中，请稍后！')
-    ThingOrigin.indexedDB
-      .insertModel("ttt", "ttt", modelInfo)
-      .then((modelParam) => {
-        if (modelParam.saved == false) {
-          console.log("缓存失败");
-        } else {
-          console.log("开始缓存", modelParam);
-        }
-      });
-  }
-});
+//   if (res.saved) {
+//     console.log("已缓存", res.type, res.url);
+//     ThingOrigin.model.initFileModel(res.type, res.url).then((model) => {
+//       console.log(model);
+//       //@ts-ignore
+//       mainScene.add(model.scene);
+//     });
+//   } else {
+//     // ElMessage('模型首次加载缓存中，请稍后！')
+//     ThingOrigin.indexedDB
+//       .insertModel("ttt", "ttt", modelInfo)
+//       .then((modelParam) => {
+//         if (modelParam.saved == false) {
+//           console.log("缓存失败");
+//         } else {
+//           console.log("开始缓存", modelParam);
+//         }
+//       });
+//   }
+// });
 
 // demo2 物理引擎案例
 // var world,
