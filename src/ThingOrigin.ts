@@ -5,6 +5,7 @@ import { TMachine } from "./ts/TMachine";
 import { TMaterial } from "./ts/TMaterial";
 import { TModel } from "./ts/TModel";
 import { Tool } from "./ts/Tool";
+import { TPhysics } from "./ts/TPhysics";
 import { SceneMap } from "./ts/TScene/SceneMap";
 import { TScene } from "./ts/TScene/TScene";
 
@@ -19,6 +20,7 @@ export class ThingOrigin {
   public static model: TModel = new TModel();
   public static machine: TMachine = new TMachine();
   public static indexedDB: TIndexedDB = new TIndexedDB();
+  public static physics: TPhysics = new TPhysics();
 
   constructor() {}
 

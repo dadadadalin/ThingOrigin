@@ -50,7 +50,7 @@
     "webpack-dev-server": "^2.11.5"
   },
   "dependencies": {
-    "cannon": "^0.6.2",
+    "cannon-es": "^0.20.0",
     "d3-geo": "^3.0.1",
     "lodash.merge": "^4.6.2",
     "three": "0.118.0",
