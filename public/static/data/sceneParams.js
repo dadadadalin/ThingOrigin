@@ -184,6 +184,7 @@ export default {
   animations: [],
   css2d: [],
   attaches: [],
+  //事件
   handles: [],
   //模型关联关系
   attachList: [],

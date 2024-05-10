@@ -1,6 +1,7 @@
 import * as CANNON from "cannon-es";
 import {
-  AnimationMixer, AnimationUtils,
+  AnimationMixer,
+  AnimationUtils,
   Clock,
   LoopOnce,
   Mesh,
@@ -13,7 +14,105 @@ import { ThingOrigin } from "./ThingOrigin";
 // import { Water } from "three/examples/jsm/objects/Water.js";
 // import sortedArray = AnimationUtils.sortedArray;
 
-let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
+let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
+  models: [
+    {
+      name: "ABB-01",
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      rotation: {
+        _x: 0,
+        _y: 0,
+        _z: 0,
+        _order: "XYZ",
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      type: "Group",
+      uuid: "7164D490-F0E1-484A-9B3C-1E94B2BFD807",
+      ownCSS2D: false,
+      userData: {
+        rootName: "ABB-01",
+        sim: {
+          type: "robotArm",
+          end: "柱体",
+        },
+      },
+      modelInfo: {
+        saved: true,
+        url: "/static/three/test/scene.gltf",
+        name: "ABB机器人",
+        type: "gltf",
+        scale: [1, 1, 1],
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        userData: {
+          rootName: "ABB-01",
+          sim: {
+            type: "robotArm",
+            end: "柱体",
+          },
+        },
+        modelName: "ABB-01",
+      },
+      zIndex: 1,
+    },
+    {
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      rotation: {
+        _x: 0,
+        _y: 0,
+        _z: 0,
+        _order: "XYZ",
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      type: "Mesh",
+      uuid: "4AA78DEC-C49C-44D6-989E-0E5665372432",
+      ownCSS2D: false,
+      userData: {},
+      modelInfo: {
+        name: "零件",
+        loadType: "base",
+        type: "cube",
+        icon: "icon-cube",
+        scale: [1, 1, 1],
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        base: {
+          width: 18,
+          height: 6,
+          depth: 2,
+        },
+        config: {
+          color: "yellow",
+        },
+        userData: {
+          rootName: "cube-01",
+          sim: {
+            type: "part",
+            positionOffset: [0, 0, 9.7],
+            rotationOffset: [0, 0, 0],
+          },
+        },
+      },
+      zIndex: 2,
+    },
+  ],
+});
 //
 // let map = ThingOrigin.model.initMap("/static/data/china.json").then((map) => {
 //   mainScene.add(map);
@@ -76,114 +175,113 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"));
 // });
 
 // demo2 物理引擎案例
-var world,
-  mass,
-  body,
-  shape,
-  timeStep = 1 / 60,
-  camera,
-  scene,
-  renderer,
-  geometry,
-  material,
-  mesh;
+// var world,
+//   mass,
+//   body,
+//   shape,
+//   timeStep = 1 / 60,
+//   camera,
+//   scene,
+//   renderer,
+//   geometry,
+//   material,
+//   mesh;
 
-initThree();
-initCannon();
-animate();
+// initThree();
+// initCannon();
+// animate();
 
-function initCannon() {
-  world = ThingOrigin.physics.initWorld()
-  // world.broadphase = new CANNON.NaiveBroadphase();
-  // world.solver.iterations = 10; //迭代次数
+// function initCannon() {
+//   world = ThingOrigin.physics.initWorld();
+//   // world.broadphase = new CANNON.NaiveBroadphase();
+//   // world.solver.iterations = 10; //迭代次数
 
-  // world.defaultContactMaterial.contactEquationStiffness = 1e7;
-  // world.defaultContactMaterial.contactEquationRelaxation = 4;
-  let materialInfo = {
-    friction:0.7,
-    restitution:1
-  }
-  let boxMaterialCon = ThingOrigin.physics.initMaterial(materialInfo)
+//   // world.defaultContactMaterial.contactEquationStiffness = 1e7;
+//   // world.defaultContactMaterial.contactEquationRelaxation = 4;
+//   let materialInfo = {
+//     friction: 0.7,
+//     restitution: 1,
+//   };
+//   let boxMaterialCon = ThingOrigin.physics.initMaterial(materialInfo);
 
-  // Create a plane
-  let groundShape = ThingOrigin.physics.initPlane();
-  let groundBody = ThingOrigin.physics.initBody(0,groundShape,[0,0,0])
-  groundBody.quaternion.setFromAxisAngle(
-    new CANNON.Vec3(1, 0, 0),
-    -Math.PI / 2
-  );
-  world.addBody(groundBody);
+//   // Create a plane
+//   let groundShape = ThingOrigin.physics.initPlane();
+//   let groundBody = ThingOrigin.physics.initBody(0, groundShape, [0, 0, 0]);
+//   groundBody.quaternion.setFromAxisAngle(
+//     new CANNON.Vec3(1, 0, 0),
+//     -Math.PI / 2
+//   );
+//   world.addBody(groundBody);
 
+//   let modelInfo = {
+//     base: {
+//       width: 10,
+//       height: 10,
+//       depth: 10,
+//     },
+//   };
+//   shape = ThingOrigin.physics.initBox(modelInfo);
+//   mass = 1;
+//   body = ThingOrigin.physics.initBody(1, shape, [0, 30, 0]);
+//   // body.position.set(0, 30, 0);
+//   body.angularVelocity.set(1, 10, 1); //角速度
+//   body.angularDamping = 0.01; //角度阻尼
+//   world.addBody(body);
+// }
 
-  let modelInfo = {
-    base: {
-      width: 10,
-      height: 10,
-      depth: 10,
-    },
-  }
-  shape = ThingOrigin.physics.initBox(modelInfo)
-  mass = 1;
-  body = ThingOrigin.physics.initBody(1,shape,[0,30,0])
-  // body.position.set(0, 30, 0);
-  body.angularVelocity.set(1, 10, 1); //角速度
-  body.angularDamping = 0.01; //角度阻尼
-  world.addBody(body);
-}
+// let modelA;
+// let modelB;
+// function initThree() {
+//   modelB = ThingOrigin.model.initCube("wb", {});
+//   modelB.position.set(0, 60, 0);
+//   mainScene.add(modelB);
 
-let modelA;
-let modelB;
-function initThree() {
-  modelB = ThingOrigin.model.initCube("wb",{});
-  modelB.position.set(0, 60, 0);
-  mainScene.add(modelB);
+//   // modelB.material = ThingOrigin.material.initPicMaterial("/static/img/wb.jpg");
+//   // ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] }).then((model) => {
+//   //     console.log(model);
+//   //     mainScene.add(model);
+//   //     console.log(ThingOrigin.tool.getObjectBox(model));
+//   //     modelA = model;
+//   //     animate();
 
-  // modelB.material = ThingOrigin.material.initPicMaterial("/static/img/wb.jpg");
-  // ThingOrigin.model.initFileModel("gltf", "/static/three/test/scene.gltf", { scale: [4, 4, 4] }).then((model) => {
-  //     console.log(model);
-  //     mainScene.add(model);
-  //     console.log(ThingOrigin.tool.getObjectBox(model));
-  //     modelA = model;
-  //     animate();
+//   //     ThingOrigin.animate.showExploded(model, 5, 5000);
+//   // });
+//   // geometry = new BoxGeometry(2, 2, 2);
+//   // material = new MeshBasicMaterial({ color: 0xff0000, wireframe: true });
 
-  //     ThingOrigin.animate.showExploded(model, 5, 5000);
-  // });
-  // geometry = new BoxGeometry(2, 2, 2);
-  // material = new MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+//   // mesh = new Mesh(geometry, material);
+//   // mainScene.add(mesh);
+// }
 
-  // mesh = new Mesh(geometry, material);
-  // mainScene.add(mesh);
-}
+// function animate() {
+//   requestAnimationFrame(animate);
+//   updatePhysics();
+// }
 
-function animate() {
-  requestAnimationFrame(animate);
-  updatePhysics();
-}
+// function updatePhysics() {
+//   // Step the physics world
+//   world.step(timeStep);
 
-function updatePhysics() {
-  // Step the physics world
-  world.step(timeStep);
+//   // Copy coordinates from Cannon.js to Three.js
+//   // modelA.position.copy(body.position);
+//   // modelA.quaternion.copy(body.quaternion);
+//   modelB.position.copy(body.position);
+//   modelB.quaternion.copy(body.quaternion);
+//   // mesh.position.copy(body.position);
+//   // mesh.quaternion.copy(body.quaternion);
+// }
 
-  // Copy coordinates from Cannon.js to Three.js
-  // modelA.position.copy(body.position);
-  // modelA.quaternion.copy(body.quaternion);
-  modelB.position.copy(body.position);
-  modelB.quaternion.copy(body.quaternion);
-  // mesh.position.copy(body.position);
-  // mesh.quaternion.copy(body.quaternion);
-}
+// // demo1 中科院图谱案例
+// // import links from "../public/static/data/w-links.js";
+// // import nodes from "../public/static/data/w-nodes.js";
 
-// demo1 中科院图谱案例
-// import links from "../public/static/data/w-links.js";
-// import nodes from "../public/static/data/w-nodes.js";
+// // let mainScene = ThingOrigin.addScene("test", document.getElementById("d1"));
 
-// let mainScene = ThingOrigin.addScene("test", document.getElementById("d1"));
+// // console.log(links, nodes);
+// // let n = ThingOrigin.model.initSpriteShape("nodes", nodes, {
+// //   shape: "sphere",
+// //   color: "red",
+// //   radius: 10,
+// // });
 
-// console.log(links, nodes);
-// let n = ThingOrigin.model.initSpriteShape("nodes", nodes, {
-//   shape: "sphere",
-//   color: "red",
-//   radius: 10,
-// });
-
-// mainScene.add(n);
+// // mainScene.add(n);

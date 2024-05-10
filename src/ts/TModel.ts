@@ -220,7 +220,7 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radius: 10, widthSegments: 10, heightSegments: 10},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData   * @param {object} [userData] 填入模型的userData   * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
    */
-  public initSphere(name: string, modelInfo: any): Object3D {
+  public initSphere(modelInfo: any): Object3D {
     let defaultParams = {
       base: {
         radius: 10,
@@ -247,7 +247,7 @@ export class TModel {
       color: param.config.color,
     });
     const geometryObject = new Mesh(sphere, material);
-    geometryObject.name = name;
+    geometryObject.name = param.name;
     return this.setObjectConfigs(geometryObject, param);
   }
 
@@ -274,9 +274,7 @@ export class TModel {
       },
     };
     let param = Object.assign(defaultParams, modelInfo);
-    let cube: BoxBufferGeometry;
-
-    cube = new BoxBufferGeometry(
+    let cube: BoxBufferGeometry = new BoxBufferGeometry(
       param.base.width,
       param.base.height,
       param.base.depth,
@@ -332,7 +330,7 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radius: 10,height: 20,},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData
    * @returns {*}  {Object3D}
    */
-  public initCone(name: string, modelInfo: any): Object3D {
+  public initCone(modelInfo: any): Object3D {
     let defaultParams = {
       base: {
         radius: 10,
@@ -358,7 +356,7 @@ export class TModel {
       color: param.config.color,
     });
     const geometryObject = new Mesh(cone, material);
-    geometryObject.name = name;
+    geometryObject.name = param.name;
     return this.setObjectConfigs(geometryObject, param);
   }
 
@@ -370,7 +368,7 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radiusTop: 10,radiusBottom: 10,},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }
    * @returns {*}  {Object3D}
    */
-  public initCylinder(name: string, modelInfo: any): Object3D {
+  public initCylinder(modelInfo: any): Object3D {
     let defaultParams = {
       base: {
         radiusTop: 10,
@@ -400,7 +398,7 @@ export class TModel {
       color: param.config.color,
     });
     const geometryObject = new Mesh(cylinder, material);
-    geometryObject.name = name;
+    geometryObject.name = param.name;
     return this.setObjectConfigs(geometryObject, param);
   }
 

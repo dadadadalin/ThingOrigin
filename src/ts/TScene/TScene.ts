@@ -392,75 +392,32 @@ export class TScene extends Scene {
    * @param {ThingOriginParams} sceneParams 场景参数
    */
   private loadModel(sceneParams: ThingOriginParams) {
+    console.log(sceneParams.models);
     for (let i = 0; i < sceneParams.models.length; i++) {
       let item = sceneParams.models[i];
-      if (item["objInfo"].objType == "modelFile") {
-        //实际模型变量
-        let modelConfigs = {
-          //@ts-ignore
-          position: Object.values(item.position),
-          //@ts-ignore
-          rotation: Object.values(item.rotation),
-          //@ts-ignore
-          scale: Object.values(item.scale),
-        };
+      if (["gltf"].indexOf(item["modelInfo"].type) != -1) {
         ThingOrigin.model
-          .initFileModel(item["objInfo"], item["objInfo"].url)
+          .initFileModel(item["modelInfo"], item["modelInfo"].url)
           .then((model) => {
-            if (item["objInfo"].fileType == "gltf") {
+            console.log(model);
+            if (item["modelInfo"].type == "gltf") {
               //@ts-ignore
               this.add(model.scene);
             } else {
               this.add(model);
             }
           });
-      } else if (item["objInfo"].objType == "sphere") {
-        let sphere = ThingOrigin.model.initSphere(item.name, {
-          base: { radius: item["objInfo"].radius },
-          config: {
-            color: item["objInfo"].color,
-            position: [item.position.x, item.position.y, item.position.z],
-          },
-        });
+      } else if (item["modelInfo"].type == "sphere") {
+        let sphere = ThingOrigin.model.initSphere(item["modelInfo"]);
         this.add(sphere);
-      } else if (item["objInfo"].objType == "cube") {
-        let cube = ThingOrigin.model.initCube({
-          name: item.name,
-          base: {
-            width: item["objInfo"].width,
-            height: item["objInfo"].height,
-            depth: item["objInfo"].depth,
-          },
-          config: {
-            color: item["objInfo"].color,
-            position: [item.position.x, item.position.y, item.position.z],
-          },
-        });
+      } else if (item["modelInfo"].type == "cube") {
+        let cube = ThingOrigin.model.initCube(item["modelInfo"]);
         this.add(cube);
-      } else if (item["objInfo"].objType == "cylinder") {
-        let cylinder = ThingOrigin.model.initCylinder(item.name, {
-          base: {
-            radiusTop: item["objInfo"].radiusTop,
-            height: item["objInfo"].height,
-            radiusBottom: item["objInfo"].radiusBottom,
-          },
-          config: {
-            color: item["objInfo"].color,
-            position: [item.position.x, item.position.y, item.position.z],
-          },
-        });
+      } else if (item["modelInfo"].type == "cylinder") {
+        let cylinder = ThingOrigin.model.initCylinder(item["modelInfo"]);
         this.add(cylinder);
-      } else if (item["objInfo"].objType == "cone") {
-        let cone = ThingOrigin.model.initCone(item.name, {
-          base: {
-            radius: item["objInfo"].radius,
-            height: item["objInfo"].height,
-          },
-          config: {
-            color: item["objInfo"].color,
-            position: [item.position.x, item.position.y, item.position.z],
-          },
-        });
+      } else if (item["modelInfo"].type == "cone") {
+        let cone = ThingOrigin.model.initCone(item["modelInfo"]);
         this.add(cone);
       }
     }
