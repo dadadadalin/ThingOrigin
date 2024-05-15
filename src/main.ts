@@ -15,104 +15,151 @@ import { ThingOrigin } from "./ThingOrigin";
 // import sortedArray = AnimationUtils.sortedArray;
 
 let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
-  models: [
-    {
-      name: "ABB-01",
-      position: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      rotation: {
-        _x: 0,
-        _y: 0,
-        _z: 0,
-        _order: "XYZ",
-      },
-      scale: {
-        x: 1,
-        y: 1,
-        z: 1,
-      },
-      type: "Group",
-      uuid: "7164D490-F0E1-484A-9B3C-1E94B2BFD807",
-      ownCSS2D: false,
-      userData: {
-        rootName: "ABB-01",
-        sim: {
-          type: "robotArm",
-          end: "柱体",
-        },
-      },
-      modelInfo: {
-        saved: true,
-        url: "/static/three/test/scene.gltf",
-        name: "ABB机器人",
-        type: "gltf",
-        scale: [1, 1, 1],
-        position: [0, 0, 0],
-        rotation: [0, 0, 0],
-        userData: {
-          rootName: "ABB-01",
-          sim: {
-            type: "robotArm",
-            end: "柱体",
-          },
-        },
-        modelName: "ABB-01",
-      },
-      zIndex: 1,
-    },
-    {
-      position: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-      rotation: {
-        _x: 0,
-        _y: 0,
-        _z: 0,
-        _order: "XYZ",
-      },
-      scale: {
-        x: 1,
-        y: 1,
-        z: 1,
-      },
-      type: "Mesh",
-      uuid: "4AA78DEC-C49C-44D6-989E-0E5665372432",
-      ownCSS2D: false,
-      userData: {},
-      modelInfo: {
-        name: "零件",
-        loadType: "base",
-        type: "cube",
-        icon: "icon-cube",
-        scale: [1, 1, 1],
-        position: [0, 0, 0],
-        rotation: [0, 0, 0],
-        base: {
-          width: 18,
-          height: 6,
-          depth: 2,
-        },
-        config: {
-          color: "yellow",
-        },
-        userData: {
-          rootName: "cube-01",
-          sim: {
-            type: "part",
-            positionOffset: [0, 0, 9.7],
-            rotationOffset: [0, 0, 0],
-          },
-        },
-      },
-      zIndex: 2,
-    },
-  ],
+  // modelList: [
+  //   {
+  //     name: "零件",
+  //     position: {
+  //       x: 30,
+  //       y: 0,
+  //       z: 0,
+  //     },
+  //     rotation: {
+  //       x: 0,
+  //       y: 0,
+  //       z: 0,
+  //     },
+  //     scale: {
+  //       x: 1,
+  //       y: 1,
+  //       z: 1,
+  //     },
+  //     type: "cube",
+  //     uuid: "41D2F7DC-5D1A-442E-8888-B3B61A5C1695",
+  //     ownCSS2dList: false,
+  //     userData: {
+  //       rootName: "cube-01",
+  //       sim: {
+  //         type: "part",
+  //         positionOffset: [0, 0, 9.7],
+  //         rotationOffset: [0, 0, 0],
+  //       },
+  //     },
+  //     loadType: "base",
+  //     base: {
+  //       width: 18,
+  //       height: 6,
+  //       depth: 2,
+  //     },
+  //     config: {
+  //       color: "yellow",
+  //     },
+  //     zIndex: 1,
+  //   },
+  //   {
+  //     name: "ABB机器人",
+  //     position: {
+  //       x: 0,
+  //       y: 0,
+  //       z: 0,
+  //     },
+  //     rotation: {
+  //       x: 0,
+  //       y: 0,
+  //       z: 0,
+  //     },
+  //     scale: {
+  //       x: 1,
+  //       y: 1,
+  //       z: 1,
+  //     },
+  //     type: "gltf",
+  //     uuid: "7F62DD93-811D-4A32-A8E6-94D59C133D29",
+  //     ownCSS2dList: false,
+  //     userData: {
+  //       rootName: "ABB-01",
+  //       sim: {
+  //         type: "robotArm",
+  //         end: "柱体",
+  //       },
+  //     },
+  //     saved: true,
+  //     url: "/static/three/test/abb.gltf",
+  //     modelName: "ABB-01",
+  //     zIndex: 2,
+  //   },
+  // ],
 });
+
+console.log(mainScene);
+
+let cube = ThingOrigin.model.initCube({
+  name: "零件",
+  modelName: "part",
+  loadType: "base",
+  type: "cube",
+  icon: "icon-cube",
+  scale: { x: 1, y: 1, z: 1 },
+  position: { x: 0, y: 0, z: 0 },
+  rotation: { x: 0, y: 0, z: 0 },
+  base: {
+    width: 18,
+    height: 6,
+    depth: 2,
+  },
+  config: {
+    color: "blue",
+  },
+  userData: {
+    rootName: "cube-01",
+    sim: {
+      type: "part",
+      positionOffset: [0, 0, 9.7],
+      rotationOffset: [0, 0, 0],
+    },
+  },
+});
+mainScene.add(cube);
+
+// ThingOrigin.model
+//   .initFileModel(
+//     {
+//       name: "ABB机器人",
+//       position: {
+//         x: 20,
+//         y: 0,
+//         z: 0,
+//       },
+//       rotation: {
+//         x: 0,
+//         y: 0,
+//         z: 0,
+//       },
+//       scale: {
+//         x: 1,
+//         y: 1,
+//         z: 1,
+//       },
+//       type: "gltf",
+//       uuid: "7F62DD93-811D-4A32-A8E6-94D59C133D29",
+//       ownCSS2dList: false,
+//       userData: {
+//         rootName: "ABB-01",
+//         sim: {
+//           type: "robotArm",
+//           end: "柱体",
+//         },
+//       },
+//       saved: true,
+//       url: "/static/three/test/abb.gltf",
+//       modelName: "ABB-01",
+//       zIndex: 2,
+//     },
+//     "/static/three/test/abb.gltf"
+//   )
+//   .then((model) => {
+//     console.log(model);
+//     mainScene.add(model.scene);
+//   });
 //
 // let map = ThingOrigin.model.initMap("/static/data/china.json").then((map) => {
 //   mainScene.add(map);

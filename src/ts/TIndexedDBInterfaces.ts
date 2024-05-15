@@ -20,4 +20,6 @@ interface modelResultParams {
   rotation?: number[];
   userData?: any;
   modelName?: string;
+  modelSize?: string;
+  loadType?: string;
 }

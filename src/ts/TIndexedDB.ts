@@ -43,9 +43,13 @@ export class TIndexedDB {
             //@ts-ignore
             let url = URL.createObjectURL(e.target.result.model);
             //@ts-ignore
+            let modelSize = e.target.result.modelSize;
+            //@ts-ignore
             let scale = e.target.result.scale;
             //@ts-ignore
             let type = e.target.result.type;
+            //@ts-ignore
+            let loadType = e.target.result.loadType;
             //@ts-ignore
             let name = e.target.result.name;
             //@ts-ignore
@@ -59,14 +63,16 @@ export class TIndexedDB {
 
             resolve({
               saved: true,
-              url: url,
               name: name,
+              modelName: modelName,
+              url: url,
+              modelSize: modelSize,
               type: type,
+              loadType: loadType,
               scale: scale,
               position: position,
               rotation: rotation,
               userData: userData,
-              modelName: modelName,
             });
           } else {
             resolve({ saved: false });
@@ -84,14 +90,16 @@ export class TIndexedDB {
           // 定义存储对象的数据项
           objectStore.createIndex("id", "id", { unique: true });
           objectStore.createIndex("name", "name");
+          objectStore.createIndex("modelName", "modelName");
           objectStore.createIndex("model", "model");
-          objectStore.createIndex("type", "type");
           objectStore.createIndex("url", "url");
+          objectStore.createIndex("modelSize", "modelSize");
+          objectStore.createIndex("type", "type");
+          objectStore.createIndex("loadType", "loadType");
           objectStore.createIndex("position", "position");
           objectStore.createIndex("scale", "scale");
           objectStore.createIndex("rotation", "rotation");
           objectStore.createIndex("userData", "userData");
-          objectStore.createIndex("modelName", "modelName");
         }
         console.log("数据库升级成功");
       };
@@ -118,7 +126,6 @@ export class TIndexedDB {
       ajax.open("get", modelInfo.url);
       ajax.send();
       ajax.onreadystatechange = () => {
-        console.log(111, ajax);
         // && ajax.responseText.substring(0, 9) == "<!DOCTYPE"
         if (ajax.readyState == 4 && ajax.status == 200) {
           modelInfo.model = new Blob([ajax.responseText]);
@@ -140,9 +147,13 @@ export class TIndexedDB {
               //@ts-ignore
               let url = URL.createObjectURL(e2.target.result.model);
               //@ts-ignore
+              let modelSize = e2.target.result.modelSize;
+              //@ts-ignore
               let scale = e2.target.result.scale;
               //@ts-ignore
               let type = e2.target.result.type;
+              //@ts-ignore
+              let loadType = e2.target.result.loadType;
               //@ts-ignore
               let name = e2.target.result.name;
               //@ts-ignore
@@ -153,16 +164,19 @@ export class TIndexedDB {
               let userData = e2.target.result.userData;
               //@ts-ignore
               let modelName = e2.target.result.modelName;
+
               resolve({
                 saved: true,
-                url: url,
-                scale: scale,
-                type: type,
                 name: name,
+                modelName: modelName,
+                url: url,
+                modelSize: modelSize,
+                type: type,
+                loadType: loadType,
+                scale: scale,
                 position: position,
                 rotation: rotation,
                 userData: userData,
-                modelName: modelName,
               });
             };
             // } catch (error) {

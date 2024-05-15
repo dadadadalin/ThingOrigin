@@ -94,7 +94,7 @@ export class TModel {
           this.GLTFLoader.load(url, (gltf) => {
             let model = this.setModelConfig(gltf.scene, modelInfo);
             //@ts-ignore
-            gltf.scene = model;
+            // gltf.scene = model;
             resolve(gltf as unknown as Object3D);
           });
           break;
@@ -109,25 +109,24 @@ export class TModel {
   }
 
   private setModelConfig(model: Object3D, modelInfo: any): Object3D {
+    console.log(modelInfo);
     if (modelInfo.scale)
-      model.scale.set(
-        modelInfo.scale[0],
-        modelInfo.scale[1],
-        modelInfo.scale[2]
-      );
+      model.scale.set(modelInfo.scale.x, modelInfo.scale.y, modelInfo.scale.z);
     if (modelInfo.rotation)
       model.rotation.set(
-        MathUtils.degToRad(modelInfo.rotation[0]),
-        MathUtils.degToRad(modelInfo.rotation[1]),
-        MathUtils.degToRad(modelInfo.rotation[2])
+        MathUtils.degToRad(modelInfo.rotation.x),
+        MathUtils.degToRad(modelInfo.rotation.y),
+        MathUtils.degToRad(modelInfo.rotation.z)
       );
     if (modelInfo.position)
       model.position.set(
-        modelInfo.position[0],
-        modelInfo.position[1],
-        modelInfo.position[2]
+        modelInfo.position.x,
+        modelInfo.position.y,
+        modelInfo.position.z
       );
-    model.userData = modelInfo.userData;
+
+    model.name = modelInfo.modelName;
+    model.userData = Object.assign(modelInfo.userData, { by: "ThingOrigin3D" });
 
     model.updateMatrixWorld(true);
     return model;
@@ -162,7 +161,7 @@ export class TModel {
     });
     const geometryObject = new Mesh(plane, material);
     geometryObject.name = name;
-    return this.setObjectConfigs(geometryObject, param);
+    return this.setModelConfig(geometryObject, param);
   }
 
   /**
@@ -209,7 +208,7 @@ export class TModel {
     let param = Object.assign(defaultParams, modelInfo);
     let group = new Group();
     group.name = name;
-    return this.setObjectConfigs(group, param);
+    return this.setModelConfig(group, param);
   }
 
   /**
@@ -248,7 +247,7 @@ export class TModel {
     });
     const geometryObject = new Mesh(sphere, material);
     geometryObject.name = param.name;
-    return this.setObjectConfigs(geometryObject, param);
+    return this.setModelConfig(geometryObject, param);
   }
 
   /**
@@ -288,7 +287,7 @@ export class TModel {
     });
     const geometryObject = new Mesh(cube, material);
     geometryObject.name = modelInfo.name;
-    return this.setObjectConfigs(geometryObject, param);
+    return this.setModelConfig(geometryObject, param);
   }
   // public initBox1(
   //   name: string,
@@ -319,7 +318,7 @@ export class TModel {
   //   });
   //   const geometryObject = new Mesh(cube, material);
   //   geometryObject.name = name;
-  //   return this.setObjectConfigs(geometryObject, geometryConfigs, userData);
+  //   return this.setModelConfig(geometryObject, geometryConfigs, userData);
   // }
 
   /**
@@ -357,7 +356,7 @@ export class TModel {
     });
     const geometryObject = new Mesh(cone, material);
     geometryObject.name = param.name;
-    return this.setObjectConfigs(geometryObject, param);
+    return this.setModelConfig(geometryObject, param);
   }
 
   /**
@@ -399,7 +398,7 @@ export class TModel {
     });
     const geometryObject = new Mesh(cylinder, material);
     geometryObject.name = param.name;
-    return this.setObjectConfigs(geometryObject, param);
+    return this.setModelConfig(geometryObject, param);
   }
 
   /**
@@ -572,7 +571,7 @@ export class TModel {
         geometryObject.name = text;
 
         console.log(fontUrl);
-        resolve(this.setObjectConfigs(geometryObject, param));
+        resolve(this.setModelConfig(geometryObject, param));
       })
     );
   }
@@ -621,7 +620,7 @@ export class TModel {
         const geometryObject = new Mesh(geometry, matLite);
         geometryObject.name = text;
 
-        resolve(this.setObjectConfigs(geometryObject, param));
+        resolve(this.setModelConfig(geometryObject, param));
       })
     );
   }
@@ -692,7 +691,7 @@ export class TModel {
           lineText.add(lineMesh);
         }
 
-        resolve(this.setObjectConfigs(lineText, param));
+        resolve(this.setModelConfig(lineText, param));
       })
     );
   }
@@ -886,53 +885,5 @@ export class TModel {
       spriteGroup.add(sprite);
     }
     return spriteGroup;
-  }
-
-  /**
-   * @description 处理模型的样式
-   * @author LL
-   * @date 2021/07/23
-   * @private
-   * @param {BufferGeometry} object
-   * @param {geometryConfigs} modelInfo 几何通用参数 例：{ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }
-   * @returns {*}  {Object3D}
-   */
-  private setObjectConfigs(object: Object3D, modelInfo: any): Object3D {
-    console.log(object, modelInfo);
-    if (modelInfo.config.scale) {
-      object.scale.set(
-        modelInfo.config.scale[0],
-        modelInfo.config.scale[1],
-        modelInfo.config.scale[2]
-      );
-    } else {
-      object.scale.set(1, 1, 1);
-    }
-
-    if (modelInfo.config.position) {
-      object.position.set(
-        modelInfo.config.position[0],
-        modelInfo.config.position[1],
-        modelInfo.config.position[2]
-      );
-    } else {
-      object.position.set(0, 0, 0);
-    }
-
-    if (modelInfo.config.rotation) {
-      object.rotation.set(
-        modelInfo.config.rotation[0],
-        modelInfo.config.rotation[1],
-        modelInfo.config.rotation[2]
-      );
-    } else {
-      object.rotation.set(0, 0, 0);
-    }
-
-    if (modelInfo.userData) {
-      object.userData = modelInfo.userData;
-    }
-
-    return object;
   }
 }

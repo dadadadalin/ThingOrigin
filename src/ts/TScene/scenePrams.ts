@@ -5,8 +5,8 @@ interface ThingOriginParams {
   camera?: cameraParams;
   lights?: lightParams[];
   controls?: controlsParams;
-  models?: modelParams[];
-  css2d?: css2dParams[];
+  modelList?: modelParams[];
+  CSS2dList?: CSS2dListParams[];
   helper?: helperParams;
   effectComposer?: effectComposerParams;
 }
@@ -26,18 +26,21 @@ interface xyz {
 
 interface modelParams {
   name?: string;
+  modelName?: string;
+  loadType: string;
+  ownCSS2D?: boolean;
+  saved?: boolean;
   position?: xyz;
   rotation?: xyz;
   scale?: xyz;
-  type?: string;
-  ownCSS2D?: boolean;
-  fileType?: string;
   folder?: string;
-  fileName?: string;
-  modelType?: string;
+  type?: string;
+  url: string;
+  uuid?: string;
+  userData?: any;
 }
 
-interface css2dParams {
+interface CSS2dListParams {
   uuid?: string;
   name?: string;
   domTypeIndex?: string;

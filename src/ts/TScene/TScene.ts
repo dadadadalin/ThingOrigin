@@ -102,20 +102,20 @@ export class TScene extends Scene {
       this.sceneParam.lights = userSceneParam.lights;
     if (
       userSceneParam &&
-      userSceneParam.models &&
-      userSceneParam.models.length != 0
+      userSceneParam.modelList &&
+      userSceneParam.modelList.length != 0
     )
-      this.sceneParam.models = userSceneParam.models;
+      this.sceneParam.modelList = userSceneParam.modelList;
     if (
       userSceneParam &&
-      userSceneParam.css2d &&
-      userSceneParam.css2d.length != 0
+      userSceneParam.CSS2dList &&
+      userSceneParam.CSS2dList.length != 0
     )
-      this.sceneParam.css2d = userSceneParam.css2d;
-    // if (userSceneParam.animations)
-    //   this.sceneParam.animations = userSceneParam.animations;
-    // if (userSceneParam.handles)
-    //   this.sceneParam.handles = userSceneParam.handles;
+      this.sceneParam.CSS2dList = userSceneParam.CSS2dList;
+    // if (userSceneParam.animationList)
+    //   this.sceneParam.animationList = userSceneParam.animationList;
+    // if (userSceneParam.handleList)
+    //   this.sceneParam.handleList = userSceneParam.handleList;
 
     this.container = container;
     this.initCamera(this.sceneParam);
@@ -125,8 +125,8 @@ export class TScene extends Scene {
     this.initControl(this.sceneParam);
 
     if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
-    if (this.sceneParam.models.length != 0) this.loadModel(this.sceneParam);
-    if (this.sceneParam.css2d) this.loadCSS2D(this.sceneParam);
+    if (this.sceneParam.modelList.length != 0) this.loadModel(this.sceneParam);
+    if (this.sceneParam.CSS2dList) this.loadCSS2D(this.sceneParam);
 
     if (this.sceneParam.scene.fog.show)
       this.sceneParam.scene.fog.cameraView
@@ -392,32 +392,29 @@ export class TScene extends Scene {
    * @param {ThingOriginParams} sceneParams 场景参数
    */
   private loadModel(sceneParams: ThingOriginParams) {
-    console.log(sceneParams.models);
-    for (let i = 0; i < sceneParams.models.length; i++) {
-      let item = sceneParams.models[i];
-      if (["gltf"].indexOf(item["modelInfo"].type) != -1) {
-        ThingOrigin.model
-          .initFileModel(item["modelInfo"], item["modelInfo"].url)
-          .then((model) => {
-            console.log(model);
-            if (item["modelInfo"].type == "gltf") {
-              //@ts-ignore
-              this.add(model.scene);
-            } else {
-              this.add(model);
-            }
-          });
-      } else if (item["modelInfo"].type == "sphere") {
-        let sphere = ThingOrigin.model.initSphere(item["modelInfo"]);
+    console.log(sceneParams.modelList);
+    for (let i = 0; i < sceneParams.modelList.length; i++) {
+      let item = sceneParams.modelList[i];
+      if (["gltf"].indexOf(item.type) != -1) {
+        ThingOrigin.model.initFileModel(item, item.url).then((model) => {
+          if (item.type == "gltf") {
+            //@ts-ignore
+            this.add(model.scene);
+          } else {
+            this.add(model);
+          }
+        });
+      } else if (item.type == "sphere") {
+        let sphere = ThingOrigin.model.initSphere(item);
         this.add(sphere);
-      } else if (item["modelInfo"].type == "cube") {
-        let cube = ThingOrigin.model.initCube(item["modelInfo"]);
+      } else if (item.type == "cube") {
+        let cube = ThingOrigin.model.initCube(item);
         this.add(cube);
-      } else if (item["modelInfo"].type == "cylinder") {
-        let cylinder = ThingOrigin.model.initCylinder(item["modelInfo"]);
+      } else if (item.type == "cylinder") {
+        let cylinder = ThingOrigin.model.initCylinder(item);
         this.add(cylinder);
-      } else if (item["modelInfo"].type == "cone") {
-        let cone = ThingOrigin.model.initCone(item["modelInfo"]);
+      } else if (item.type == "cone") {
+        let cone = ThingOrigin.model.initCone(item);
         this.add(cone);
       }
     }
@@ -465,32 +462,25 @@ export class TScene extends Scene {
    * @date 2021/08/31
    * @private
    * @param {ThingOriginParams} sceneParams 场景参数
+   * @param {html} HTMLElement 承载随行框的dom元素
    */
-  private loadCSS2D(sceneParams: ThingOriginParams) {
-    if (!sceneParams.css2d) return;
+  private loadCSS2D(sceneParams: ThingOriginParams, html?: HTMLElement) {
+    if (!sceneParams.CSS2dList) return;
     let timer = setInterval(() => {
-      let can = true;
-      for (let i = 0; i < sceneParams.css2d.length; i++) {
-        if (
-          !this.getObjectByProperty(
-            "uuid",
-            sceneParams.css2d[i]["bindModeluuid"]
-          )
-        ) {
-          can = false;
-        }
-      }
-      if (can) {
-        for (let i = 0; i < sceneParams.css2d.length; i++) {
-          let item = sceneParams.css2d[i];
-          let model = this.getObjectByProperty("uuid", item["bindModeluuid"]);
+      let flag = sceneParams.CSS2dList.every((item) =>
+        this.getObjectByProperty("name", item.name)
+      );
+      if (flag) {
+        for (let i = 0; i < sceneParams.CSS2dList.length; i++) {
+          let item = sceneParams.CSS2dList[i];
+          let model = this.getObjectByProperty("name", item["name"]);
           //2d DOM元素如果存在，则加载
           if (document.getElementById(item.domId)) {
             this.addCSS2D(model, document.getElementById(item.domId));
           } else {
             //否则先生成DOM元素
             let div = document.createElement("div");
-            div.id = "css2d_" + item["bindModeluuid"];
+            div.id = "css2d_" + model.uuid;
             div.className = "css2dStyle css2d_" + item.domTypeIndex;
             div.setAttribute(
               "style",
@@ -498,13 +488,14 @@ export class TScene extends Scene {
             );
             div.setAttribute("style", "opacity: 1");
             div.innerHTML = ` 
-            <div class="css2d_title">${item.css2dForm[1].content}</div>
-           ${item.css2dForm[2].content}`;
-            document.getElementById("WebGL-output").appendChild(div);
+              <div class="css2d_title">${item.css2dForm[1].content}</div>
+            ${item.css2dForm[2].content}`;
+            html
+              ? html.appendChild(div)
+              : document.getElementById("WebGL-output").appendChild(div);
             this.addCSS2D(
               model,
-              document.getElementById("css2d_" + item["bindModeluuid"]),
-              item.css2dBoxUuid
+              document.getElementById("css2d_" + model.uuid)
             );
           }
         }
@@ -515,8 +506,8 @@ export class TScene extends Scene {
     // let a = document.getElementById("css2d");
     // console.log(sceneParams.css2d);
 
-    // this.model.addCSS2D("name", sceneParams.css2d[0].name, document.getElementById("css2d2"));
-    // this.model.addCSS2D("name", sceneParams.css2d[1].name, document.getElementById("css2d"));
+    // this.model.addCSS2D("name", sceneParams.CSS2dList[0].name, document.getElementById("css2d2"));
+    // this.model.addCSS2D("name", sceneParams.CSS2dList[1].name, document.getElementById("css2d"));
   }
 
   /**
@@ -684,13 +675,11 @@ export class TScene extends Scene {
    * @param {HTMLElement} html dom元素
    * @param {number} [ratio=1.1]
    * @param {number[]} [offset=[0,0,0]]
-   * @param {string} css2dBoxUuid 初始元素uuid
    * @return {*}  {string}
    */
   public addCSS2D(
     model: Object3D | Group,
     html: HTMLElement,
-    css2dBoxUuid?: string,
     ratio: number = 1.1,
     offset: number[] = [0, 0, 0]
   ): string {
@@ -703,10 +692,6 @@ export class TScene extends Scene {
     // div.innerHTML = html;
 
     let CSSLabel = new CSS2DObject(html);
-    //初始元素uuid存在，则使用初始的，否则重新生成
-    if (css2dBoxUuid) {
-      CSSLabel.uuid = css2dBoxUuid;
-    }
     let sphere = ThingOrigin.tool.getObjectSphere(model);
     CSSLabel.position.set(
       sphere.center.x + offset[0],

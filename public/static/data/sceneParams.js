@@ -178,14 +178,14 @@ export default {
       { text: "type" },
       { text: "model" },
     ],
-    models: [{ id: 1, name: "aaa", type: "gltf", model: "", url: "" }],
+    modelList: [{ id: 1, name: "aaa", type: "gltf", model: "", url: "" }],
   },
-  models: [],
-  animations: [],
-  css2d: [],
-  attaches: [],
+  modelList: [],
+  animationList: [],
+  CSS2dList: [],
+  attachList: [],
   //事件
-  handles: [],
+  handleList: [],
   //模型关联关系
   attachList: [],
 };
