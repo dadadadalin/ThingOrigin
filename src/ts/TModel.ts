@@ -126,7 +126,12 @@ export class TModel {
       );
 
     model.name = modelInfo.modelName;
-    model.userData = Object.assign(modelInfo.userData, { by: "ThingOrigin3D" });
+    model.userData = Object.assign(
+      modelInfo.userData ? modelInfo.userData : {},
+      {
+        by: "ThingOrigin3D",
+      }
+    );
 
     model.updateMatrixWorld(true);
     return model;

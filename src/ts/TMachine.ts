@@ -27,10 +27,11 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      let dataUrl = joints[i].dataSource.split("root.")[1];
+      let dataUrl = joints[i].dataUrl.split("root.")[1];
       if (jointData[dataUrl]) {
-        robot.getObjectByName(joints[i].name).rotation[joints[i].axis] =
-          joints[i].reverse * Number(jointData[dataUrl] / 180) * Math.PI;
+        robot.getObjectByName(joints[i].modelName).rotation[
+          joints[i].animateAxis
+        ] = joints[i].reverse * Number(jointData[dataUrl] / 180) * Math.PI;
       } else {
         console.warn("重置数据异常：" + i + "=" + jointData[dataUrl]);
       }
@@ -59,10 +60,17 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      let dataUrl = joints[i].dataSource.split("root.")[1];
+      let dataUrl = joints[i].dataUrl.split("root.")[1];
       if (jointData[dataUrl]) {
-        robot.getObjectByName(joints[i].name).rotation[joints[i].axis] =
-          joints[i].reverse * Number(jointData[dataUrl]);
+        console.log(
+          "重置方法：",
+          joints[i].modelName,
+          joints[i].animateAxis,
+          joints[i].reverse * Number(jointData[dataUrl])
+        );
+        robot.getObjectByName(joints[i].modelName).rotation[
+          joints[i].animateAxis
+        ] = joints[i].reverse * Number(jointData[dataUrl]);
       } else {
         console.warn(
           "【" + robot.name + "】数据异常：" + i + "=" + jointData[dataUrl]
@@ -93,12 +101,12 @@ export class TMachine {
       return;
     }
     for (var i = 0; i < joints.length; i++) {
-      let dataUrl = joints[i].dataSource.split("root.")[1];
+      let dataUrl = joints[i].dataUrl.split("root.")[1];
       if (preData[dataUrl] != undefined && curData[dataUrl] != undefined) {
         if (preData[dataUrl] != curData[dataUrl]) {
           ThingOrigin.animate.rotateAngle(
-            robot.getObjectByName(joints[i].name),
-            joints[i].axis,
+            robot.getObjectByName(joints[i].modelName),
+            joints[i].animateAxis,
             joints[i].reverse * Number(preData[dataUrl]),
             joints[i].reverse * Number(curData[dataUrl]),
             time
@@ -106,7 +114,7 @@ export class TMachine {
         }
       } else {
         console.warn(
-          joints[i].name +
+          joints[i].modelName +
             "数据异常：pre=" +
             preData[dataUrl] +
             ",cur=" +
@@ -139,12 +147,12 @@ export class TMachine {
     }
 
     for (var i = 0; i < joints.length; i++) {
-      let dataUrl = joints[i].dataSource.split("root.")[1];
+      let dataUrl = joints[i].dataUrl.split("root.")[1];
       if (preData[dataUrl] != undefined && curData[dataUrl] != undefined) {
         if (preData[dataUrl] != curData[dataUrl]) {
           ThingOrigin.animate.rotateRadian(
-            robot.getObjectByName(joints[i].name),
-            joints[i].axis,
+            robot.getObjectByName(joints[i].modelName),
+            joints[i].animateAxis,
             joints[i].reverse * Number(preData[dataUrl]),
             joints[i].reverse * Number(curData[dataUrl]),
             time
@@ -152,7 +160,7 @@ export class TMachine {
         }
       } else {
         console.warn(
-          joints[i].name +
+          joints[i].modelName +
             "数据异常：pre=" +
             preData[dataUrl] +
             ",cur=" +

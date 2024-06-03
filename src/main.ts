@@ -92,33 +92,38 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 
 console.log(mainScene);
 
-let cube = ThingOrigin.model.initCube({
-  name: "零件",
-  modelName: "part",
-  loadType: "base",
-  type: "cube",
-  icon: "icon-cube",
-  scale: { x: 1, y: 1, z: 1 },
-  position: { x: 0, y: 0, z: 0 },
-  rotation: { x: 0, y: 0, z: 0 },
-  base: {
-    width: 18,
-    height: 6,
-    depth: 2,
-  },
-  config: {
-    color: "blue",
-  },
-  userData: {
-    rootName: "cube-01",
-    sim: {
-      type: "part",
-      positionOffset: [0, 0, 9.7],
-      rotationOffset: [0, 0, 0],
-    },
-  },
-});
-mainScene.add(cube);
+let modelB = ThingOrigin.model.initCube("wb");
+console.log(modelB);
+
+mainScene.add(modelB);
+
+// let cube = ThingOrigin.model.initCube({
+//   name: "零件",
+//   modelName: "part",
+//   loadType: "base",
+//   type: "cube",
+//   icon: "icon-cube",
+//   scale: { x: 1, y: 1, z: 1 },
+//   position: { x: 0, y: 0, z: 0 },
+//   rotation: { x: 0, y: 0, z: 0 },
+//   base: {
+//     width: 18,
+//     height: 6,
+//     depth: 2,
+//   },
+//   config: {
+//     color: "blue",
+//   },
+//   userData: {
+//     rootName: "cube-01",
+//     sim: {
+//       type: "part",
+//       positionOffset: [0, 0, 9.7],
+//       rotationOffset: [0, 0, 0],
+//     },
+//   },
+// });
+// mainScene.add(cube);
 
 // ThingOrigin.model
 //   .initFileModel(
@@ -159,6 +164,9 @@ mainScene.add(cube);
 //   .then((model) => {
 //     console.log(model);
 //     mainScene.add(model.scene);
+
+//     let a = ThingOrigin.tool.getChildrenInfo(model.scene);
+//     console.log(a);
 //   });
 //
 // let map = ThingOrigin.model.initMap("/static/data/china.json").then((map) => {

@@ -1,8 +1,10 @@
 interface jointsParams {
-  axis: string;
-  dataSource: string;
-  name: string;
+  animateAxis: string;
+  dataUrl: string;
+  modelName: string;
   reverse: number;
+  simulateRange: number[];
+  animateType: string;
 }
 
 interface jointDataParams {

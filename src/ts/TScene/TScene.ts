@@ -688,9 +688,6 @@ export class TScene extends Scene {
       return;
     }
 
-    // let div = document.createElement("div");
-    // div.innerHTML = html;
-
     let CSSLabel = new CSS2DObject(html);
     let sphere = ThingOrigin.tool.getObjectSphere(model);
     CSSLabel.position.set(
