@@ -66,17 +66,38 @@ export class TModel {
    * @returns {*}  {Promise<Object3D>}
    */
   public initFileModel(modelInfo: any, url: string): Promise<Object3D> {
+    let defaultParams = {
+      modelName: "fileModel-" + new Date().getTime(),
+      config: {
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+      },
+    };
+    let param = Object.assign(defaultParams, modelInfo);
     return new Promise((resolve) => {
-      switch (modelInfo.type) {
+      switch (param.type) {
         case "fbx":
           this.FBXLoader.load(url, (fbx: Group) => {
-            let model = this.setModelConfig(fbx, modelInfo);
+            let model = this.setModelConfig(fbx, param);
             resolve(model);
           });
           break;
         case "obj":
           this.OBJLoader.load(url, (obj: Object3D) => {
-            let model = this.setModelConfig(obj, modelInfo);
+            let model = this.setModelConfig(obj, param);
             resolve(model);
           });
           break;
@@ -86,13 +107,13 @@ export class TModel {
             material.side = DoubleSide;
             var mesh = new Mesh(geometry, material); //网格模型对象Mesh
 
-            let model = this.setModelConfig(mesh, modelInfo);
+            let model = this.setModelConfig(mesh, param);
             resolve(model);
           });
           break;
         case "gltf":
           this.GLTFLoader.load(url, (gltf) => {
-            let model = this.setModelConfig(gltf.scene, modelInfo);
+            let model = this.setModelConfig(gltf.scene, param);
             //@ts-ignore
             // gltf.scene = model;
             resolve(gltf as unknown as Object3D);
@@ -100,7 +121,7 @@ export class TModel {
           break;
         case "json":
           this.ObjectLoader.load(url, (object: Object3D) => {
-            let model = this.setModelConfig(object, modelInfo);
+            let model = this.setModelConfig(object, param);
             resolve(model);
           });
           break;
@@ -109,7 +130,6 @@ export class TModel {
   }
 
   private setModelConfig(model: Object3D, modelInfo: any): Object3D {
-    console.log(modelInfo);
     if (modelInfo.scale)
       model.scale.set(modelInfo.scale.x, modelInfo.scale.y, modelInfo.scale.z);
     if (modelInfo.rotation)
@@ -145,8 +165,9 @@ export class TModel {
    * @param {any} modelInfo 几何通用参数 例：{ base:{width: 10, height: 10, widthSegments: 32,  heightSegments: 32},config：{color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]} }
    * @returns {*}  {Object3D}
    */
-  public initPlane(name: string, modelInfo: any): Object3D {
+  public initPlane(modelInfo: any): Object3D {
     let defaultParams = {
+      modelName: "plane-" + new Date().getTime(),
       base: {
         width: 10,
         height: 10,
@@ -165,32 +186,59 @@ export class TModel {
       color: param.config.color,
     });
     const geometryObject = new Mesh(plane, material);
-    geometryObject.name = name;
     return this.setModelConfig(geometryObject, param);
   }
 
   /**
    * @description 创建面板
    * @author LL
-   * @date 24/12/2021
-   * @param {string} name
-   * @param {number[]} face
-   * @param {number} distance
-   * @param {number} [size]
-   * @param {string} [color]
+   * @date 2024/06/03
+   * @param {*} modelInfo
    * @returns {*}  {PlaneHelper}
    */
-  public initPlaneHelper(
-    name: string,
-    face: number[],
-    distance: number,
-    size?: number,
-    color?: string
-  ): PlaneHelper {
-    const plane = new Plane(new Vector3(face[0], face[1], face[2]), distance);
-    const helper = new PlaneHelper(plane, size, new Color(color).getHex());
-    helper.name = name;
-    return helper;
+  public initPlaneHelper(modelInfo): PlaneHelper {
+    let defaultParams = {
+      modelName: "group-" + new Date().getTime(),
+      base: {
+        face: {
+          x: 1,
+          y: 0,
+          z: 0,
+        },
+        distance: 0,
+        size: 1,
+        color: "0xffff00",
+      },
+      config: {
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+      },
+    };
+    let param = Object.assign(defaultParams, modelInfo);
+    const plane = new Plane(
+      new Vector3(param.base.face.x, param.base.face.y, param.base.face.z),
+      param.base.face.distance
+    );
+    const helper = new PlaneHelper(
+      plane,
+      param.base.face.size,
+      new Color(param.base.face.color).getHex()
+    );
+
+    return this.setModelConfig(helper, param) as PlaneHelper;
   }
 
   /**
@@ -201,18 +249,30 @@ export class TModel {
    * @param {any} modelInfo modelInfo={ base:{},config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
    * @returns {*}  {Object3D}
    */
-  public initGroup(name: string, modelInfo: any): Object3D {
+  public initGroup(modelInfo: any): Object3D {
     let defaultParams = {
+      modelName: "group-" + new Date().getTime(),
       base: {},
       config: {
-        position: [0, 0, 0],
-        scale: [1, 1, 1],
-        rotation: [0, 0, 0],
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
       },
     };
     let param = Object.assign(defaultParams, modelInfo);
     let group = new Group();
-    group.name = name;
     return this.setModelConfig(group, param);
   }
 
@@ -226,6 +286,7 @@ export class TModel {
    */
   public initSphere(modelInfo: any): Object3D {
     let defaultParams = {
+      modelName: "sphere-" + new Date().getTime(),
       base: {
         radius: 10,
         widthSegments: 15,
@@ -233,6 +294,21 @@ export class TModel {
       },
       config: {
         color: "#f00",
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
       },
     };
     let param = Object.assign(defaultParams, modelInfo);
@@ -251,20 +327,22 @@ export class TModel {
       color: param.config.color,
     });
     const geometryObject = new Mesh(sphere, material);
-    geometryObject.name = param.name;
     return this.setModelConfig(geometryObject, param);
   }
 
   /**
-   * @description 添加几何体
+   * @description 添加立方体
    * @author LL
    * @date 2021/08/19
-   * @param {string} name 几何体名称
-   * @param {any} modelInfo 几何通用参数 modelInfo = { base:{width: 10, height: 10, depth: 10},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
+   * @param {cubeInfoParams} cubeInfo 几何通用参数
+   * @param {material} MeshLambertMaterial 几何通用参数
    */
-  public initCube(modelInfo?: any): Object3D {
+  public initCube(
+    modelInfo?: cubeInfoParams,
+    material?: MeshLambertMaterial
+  ): Object3D {
     let defaultParams = {
+      modelName: "cube-" + new Date().getTime(),
       base: {
         width: 10,
         height: 10,
@@ -273,8 +351,26 @@ export class TModel {
         heightSegments: 1,
         depthSegments: 1,
       },
-      config: {
+      material: {
         color: "#f00",
+        type: "MeshLambertMaterial",
+      },
+      config: {
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
       },
     };
     let param = Object.assign(defaultParams, modelInfo);
@@ -287,44 +383,13 @@ export class TModel {
       param.base.depthSegments
     );
 
-    let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: param.config.color,
-    });
+    if (!material) {
+      material = new MeshLambertMaterial({ color: param.material.color });
+    }
+
     const geometryObject = new Mesh(cube, material);
-    geometryObject.name = modelInfo.name;
     return this.setModelConfig(geometryObject, param);
   }
-  // public initBox1(
-  //   name: string,
-  //   cubeParams: cubeParams = { width: 10, height: 10, depth: 10 },
-  //   geometryConfigs: geometryConfigs = {
-  //     color: "#f00",
-  //     position: [0, 0, 0],
-  //     scale: [1, 1, 1],
-  //     rotation: [0, 0, 0],
-  //   },
-  //   userData?: object
-  // ): Object3D {
-  //   let cube: BoxBufferGeometry;
-  //   if (cubeParams) {
-  //     cube = new BoxBufferGeometry(
-  //       cubeParams.width,
-  //       cubeParams.height,
-  //       cubeParams.depth,
-  //       cubeParams.widthSegments,
-  //       cubeParams.heightSegments,
-  //       cubeParams.depthSegments
-  //     );
-  //   } else {
-  //     cube = new BoxBufferGeometry();
-  //   }
-  //   let material: MeshLambertMaterial = new MeshLambertMaterial({
-  //     color: geometryConfigs.color,
-  //   });
-  //   const geometryObject = new Mesh(cube, material);
-  //   geometryObject.name = name;
-  //   return this.setModelConfig(geometryObject, geometryConfigs, userData);
-  // }
 
   /**
    * @description 添加圆锥
@@ -342,6 +407,21 @@ export class TModel {
       },
       config: {
         color: "#f00",
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
       },
     };
     let param = Object.assign(defaultParams, modelInfo);
@@ -382,6 +462,21 @@ export class TModel {
       },
       config: {
         color: "#f00",
+        position: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
+        rotation: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
       },
     };
     let param = Object.assign(defaultParams, modelInfo);

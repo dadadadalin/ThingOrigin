@@ -108,10 +108,10 @@ export class TScene extends Scene {
       this.sceneParam.modelList = userSceneParam.modelList;
     if (
       userSceneParam &&
-      userSceneParam.CSS2dList &&
-      userSceneParam.CSS2dList.length != 0
+      userSceneParam.markerList &&
+      userSceneParam.markerList.length != 0
     )
-      this.sceneParam.CSS2dList = userSceneParam.CSS2dList;
+      this.sceneParam.markerList = userSceneParam.markerList;
     // if (userSceneParam.animationList)
     //   this.sceneParam.animationList = userSceneParam.animationList;
     // if (userSceneParam.handleList)
@@ -126,7 +126,7 @@ export class TScene extends Scene {
 
     if (this.sceneParam.scene.stats.show) this.showStats(this.sceneParam);
     if (this.sceneParam.modelList.length != 0) this.loadModel(this.sceneParam);
-    if (this.sceneParam.CSS2dList) this.loadCSS2D(this.sceneParam);
+    if (this.sceneParam.markerList) this.loadCSS2D(this.sceneParam);
 
     if (this.sceneParam.scene.fog.show)
       this.sceneParam.scene.fog.cameraView
@@ -244,6 +244,7 @@ export class TScene extends Scene {
     );
     this.CSS2DRenderer.domElement.style.position = "absolute";
     this.CSS2DRenderer.domElement.style.bottom = "0";
+    this.CSS2DRenderer.domElement.id = "markerRender";
     this.container.appendChild(this.CSS2DRenderer.domElement);
   }
 
@@ -393,31 +394,31 @@ export class TScene extends Scene {
    */
   private loadModel(sceneParams: ThingOriginParams) {
     console.log(sceneParams.modelList);
-    for (let i = 0; i < sceneParams.modelList.length; i++) {
-      let item = sceneParams.modelList[i];
-      if (["gltf"].indexOf(item.type) != -1) {
-        ThingOrigin.model.initFileModel(item, item.url).then((model) => {
-          if (item.type == "gltf") {
-            //@ts-ignore
-            this.add(model.scene);
-          } else {
-            this.add(model);
-          }
-        });
-      } else if (item.type == "sphere") {
-        let sphere = ThingOrigin.model.initSphere(item);
-        this.add(sphere);
-      } else if (item.type == "cube") {
-        let cube = ThingOrigin.model.initCube(item);
-        this.add(cube);
-      } else if (item.type == "cylinder") {
-        let cylinder = ThingOrigin.model.initCylinder(item);
-        this.add(cylinder);
-      } else if (item.type == "cone") {
-        let cone = ThingOrigin.model.initCone(item);
-        this.add(cone);
-      }
-    }
+    // for (let i = 0; i < sceneParams.modelList.length; i++) {
+    //   let item = sceneParams.modelList[i];
+    //   if (["gltf"].indexOf(item.type) != -1) {
+    //     ThingOrigin.model.initFileModel(item, item.url).then((model) => {
+    //       if (item.type == "gltf") {
+    //         //@ts-ignore
+    //         this.add(model.scene);
+    //       } else {
+    //         this.add(model);
+    //       }
+    //     });
+    //   } else if (item.type == "sphere") {
+    //     let sphere = ThingOrigin.model.initSphere(item);
+    //     this.add(sphere);
+    //   } else if (item.type == "cube") {
+    //     let cube = ThingOrigin.model.initCube(item);
+    //     this.add(cube);
+    //   } else if (item.type == "cylinder") {
+    //     let cylinder = ThingOrigin.model.initCylinder(item);
+    //     this.add(cylinder);
+    //   } else if (item.type == "cone") {
+    //     let cone = ThingOrigin.model.initCone(item);
+    //     this.add(cone);
+    //   }
+    // }
   }
 
   /**
@@ -465,18 +466,18 @@ export class TScene extends Scene {
    * @param {html} HTMLElement 承载随行框的dom元素
    */
   private loadCSS2D(sceneParams: ThingOriginParams, html?: HTMLElement) {
-    if (!sceneParams.CSS2dList) return;
+    if (!sceneParams.markerList) return;
     let timer = setInterval(() => {
-      let flag = sceneParams.CSS2dList.every((item) =>
+      let flag = sceneParams.markerList.every((item) =>
         this.getObjectByProperty("name", item.name)
       );
       if (flag) {
-        for (let i = 0; i < sceneParams.CSS2dList.length; i++) {
-          let item = sceneParams.CSS2dList[i];
+        for (let i = 0; i < sceneParams.markerList.length; i++) {
+          let item = sceneParams.markerList[i];
           let model = this.getObjectByProperty("name", item["name"]);
           //2d DOM元素如果存在，则加载
           if (document.getElementById(item.domId)) {
-            this.addCSS2D(model, document.getElementById(item.domId));
+            this.addMarker(model, document.getElementById(item.domId));
           } else {
             //否则先生成DOM元素
             let div = document.createElement("div");
@@ -493,7 +494,7 @@ export class TScene extends Scene {
             html
               ? html.appendChild(div)
               : document.getElementById("WebGL-output").appendChild(div);
-            this.addCSS2D(
+            this.addMarker(
               model,
               document.getElementById("css2d_" + model.uuid)
             );
@@ -506,8 +507,8 @@ export class TScene extends Scene {
     // let a = document.getElementById("css2d");
     // console.log(sceneParams.css2d);
 
-    // this.model.addCSS2D("name", sceneParams.CSS2dList[0].name, document.getElementById("css2d2"));
-    // this.model.addCSS2D("name", sceneParams.CSS2dList[1].name, document.getElementById("css2d"));
+    // this.model.addMarker("name", sceneParams.markerList[0].name, document.getElementById("css2d2"));
+    // this.model.addMarker("name", sceneParams.markerList[1].name, document.getElementById("css2d"));
   }
 
   /**
@@ -636,8 +637,8 @@ export class TScene extends Scene {
    * @author gj
    * @param {string} uuid
    */
-  public removeModel(uuid: string): void {
-    let obj = this.getObjectByProperty("uuid", uuid);
+  public removeModel(modelName: string): void {
+    let obj = this.getObjectByProperty("name", modelName);
     if (!obj) {
       console.warn("删除模型失败，物体不存在");
       return;
@@ -646,7 +647,7 @@ export class TScene extends Scene {
     obj.traverse((child) => {
       if (obj.uuid != child.uuid) {
         if (child instanceof CSS2DObject) {
-          this.removeCSS2D(child.uuid);
+          this.removeMarker(child.parent);
         }
       }
       //删除模型缓冲区存储顶点数据
@@ -673,44 +674,62 @@ export class TScene extends Scene {
    * @date 2021/08/30
    * @param {Object3D} model
    * @param {HTMLElement} html dom元素
-   * @param {number} [ratio=1.1]
-   * @param {number[]} [offset=[0,0,0]]
+   * @param {markerInfoParams} markerInfo 标记信息
    * @return {*}  {string}
    */
-  public addCSS2D(
+  public addMarker(
     model: Object3D | Group,
     html: HTMLElement,
-    ratio: number = 1.1,
-    offset: number[] = [0, 0, 0]
+    markerInfo?: markerInfoParams
   ): string {
     if (!model) {
       console.warn("标注添加失败，物体不存在");
       return;
     }
 
-    let CSSLabel = new CSS2DObject(html);
+    //合并用户参数与默认参数
+    const defaultParams = {
+      ratio: 1.1,
+      offset: { x: 0, y: 0, z: 0 },
+    };
+    let param = Object.assign(defaultParams, markerInfo);
+
+    //创建2d元素
+    let css2dObject = new CSS2DObject(html);
     let sphere = ThingOrigin.tool.getObjectSphere(model);
-    CSSLabel.position.set(
-      sphere.center.x + offset[0],
-      sphere.center.y + sphere.radius * ratio + offset[1],
-      sphere.center.z + offset[2]
+    css2dObject.position.set(
+      sphere.center.x + param.offset.x,
+      sphere.center.y + sphere.radius * param.ratio + param.offset.y,
+      sphere.center.z + param.offset.z
     );
-    CSSLabel.element.id = CSSLabel.uuid;
-    CSSLabel.userData.modelUUID = model.uuid;
-    model.attach(CSSLabel);
-    return CSSLabel.uuid;
+    css2dObject.userData.modelName = model.name;
+
+    model.attach(css2dObject);
   }
 
   /**
-   * @description 删除2d元素
-   * @author gj
-   * @param {string} uuid 模型的uuid
+   * @description 删除marker元素
+   * @author LL
+   * @param {Object3D} model 挂载模型
    */
-  public removeCSS2D(uuid: string): void {
-    let mySelfHtml = document.getElementById(uuid);
-    if (mySelfHtml) mySelfHtml.parentElement.removeChild(mySelfHtml);
+  public removeMarker(model: Object3D): void {
+    console.log(model);
+    model.traverse((child) => {
+      if (child instanceof CSS2DObject) {
+        model.remove(child);
+      }
+    });
+  }
 
-    this.removeModel(uuid);
+  /**
+   * @description 根据挂载模型名称删除marker元素
+   * @author LL
+   * @date 2024/06/04
+   * @param {string} modelName
+   */
+  public removeMarkerByName(modelName: string): void {
+    let model = this.getObjectByName(modelName);
+    this.removeMarker(model);
   }
 
   /**

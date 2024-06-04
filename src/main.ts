@@ -35,7 +35,6 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
   //     },
   //     type: "cube",
   //     uuid: "41D2F7DC-5D1A-442E-8888-B3B61A5C1695",
-  //     ownCSS2dList: false,
   //     userData: {
   //       rootName: "cube-01",
   //       sim: {
@@ -74,7 +73,6 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
   //     },
   //     type: "gltf",
   //     uuid: "7F62DD93-811D-4A32-A8E6-94D59C133D29",
-  //     ownCSS2dList: false,
   //     userData: {
   //       rootName: "ABB-01",
   //       sim: {
@@ -92,10 +90,20 @@ let mainScene = ThingOrigin.addScene("ttt", document.getElementById("d1"), {
 
 console.log(mainScene);
 
-let modelB = ThingOrigin.model.initCube("wb");
+let modelB = ThingOrigin.model.initCube({ modelName: "yyy" });
 console.log(modelB);
 
 mainScene.add(modelB);
+let h = document.createElement("div");
+h.innerText = "wo";
+let iii = mainScene.addMarker(modelB, h);
+
+console.log("b", modelB);
+
+setTimeout(() => {
+  console.log("删除");
+  mainScene.removeMarkerByName("yyy");
+}, 2500);
 
 // let cube = ThingOrigin.model.initCube({
 //   name: "零件",
@@ -146,7 +154,7 @@ mainScene.add(modelB);
 //       },
 //       type: "gltf",
 //       uuid: "7F62DD93-811D-4A32-A8E6-94D59C133D29",
-//       ownCSS2dList: false,
+
 //       userData: {
 //         rootName: "ABB-01",
 //         sim: {

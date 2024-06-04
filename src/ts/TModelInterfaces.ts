@@ -98,10 +98,41 @@ interface sphereParams {
   thetaLength?: number;
 }
 
+interface xyz {
+  x: number;
+  y: number;
+  z: number;
+}
+
+interface configParams {
+  position: xyz;
+  scale: xyz;
+  rotation: xyz;
+}
+
+interface materialParams {
+  type: string;
+  color: string;
+}
+
 /**
- * @description 创建几何体参数
+ * @description
  * @author LL
- * @date 2021/08/19
+ * @date 2024/06/03
+ * @interface cubeInfoParams
+ */
+interface cubeInfoParams {
+  modelName?: string;
+  base?: cubeBaseParam;
+  material?: materialParams;
+  config?: configParams;
+}
+
+/**
+ * @description
+ * @author LL
+ * @date 2024/06/03
+ * @interface cubeBaseParam
  * @width number X轴上面的宽度，默认值为1。
  * @height number Y轴上面的高度，默认值为1。
  * @depth number Z轴上面的高度，默认值为1。
@@ -109,7 +140,7 @@ interface sphereParams {
  * @heightSegments number 高度的分段数，默认值是1。
  * @depthSegments number 深度的分段数，默认值是1。
  */
-interface cubeParams {
+interface cubeBaseParam {
   width?: number;
   height?: number;
   depth?: number;

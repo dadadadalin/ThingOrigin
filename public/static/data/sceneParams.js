@@ -182,7 +182,7 @@ export default {
   },
   modelList: [],
   animationList: [],
-  CSS2dList: [],
+  markerList: [],
   //事件
   handleList: [],
   //模型关联关系

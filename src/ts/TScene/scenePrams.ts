@@ -6,7 +6,7 @@ interface ThingOriginParams {
   lights?: lightParams[];
   controls?: controlsParams;
   modelList?: modelParams[];
-  CSS2dList?: CSS2dListParams[];
+  markerList?: markerListParams[];
   helper?: helperParams;
   effectComposer?: effectComposerParams;
 }
@@ -40,7 +40,12 @@ interface modelParams {
   userData?: any;
 }
 
-interface CSS2dListParams {
+interface markerInfoParams {
+  ratio: number;
+  offset: xyz;
+}
+
+interface markerListParams {
   uuid?: string;
   name?: string;
   domTypeIndex?: string;
