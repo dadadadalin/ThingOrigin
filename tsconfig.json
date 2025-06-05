@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
+    "target": "es2017",
     "module": "commonjs",
-    "target": "ES5",
+    "moduleResolution": "node",
+    "outDir": "./dist",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "strict": false,
+    "allowJs": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
     "skipLibCheck": true,
-    "lib": ["dom", "es5", "es6", "es7"]
-  }
+    "types": ["three"]
+  },
+  "include": ["src/**/*.ts", "test/main.ts"],
+  "exclude": ["public", "node_modules"]
 }

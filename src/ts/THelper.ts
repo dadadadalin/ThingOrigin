@@ -1,11 +1,13 @@
 import { AxesHelper, BoxHelper, Color, GridHelper } from "three";
-import { TScene } from "./TScene/TScene";
+import { TScene } from "./TScene";
+import { merge } from "lodash";
 
 export class THelper {
   tScene: TScene;
   grid: GridHelper;
   axes: AxesHelper;
   box: BoxHelper;
+  boxList: any[] = [];
 
   constructor(tScene: TScene) {
     this.tScene = tScene;
@@ -40,14 +42,15 @@ export class THelper {
    * @returns {*}
    */
   public initBox(uuid: string) {
-    let obj = this.tScene.getObjectByProperty("uuid", uuid);
+    let obj: any = this.tScene.getObjectByProperty("uuid", uuid);
     if (!obj) {
       console.warn("包围盒加载失败，物体不存在");
       return;
     }
 
     this.box = new BoxHelper(obj);
-    this.box.name = "boxHelper";
+    this.box.name = obj.name + "-boxHelper";
+    this.boxList.push(this.box);
 
     this.tScene.add(this.box);
   }
@@ -56,11 +59,26 @@ export class THelper {
    * @description 去掉包围盒
    * @author LL
    */
-  public removeBox() {
-    if (this.box) {
-      this.tScene.remove(this.box);
-      this.box = null;
+  public removeBox(modelName?: string) {
+    if (modelName) {
+      let index = this.boxList.findIndex(
+        (item) => item.name === modelName + "-boxHelper"
+      );
+      if (index != -1) {
+        this.tScene.remove(this.boxList[index]);
+        this.boxList.splice(index, 1);
+      }
+    } else {
+      this.boxList.forEach((item) => {
+        this.tScene.remove(item);
+      });
+      this.boxList = [];
     }
+
+    // if (this.box) {
+    //   this.tScene.remove(this.box);
+    //   this.box = null;
+    // }
   }
 
   /**
@@ -80,22 +98,24 @@ export class THelper {
   /**
    * @description 创建grid
    * @author LL
-   * @param {number} size 坐标格尺寸. 默认为 10
+   * @param {} gridInfo 坐标格参数
    * @param {number} divisions 坐标格细分次数. 默认为 10.
    * @param {string} colorCenterLine 中线颜色
    * @param {string} colorGrid 坐标格网格线颜色
    */
-  public initGrid(
-    size?: number,
-    divisions?: number,
-    colorCenterLine?: string,
-    colorGrid?: string
-  ) {
+  public initGrid(gridInfo?: {}) {
+    let defaultParams = {
+      size: 100,
+      divisions: 30,
+      colorCenterLine: "#000000",
+      colorGrid: "#000000",
+    };
+    let param = merge(defaultParams, gridInfo);
     this.grid = new GridHelper(
-      size,
-      divisions,
-      new Color(colorCenterLine),
-      new Color(colorGrid)
+      param.size,
+      param.divisions,
+      new Color(param.colorCenterLine),
+      new Color(param.colorGrid)
     );
     this.grid.name = "gridHelper";
     this.grid.position.y -= 1;

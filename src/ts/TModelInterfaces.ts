@@ -1,3 +1,29 @@
+interface prs {
+  position: xyz;
+  rotation: xyz;
+  scale: xyz;
+}
+
+interface modelInfoParams {
+  modelName?: string;
+  base?: any;
+  material?: any;
+  loadType?: string;
+  position?: xyz;
+  rotation?: xyz | rotationXYZ;
+  scale?: xyz;
+  modelType?: string;
+  modelUrl?: string;
+  userData?: any;
+  visible?: boolean;
+  [key: string]: any;
+}
+
+interface updateInfoParams {
+  modelInfo: modelInfoParams;
+  update: string;
+}
+
 /**
  * @description 文字参数
  * @author LL
@@ -104,28 +130,9 @@ interface xyz {
   z: number;
 }
 
-interface configParams {
-  position: xyz;
-  scale: xyz;
-  rotation: xyz;
-}
-
 interface materialParams {
   type: string;
   color: string;
-}
-
-/**
- * @description
- * @author LL
- * @date 2024/06/03
- * @interface cubeInfoParams
- */
-interface cubeInfoParams {
-  modelName?: string;
-  base?: cubeBaseParam;
-  material?: materialParams;
-  config?: configParams;
 }
 
 /**
@@ -271,6 +278,12 @@ interface LineParams {
   lineWidth?: number;
   linecap?: string;
   linejoin?: string;
+}
+
+interface ArrowParams {
+  color?: string;
+  headLength?: number;
+  headWidth?: number;
 }
 
 interface planeParams {

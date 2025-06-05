@@ -1,19 +1,18 @@
 import {
   Box3,
-  BufferGeometry,
   Color,
-  Geometry,
   Matrix4,
-  Mesh,
   Object3D,
   Sphere,
   Vector3,
-  BufferAttribute,
-  Float32BufferAttribute,
-  Face3,
   Clock,
+  Mesh,
+  Matrix3,
+  Vector4,
+  Euler,
+  EulerOrder,
+  Quaternion,
 } from "three";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
 
 /**
  * 自定义工具方法
@@ -28,7 +27,7 @@ export class Tool {
   }
 
   /**
-   * @description 创建向量
+   * @description 创建Vector3向量
    * @author LL
    * @date 2021/08/24
    * @param {number} x
@@ -36,19 +35,34 @@ export class Tool {
    * @param {number} z
    * @returns {*}  {Vector3}
    */
-  public vector3(x?: number, y?: number, z?: number): Vector3 {
-    return new Vector3(x, y, x);
+  public initVector3(x?: number, y?: number, z?: number): Vector3 {
+    return new Vector3(x, y, z);
+  }
+
+  /**
+   * @description 创建Vector4向量
+   * @author LL
+   * @date 2024/07/19
+   * @param {number} [x]
+   * @param {number} [y]
+   * @param {number} [z]
+   * @param {number} [w]
+   * @returns {*}  {Vector4}
+   * @memberof Tool
+   */
+  public initVector4(x?: number, y?: number, z?: number, w?: number): Vector4 {
+    return new Vector4(x, y, z, w);
   }
 
   /**
    * @description 获取轴向量
    * @author LL
-   * @date 25/04/2022
+   * @date 2022/04/25
    * @param {string} axis 轴
    * @param {number} [value=1]
    * @returns {*}  {Vector3}
    */
-  public getAxisVector3(axis: string, value: number = 1): Vector3 {
+  public initVector3ByAxis(axis: string, value: number = 1): Vector3 {
     let vec3: Vector3;
     if (axis == "x") {
       vec3 = new Vector3(value, 0, 0);
@@ -62,28 +76,81 @@ export class Tool {
   }
 
   /**
+   * @description 创建3x3矩阵
+   * @author LL
+   * @date 2024/07/19
+   * @returns {*}  {Matrix3}
+   * @memberof Tool
+   */
+  public initMatrix3(): Matrix3 {
+    return new Matrix3();
+  }
+
+  /**
+   * @description 创建4x4矩阵
+   * @author gj
+   * @date 2023/11/20
+   * @returns {*}  {Matrix4}
+   */
+  public initMatrix4(): Matrix4 {
+    return new Matrix4();
+  }
+
+  /**
+   * @description 创建Quaternion
+   * @author LL
+   * @date 2025/03/17
+   * @returns {*}
+   * @memberof Tool
+   */
+  public initQuaternion() {
+    return new Quaternion();
+  }
+
+  /**
+   * @description 创建Box3
+   * @author LL
+   * @date 2025/03/26
+   * @returns {*}
+   * @memberof Tool
+   */
+  public initBox3() {
+    return new Box3();
+  }
+
+  /**
+   * @description 创建欧拉角
+   * @author LL
+   * @date 2024/07/19
+   * @param {number} [x]
+   * @param {number} [y]
+   * @param {number} [z]
+   * @param {EulerOrder} [order]
+   * @returns {*}
+   * @memberof Tool
+   */
+  public initEuler(x?: number, y?: number, z?: number, order?: EulerOrder) {
+    return new Euler(x, y, z, order);
+  }
+
+  /**
    * @description 获取模型中心点位置
    * @author LL
    * @param {Object3D} obj 模型
    * @return {*}  {Vector3}
    */
-  public getObjectCenter(obj: Object3D): Vector3 {
-    let box = this.getObjectBox(obj);
-    let newPosition = new Vector3(
-      (box.max.x + box.min.x) / 2,
-      (box.max.y + box.min.y) / 2,
-      (box.max.z + box.min.z) / 2
-    );
-    return newPosition;
+  public getModelCenter(obj: Object3D): Vector3 {
+    let box = this.getModelBox(obj);
+    return box.getCenter(new Vector3());
   }
 
   /**
-   * @description 返回模型的包围盒
+   * @description 获取模型包围盒
    * @author LL
    * @param {Object3D} obj 模型
    * @return {*}  {Box3}
    */
-  public getObjectBox(obj: Object3D): Box3 {
+  public getModelBox(obj: Object3D) {
     let box = new Box3();
     //通过传入的object3D对象来返回当前模型的最小大小，值可以使一个mesh也可以使group
     box.expandByObject(obj);
@@ -92,20 +159,40 @@ export class Tool {
   }
 
   /**
-   * @description 返回模型的包裹球
+   * @description 获取模型包围盒尺寸
+   * @author LL
+   * @date 2024/09/18
+   * @param {Object3D} obj
+   * @returns {*}
+   * @memberof Tool
+   */
+  public getModelSize(obj: Object3D) {
+    let box = this.getModelBox(obj);
+    return {
+      max: box.max,
+      min: box.min,
+      width: box.max.x - box.min.x,
+      height: box.max.y - box.min.y,
+      depth: box.max.z - box.min.z,
+      center: box.getCenter(new Vector3()),
+    };
+  }
+
+  /**
+   * @description 获取模型的包裹球
    * @author LL
    * @param {Object3D} obj
    * @return {*}  {Sphere}
    */
-  public getObjectSphere(obj: Object3D): Sphere {
+  public getModelSphere(obj: Object3D): Sphere {
     if (!obj) {
       console.warn("获取包裹球失败，物体不存在");
       return;
     }
 
-    let center = this.getObjectCenter(obj);
+    let center = this.getModelCenter(obj);
 
-    let box = this.getObjectBox(obj);
+    let box = this.getModelBox(obj);
     let radius = center.distanceTo(
       new Vector3(box.max.x, box.max.y, box.max.z)
     );
@@ -116,7 +203,7 @@ export class Tool {
   /**
    * @description
    * @author LL
-   * @date 2021/10/15 获取模型的子模型集合
+   * @date 2021/10/15 获取模型的子模型信息
    * @param {Object3D} model 模型
    * @returns {*}  {Object3D[]}
    */
@@ -136,7 +223,7 @@ export class Tool {
         position: child.position,
         rotation: child.rotation,
         scale: child.scale,
-        ownCSS2D: this.ifOwnCSS2D(child),
+        ownMarker: this.ownMarker(child),
       };
       info.push(infoData);
     });
@@ -146,51 +233,52 @@ export class Tool {
   }
 
   /**
-   * @description 获取模型参数信息
+   * @description 获取模型信息
    * @author LL
    * @date 2021/08/19
    * @param {Object3D} model 模型
    * @returns {*}  {object}
    */
-  public getObjectInfo(model: Object3D): object {
-    let info = new Object();
+  public getModelInfo(model: Object3D): object {
     if (!model) {
       console.warn("获取信息失败，物体不存在");
       return;
     }
+    let info = new Object();
     info["name"] = model.name;
+    info["modelName"] = model.name;
     info["position"] = model.position;
     info["rotation"] = model.rotation;
     info["scale"] = model.scale;
     info["type"] = model.type;
     info["uuid"] = model.uuid;
-    info["ownCSS2D"] = this.ifOwnCSS2D(model);
+    info["ownMarker"] = this.ownMarker(model);
+    info["visible"] = model.visible;
     info["userData"] = model["userData"];
+    info["box3"] = this.getModelSize(model);
 
     return info;
   }
+
   /**
    * @description 获取模型顶点数
    * @author gj
    * @date 2023/5/16
+   * @update LL 24/6/19
    * @param {Object3D} model 模型
    * @returns {*}  {number} 顶点数
    */
-  public getModelVerticesCount(model: Object3D): number {
+  public getModelVertex(model: Object3D): number {
     if (!model) {
       console.warn("获取信息失败，物体不存在");
       return;
     }
+
     let vertices = 0; //模型顶点
-    model.traverseVisible(function (object) {
-      if (object instanceof Mesh) {
-        let geometry = object.geometry;
-        if (geometry instanceof Geometry) {
-          vertices += geometry.vertices.length;
-        } else if (
-          geometry instanceof BufferGeometry &&
-          geometry.attributes.position
-        ) {
+    model.traverseVisible((object) => {
+      if ((object as Mesh).isMesh) {
+        let geometry = (object as Mesh).geometry;
+        if (geometry && geometry.isBufferGeometry) {
           vertices += geometry.attributes.position.count;
         }
       }
@@ -199,31 +287,47 @@ export class Tool {
   }
 
   /**
+   * @description 获取点到线的最小距离
+   * @author LL
+   * @date 2025/03/26
+   * @param {*} point
+   * @param {*} lineStart
+   * @param {*} lineEnd
+   * @returns {*}  {number}
+   * @memberof Tool
+   */
+  public getDistanceToLine(point, lineStart, lineEnd): number {
+    const lineVec = new Vector3().subVectors(lineEnd, lineStart);
+    const pointVec = new Vector3().subVectors(point, lineStart);
+    const t = pointVec.dot(lineVec) / lineVec.lengthSq();
+    const clampedT = Math.max(0, Math.min(1, t));
+    const closestPoint = this.initVector3()
+      .copy(lineStart)
+      .add(lineVec.multiplyScalar(clampedT));
+    return point.distanceTo(closestPoint);
+  }
+
+  /**
    * @description 获取模型三角面数
    * @author gj
    * @date 2023/5/16
+   * @update LL 24/6/20
    * @param {Object3D} model 模型
    * @returns {*}  {number} 三角面数
    */
-  public getModelFaceCount(model: Object3D): number {
+  public getModelFace(model: Object3D): number {
     if (!model) {
       console.warn("获取信息失败，物体不存在");
       return;
     }
+
     let triangles = 0; //模型面数
-    model.traverseVisible(function (object) {
-      if (object instanceof Mesh) {
-        let geometry = object.geometry;
-        if (geometry instanceof Geometry) {
-          triangles += geometry.faces.length;
-        } else if (
-          geometry instanceof BufferGeometry &&
-          geometry.attributes.position
-        ) {
-          if (geometry.index !== null) {
-            triangles += geometry.index.count / 3;
-          } else {
-            triangles += geometry.attributes.position.count / 3;
+    model.traverseVisible((object) => {
+      if ((object as Mesh).isMesh) {
+        let geometry = (object as Mesh).geometry;
+        if (geometry && geometry.isBufferGeometry) {
+          if (geometry.index) {
+            triangles += geometry.index.array.length / 3;
           }
         }
       }
@@ -232,80 +336,52 @@ export class Tool {
   }
 
   /**
-   * @description 模型全屏预览
-   * @author gj
-   * @date 2023/5/16
-   * @param {Object3D} model 模型
+   * @description 计算两点间距离
+   * @author LL
+   * @param {xyz} start
+   * @param {xyz} end
+   * @return {*}  {number}
    */
-  public fullScreen(model: Object3D): void {
-    if (!model) {
-      console.warn("获取信息失败，物体不存在");
-      return;
-    }
+  public getDistance(start: xyz, end: xyz): number {
+    return new Vector3(start.x, start.y, start.z).distanceTo(
+      new Vector3(end.x, end.y, end.z)
+    );
+  }
 
-    let box = this.getObjectBox(model);
-    var v3 = new Vector3();
-    // 获得包围盒长宽高尺寸，结果保存在参数三维向量对象v3中
-    box.getSize(v3);
-
-    // 计算包围盒的最大边长
-    function num() {
-      var max;
-      if (v3.x > v3.y) {
-        max = v3.x;
-      } else {
-        max = v3.y;
-      }
-      if (max > v3.z) {
-      } else {
-        max = v3.z;
-      }
-      return max;
-    }
-
-    // 根据最大边长设置缩放倍数，尽量全屏显示
-    // 150：参照相机正投影相机参数left、right、top和bottom设置一个合适的值
-    // 过大会超出屏幕范围，过小全屏效果不明显
-    var S = 150 / num();
-    // 对模型进行缩放操作，实现全屏效果
-    model.scale.set(S, S, S);
-
-    // // 重新计算包围盒，重新计算包围盒，不能使用原来的包围盒必须重新声明一个包围盒
-    // let newBox3 = this.getObjectBox(target);
-    // var center = new Vector3() // 计算一个层级模型对应包围盒的几何体中心
-    // newBox3.getCenter(center)
-    // // 重新设置模型的位置，使模型居中
-    // model.position.x = model.position.x - center.x;
-    // model.position.y = model.position.y - center.y;
-    // model.position.z = model.position.z - center.z;
+  /**
+   * @description 获取模型世界坐标位置
+   * @author LL
+   * @date 2024/09/04
+   * @param {Object3D} obj
+   * @returns {*}  {Vector3}
+   * @memberof Tool
+   */
+  public getWorldPosition(obj: Object3D): Vector3 {
+    let position = new Vector3();
+    obj.getWorldPosition(position);
+    return position;
   }
 
   /**
    * @description 判断模型是否有2D元素
    * @author LL
+   * @date 2024/07/04
    * @param {Object3D} obj
-   * @return {*}  {boolean}
+   * @param domId
+   * @returns {*}  {boolean}
+   * @memberof Tool
    */
-  public ifOwnCSS2D(obj: Object3D): boolean {
-    for (let i = 0; i < obj.children.length; i++) {
-      if (obj.children[i] instanceof CSS2DObject) {
-        return true;
+  public ownMarker(obj: Object3D, domId?: string): boolean {
+    let result = false;
+    obj.traverse((child: any) => {
+      if (child.isCSS2DObject) {
+        if (!domId || (domId && child.element.id === domId)) {
+          // console.log("child", child.isCSS2DObject);
+          result = true;
+        }
       }
-    }
-    return false;
-  }
-
-  /**
-   * @description 计算两点间距离
-   * @author LL
-   * @param {number[]} start
-   * @param {number[]} end
-   * @return {*}  {number}
-   */
-  public distance(start: number[], end: number[]): number {
-    return new Vector3(start[0], start[1], start[2]).distanceTo(
-      new Vector3(end[0], end[1], end[2])
-    );
+    });
+    return result;
   }
 
   /**
@@ -326,63 +402,53 @@ export class Tool {
     );
   }
 
-  /**
-   * @description 创建4x4矩阵
-   * @author gj
-   * @date 2023/11/20
-   * @returns {*}  {Matrix4}
-   */
-  public Matrix4(): Matrix4 {
-    return new Matrix4();
-  }
+  // /**
+  //  * @description 创建属性缓冲区对象
+  //  * @author gj
+  //  * @date 2023/11/20
+  //  * @param array 属性数组 （例如顶点位置向量，面片索引，法向量，颜色值，UV坐标以及任何自定义 attribute ）
+  //  * @param itemSize 表示几个为一组
+  //  * @param normalized 指明缓存中的数据如何与GLSL代码中的数据对应
+  //  * @returns {*}  {BufferAttribute}
+  //  */
+  // public BufferAttribute(
+  //   array: ArrayLike<number>,
+  //   itemSize: number,
+  //   normalized?: boolean
+  // ): BufferAttribute {
+  //   return new BufferAttribute(array, itemSize, normalized);
+  // }
+
+  // /**
+  //  * @description 三角面片
+  //  * @author gj
+  //  * @date 2023/11/20
+  //  * @param a 顶点 A 的索引
+  //  * @param b 顶点 B 的索引
+  //  * @param c 顶点 C 的索引
+  //  * @param normal 面的法向量 - 矢量展示 Face3 的方向 默认值是 (0, 0, 0)
+  //  * @param color 面的颜色值
+  //  * @param materialIndex 材质队列中与该面相关的材质的索引。默认值为 0
+  //  * @returns {*}  {Face3}
+  //  */
+  // public Face(
+  //   a: number,
+  //   b: number,
+  //   c: number,
+  //   normal?: Vector3,
+  //   color?: Color,
+  //   materialIndex?: number
+  // ): Face {
+  //   return new Face(a, b, c, normal, color, materialIndex);
+  // }
 
   /**
-   * @description 创建属性缓冲区对象
-   * @author gj
-   * @date 2023/11/20
-   * @param array 属性数组 （例如顶点位置向量，面片索引，法向量，颜色值，UV坐标以及任何自定义 attribute ）
-   * @param itemSize 表示几个为一组
-   * @param normalized 指明缓存中的数据如何与GLSL代码中的数据对应
-   * @returns {*}  {BufferAttribute}
-   */
-  public BufferAttribute(
-    array: ArrayLike<number>,
-    itemSize: number,
-    normalized?: boolean
-  ): BufferAttribute {
-    return new BufferAttribute(array, itemSize, normalized);
-  }
-
-  /**
-   * @description 三角面片
-   * @author gj
-   * @date 2023/11/20
-   * @param a 顶点 A 的索引
-   * @param b 顶点 B 的索引
-   * @param c 顶点 C 的索引
-   * @param normal 面的法向量 - 矢量展示 Face3 的方向 默认值是 (0, 0, 0)
-   * @param color 面的颜色值
-   * @param materialIndex 材质队列中与该面相关的材质的索引。默认值为 0
-   * @returns {*}  {Face3}
-   */
-  public Face3(
-    a: number,
-    b: number,
-    c: number,
-    normal?: Vector3,
-    color?: Color,
-    materialIndex?: number
-  ): Face3 {
-    return new Face3(a, b, c, normal, color, materialIndex);
-  }
-
-  /**
-   * @description 用于跟踪时间
+   * @description 生成时钟，获取当前时间
    * @author gj
    * @date 2023/11/20
    * @returns {*}  {Clock}
    */
-  public Clock(): Clock {
+  public initClock(): Clock {
     return new Clock();
   }
 }

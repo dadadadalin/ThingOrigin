@@ -1,20 +1,17 @@
 import * as d3geo from "d3-geo";
 import {
-  ArrowHelper,
-  BoxBufferGeometry,
+  BoxGeometry,
   BufferGeometry,
+  CircleGeometry,
   Color,
-  ConeBufferGeometry,
-  CylinderBufferGeometry,
+  ConeGeometry,
+  CylinderGeometry,
   DoubleSide,
   ExtrudeGeometry,
   FileLoader,
-  FontLoader,
-  Geometry,
   Group,
   Line,
   LineBasicMaterial,
-  MathUtils,
   Mesh,
   MeshBasicMaterial,
   MeshLambertMaterial,
@@ -26,14 +23,15 @@ import {
   PlaneHelper,
   Points,
   Shape,
-  ShapeBufferGeometry,
-  SphereBufferGeometry,
+  SphereGeometry,
   Sprite,
   SpriteMaterial,
-  TextGeometry,
   Texture,
   TextureLoader,
   Vector3,
+  BufferAttribute,
+  PointsMaterial,
+  Quaternion,
 } from "three";
 import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
 import { FBXLoader } from "three/examples/jsm/loaders/FBXLoader";
@@ -41,308 +39,432 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { STLLoader } from "three/examples/jsm/loaders/STLLoader";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
-import { ThingOrigin } from "../ThingOrigin";
+import { TMaterial } from "./TMaterial";
+import { merge, cloneDeep } from "lodash";
+import { TIndexedDB } from "./TIndexedDB";
+import { TFont } from "./TFont";
 
 export class TModel {
   FBXLoader: FBXLoader = new FBXLoader();
   STLLoader: STLLoader = new STLLoader();
   OBJLoader: OBJLoader = new OBJLoader();
   SVGLoader: SVGLoader = new SVGLoader();
-  // DRACOLoader: DRACOLoader = new DRACOLoader().setDecoderPath("/static/draco/").preload();
-  DRACOLoader: DRACOLoader = new DRACOLoader()
-    .setDecoderPath("https://www.gstatic.com/draco/v1/decoders/")
-    .preload();
-  GLTFLoader: GLTFLoader = new GLTFLoader().setDRACOLoader(this.DRACOLoader);
+  // DRACOLoader: DRACOLoader = new DRACOLoader()
+  //   .setDecoderPath("/public/draco/")
+  //   .preload();
+  // GLTFLoader: GLTFLoader = new GLTFLoader().setDRACOLoader(this.DRACOLoader);
+  GLTFLoader: GLTFLoader = new GLTFLoader();
   ObjectLoader: ObjectLoader = new ObjectLoader();
 
+  material: TMaterial = new TMaterial();
+  font: TFont = new TFont();
+  /** 本地缓存 */
+  public indexedDB: TIndexedDB = new TIndexedDB();
+
   constructor() {}
+
+  /**
+   * @description 加载渲染模型
+   * @author LL
+   * @date 2021/07/26
+   * @private
+   */
+  public async loadModel(modelInfo: modelInfoParams): Promise<Object3D> {
+    let model;
+    switch (modelInfo.modelType) {
+      case "sphere":
+        let sphere = this.initSphere(modelInfo);
+        model = this.setModelConfig(sphere, modelInfo);
+        break;
+      case "cube":
+        let cube = this.initCube(modelInfo);
+        model = this.setModelConfig(cube, modelInfo);
+        break;
+      case "cylinder":
+        let cylinder = this.initCylinder(modelInfo);
+        model = this.setModelConfig(cylinder, modelInfo);
+        break;
+      case "cone":
+        let cone = this.initCone(modelInfo);
+        model = this.setModelConfig(cone, modelInfo);
+        break;
+      case "circle":
+        let circle = this.initCircle(modelInfo);
+        model = this.setModelConfig(circle, modelInfo);
+        break;
+      case "gltf":
+      case "glb":
+      case "fbx":
+      case "obj":
+      case "stl":
+      case "json":
+        let idbInfo = await this.indexedDB.getIDBModelInfo(modelInfo);
+
+        return new Promise((resolve, reject) => {
+          this.initFileModel(idbInfo).then((fileModel: any) => {
+            let model;
+            if (["gltf", "glb"].indexOf(modelInfo.modelType) !== -1) {
+              model = fileModel.scene;
+              model.animations = fileModel.animations;
+              // model.scene.visible = cloneInfo.visible;
+              //加载模型自带文字  todo
+            } else {
+              model = fileModel;
+            }
+            resolve(this.setModelConfig(model, idbInfo));
+          });
+        });
+        break;
+      case "text":
+        let textInfo = cloneDeep(modelInfo);
+
+        switch (modelInfo.base.textType) {
+          case "text":
+            let textModel = await this.font.initText(textInfo);
+            model = this.setModelConfig(textModel, modelInfo);
+            break;
+          case "traceText":
+            let textLineModel = await this.font.initTextLine(textInfo);
+            model = this.setModelConfig(textLineModel, modelInfo);
+            break;
+          case "shapeText":
+            let textShapeModel = await this.font.initTextShape(textInfo);
+            model = this.setModelConfig(textShapeModel, modelInfo);
+            break;
+        }
+        break;
+      case "assemble":
+        let assemble = await this.initAssemble(modelInfo);
+        model = this.setModelConfig(assemble, modelInfo);
+        break;
+    }
+    return model;
+  }
+
+  public async loadSimTexts(info: any, model: any) {
+    //是否带有文字
+    const textInfo = {
+      id: 2002,
+      text: "形状文字",
+      modelName: "traceText",
+      modelType: "text",
+      modelSize: null,
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        fontUrl:
+          "http://124.70.30.193:8084/model2/load/Microsoft_YaHei_Light_Regular.json",
+        height: 100,
+        text: "形状文字",
+        textType: "shapeText",
+        color: "#f00",
+        lineWidth: 2,
+        opacity: 1,
+        size: 1.5,
+      },
+      material: null,
+      userData: null,
+    };
+    const accessText = await this.indexedDB.accessModel(textInfo);
+    //如果缓存了   直接导入
+    if (accessText.info.saved) {
+      textInfo.base.fontUrl = accessText.modelUrl;
+    } else {
+      //未缓存则先缓存再导入
+      const insertText = await this.indexedDB.insertModel(textInfo);
+      if (insertText.info.saved) {
+        textInfo.base.fontUrl = insertText.modelUrl;
+      }
+    }
+    for (const item of info.userData?.sim?.simTexts) {
+      Object.assign(textInfo, item);
+      textInfo.base.text = item.text;
+      this.font.initTextShape(textInfo).then((textModel: any) => {
+        //ABB机器人文字绑定在轴上
+        if (textInfo.base.text === "夹取") {
+          model.traverse((child: any) => {
+            if (child.name === "WS30-5") {
+              child.attach(textModel);
+            }
+          });
+        } else {
+          model.attach(textModel);
+        }
+      });
+    }
+  }
 
   /**
    * @description 导入模型文件
    * @author LL
    * @date 2021/07/26
-   * @param {modelInfo} modelInfo 模型配置参数，位置和放大倍数  例：{position: [0, 0, 0], scale: [1, 1, 1] }
-   * @param {string} url  文件读取地址
+   * @param {modelInfoParams} modelInfo 模型参数
+   * @param {string} url  模型文件地址
+   * @memberof TModel
    * @returns {*}  {Promise<Object3D>}
    */
-  public initFileModel(modelInfo: any, url: string): Promise<Object3D> {
+  public initFileModel(modelInfo?: modelInfoParams): Promise<Object3D> {
     let defaultParams = {
+      modelType: "gltf",
       modelName: "fileModel-" + new Date().getTime(),
-      config: {
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
+      base: {
+        modelUrl: "http://124.70.30.193:8084/model2/loadFileAsId/3011",
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
       },
     };
-    let param = Object.assign(defaultParams, modelInfo);
+    let param = merge(defaultParams, modelInfo);
+
     return new Promise((resolve) => {
-      switch (param.type) {
+      switch (param.modelType) {
         case "fbx":
-          this.FBXLoader.load(url, (fbx: Group) => {
+          this.FBXLoader.load(modelInfo.base.modelUrl, (fbx: Group) => {
             let model = this.setModelConfig(fbx, param);
             resolve(model);
           });
           break;
         case "obj":
-          this.OBJLoader.load(url, (obj: Object3D) => {
+          this.OBJLoader.load(modelInfo.base.modelUrl, (obj: Object3D) => {
             let model = this.setModelConfig(obj, param);
             resolve(model);
           });
           break;
         case "stl":
-          this.STLLoader.load(url, (geometry: BufferGeometry) => {
-            var material = new MeshLambertMaterial(); //材质对象Material
-            material.side = DoubleSide;
-            var mesh = new Mesh(geometry, material); //网格模型对象Mesh
-
-            let model = this.setModelConfig(mesh, param);
-            resolve(model);
-          });
+          this.STLLoader.load(
+            modelInfo.base.modelUrl,
+            (geometry: BufferGeometry) => {
+              var material = new MeshLambertMaterial(); //材质对象Material
+              material.side = DoubleSide;
+              var mesh = new Mesh(geometry, material); //网格模型对象Mesh
+              let model = this.setModelConfig(mesh, param);
+              resolve(model);
+            }
+          );
           break;
         case "gltf":
-          this.GLTFLoader.load(url, (gltf) => {
+        case "glb":
+          this.GLTFLoader.load(modelInfo.base.modelUrl, (gltf) => {
             let model = this.setModelConfig(gltf.scene, param);
             //@ts-ignore
-            // gltf.scene = model;
+            gltf.scene = model;
             resolve(gltf as unknown as Object3D);
           });
           break;
         case "json":
-          this.ObjectLoader.load(url, (object: Object3D) => {
-            let model = this.setModelConfig(object, param);
-            resolve(model);
-          });
+          this.ObjectLoader.load(
+            modelInfo.base.modelUrl,
+            (object: Object3D) => {
+              let model = this.setModelConfig(object, param);
+              resolve(model);
+            }
+          );
+          break;
+        default:
+          console.warn("未定义模型类型，导入失败");
+          resolve(null);
+      }
+    });
+  }
+  /**
+   * @description 加载组合模型
+   * @author LL
+   * @date 2021/07/26
+   * @param {modelInfoParams} modelInfo 模型参数
+   */
+  public async initAssemble(modelInfo?: modelInfoParams): Promise<any> {
+    let defaultParams = {
+      modelName: "assemble-" + new Date().getTime(),
+      base: {
+        children: [],
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+
+    //1.将组合模型中的内部模型全部缓存起来
+    let loadRes = [];
+    for (let i = 0; i < param.base.children.length; i++) {
+      if (["gltf"].indexOf(param.base.children[i].modelType) != -1) {
+        let info = {
+          id: param.base.children[i].id,
+          modelName: param.base.children[i].name,
+          base: {
+            modelUrl: param.base.children[i].base.modelUrl,
+          },
+          modelType: "gltf",
+          loadType: "userModel",
+          scale: { x: 1, y: 1, z: 1 },
+          position: { x: 0, y: 0, z: 0 },
+          rotation: { x: 0, y: 0, z: 0 },
+        };
+
+        let accessInsertRes = await this.indexedDB.accessInsertModel(info);
+
+        if (accessInsertRes.saved) {
+          loadRes.push(true);
+        } else {
+          loadRes.push(false);
+        }
+      } else {
+        loadRes.push(true);
+      }
+    }
+
+    //2. 全部缓存完成后  在渲染整组模型
+    let assemble = null;
+    if (loadRes.length == param.base.children.length) {
+      console.log("组合内模型全部加载完成", param);
+      switch (modelInfo.base.loadType) {
+        case "shelf":
+          const shelf = await this.initShelf(param);
+          assemble = shelf;
+          break;
+        case "normal":
+          assemble = this.initGroup(modelInfo);
+          for (const item of modelInfo.base.children) {
+            switch (item.modelType) {
+              case "sphere":
+                let sphere = this.initSphere(item);
+                assemble.add(sphere);
+                break;
+              case "cube":
+                let cube = this.initCube(item);
+                assemble.add(cube);
+                break;
+              case "cylinder":
+                let cylinder = this.initCylinder(item);
+                assemble.add(cylinder);
+                break;
+              case "cone":
+                let cone = this.initCone(item);
+                assemble.add(cone);
+                break;
+              case "circle":
+                let circle = this.initCircle(item);
+                assemble.add(circle);
+                break;
+              case "gltf":
+                let idbInfo = await this.indexedDB.getIDBModelInfo(item);
+                let fileModel: any = await this.initFileModel(idbInfo);
+                let model;
+                if (item.modelType === "gltf") {
+                  model = fileModel.scene;
+                  model.animations = fileModel.animations;
+                  // model.scene.visible = cloneInfo.visible;
+                  // 加载模型自带文字  todo
+                } else {
+                  model = fileModel;
+                }
+                assemble.add(model);
+                break;
+            }
+          }
           break;
       }
-    });
-  }
+    }
 
-  private setModelConfig(model: Object3D, modelInfo: any): Object3D {
-    if (modelInfo.scale)
-      model.scale.set(modelInfo.scale.x, modelInfo.scale.y, modelInfo.scale.z);
-    if (modelInfo.rotation)
-      model.rotation.set(
-        MathUtils.degToRad(modelInfo.rotation.x),
-        MathUtils.degToRad(modelInfo.rotation.y),
-        MathUtils.degToRad(modelInfo.rotation.z)
-      );
-    if (modelInfo.position)
-      model.position.set(
-        modelInfo.position.x,
-        modelInfo.position.y,
-        modelInfo.position.z
-      );
-
-    model.name = modelInfo.modelName;
-    model.userData = Object.assign(
-      modelInfo.userData ? modelInfo.userData : {},
-      {
-        by: "ThingOrigin3D",
-      }
-    );
-
-    model.updateMatrixWorld(true);
-    return model;
+    return this.setModelConfig(assemble, param);
   }
 
   /**
-   * @description 创建平面
-   * @author gj
-   * @date 2023/11/20
-   * @param {string} name 平面几何体名称
-   * @param {any} modelInfo 几何通用参数 例：{ base:{width: 10, height: 10, widthSegments: 32,  heightSegments: 32},config：{color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]} }
-   * @returns {*}  {Object3D}
-   */
-  public initPlane(modelInfo: any): Object3D {
-    let defaultParams = {
-      modelName: "plane-" + new Date().getTime(),
-      base: {
-        width: 10,
-        height: 10,
-        widthSegments: 32,
-        heightSegments: 32,
-      },
-      config: {
-        color: "#f00",
-      },
-    };
-    let param = Object.assign(defaultParams, modelInfo);
-    let plane: PlaneGeometry;
-    plane = this.initPlaneGeometry(param.base.width, param.base.height);
-
-    let material: MeshBasicMaterial = new MeshBasicMaterial({
-      color: param.config.color,
-    });
-    const geometryObject = new Mesh(plane, material);
-    return this.setModelConfig(geometryObject, param);
-  }
-
-  /**
-   * @description 创建面板
-   * @author LL
-   * @date 2024/06/03
-   * @param {*} modelInfo
-   * @returns {*}  {PlaneHelper}
-   */
-  public initPlaneHelper(modelInfo): PlaneHelper {
-    let defaultParams = {
-      modelName: "group-" + new Date().getTime(),
-      base: {
-        face: {
-          x: 1,
-          y: 0,
-          z: 0,
-        },
-        distance: 0,
-        size: 1,
-        color: "0xffff00",
-      },
-      config: {
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-      },
-    };
-    let param = Object.assign(defaultParams, modelInfo);
-    const plane = new Plane(
-      new Vector3(param.base.face.x, param.base.face.y, param.base.face.z),
-      param.base.face.distance
-    );
-    const helper = new PlaneHelper(
-      plane,
-      param.base.face.size,
-      new Color(param.base.face.color).getHex()
-    );
-
-    return this.setModelConfig(helper, param) as PlaneHelper;
-  }
-
-  /**
-   * @description 新建group
+   * @description 创建Group
    * @author LL
    * @date 2021/10/26
-   * @param {string} name
-   * @param {any} modelInfo modelInfo={ base:{},config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
+   * @param {modelInfoParams} 模型参数
    * @returns {*}  {Object3D}
    */
-  public initGroup(modelInfo: any): Object3D {
+  public initGroup(modelInfo?: modelInfoParams): Object3D {
     let defaultParams = {
       modelName: "group-" + new Date().getTime(),
-      base: {},
-      config: {
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
       },
     };
-    let param = Object.assign(defaultParams, modelInfo);
+    let param = merge(defaultParams, modelInfo);
     let group = new Group();
     return this.setModelConfig(group, param);
   }
 
   /**
-   * @description 添加球体
-   * @author LL
-   * @date 2021/07/23
-   * @param {string} name 新增球体名称
-   * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radius: 10, widthSegments: 10, heightSegments: 10},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData   * @param {object} [userData] 填入模型的userData   * @param {object} [userData] 填入模型的userData
-   * @returns {*}  {Object3D}
-   */
-  public initSphere(modelInfo: any): Object3D {
-    let defaultParams = {
-      modelName: "sphere-" + new Date().getTime(),
-      base: {
-        radius: 10,
-        widthSegments: 15,
-        heightSegments: 15,
-      },
-      config: {
-        color: "#f00",
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-      },
-    };
-    let param = Object.assign(defaultParams, modelInfo);
-    let sphere: SphereBufferGeometry;
-    sphere = new SphereBufferGeometry(
-      param.base.radius,
-      param.base.widthSegments,
-      param.base.heightSegments,
-      param.base?.phiStart,
-      param.base?.phiLength,
-      param.base?.thetaStart,
-      param.base?.thetaLength
-    );
-
-    let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: param.config.color,
-    });
-    const geometryObject = new Mesh(sphere, material);
-    return this.setModelConfig(geometryObject, param);
-  }
-
-  /**
-   * @description 添加立方体
+   * @description 创建立方体
    * @author LL
    * @date 2021/08/19
-   * @param {cubeInfoParams} cubeInfo 几何通用参数
-   * @param {material} MeshLambertMaterial 几何通用参数
+   * @param {modelInfoParams} [modelInfo] 模型参数
+   * @param {*} [material] 材质
+   * @returns {*}  {Object3D}
+   * @memberof TModel
    */
-  public initCube(
-    modelInfo?: cubeInfoParams,
-    material?: MeshLambertMaterial
-  ): Object3D {
+  public initCube(modelInfo?: modelInfoParams, material?: any): Object3D {
     let defaultParams = {
       modelName: "cube-" + new Date().getTime(),
+      modelType: "cube",
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
       base: {
         width: 10,
         height: 10,
@@ -355,26 +477,9 @@ export class TModel {
         color: "#f00",
         type: "MeshLambertMaterial",
       },
-      config: {
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-      },
     };
-    let param = Object.assign(defaultParams, modelInfo);
-    let cube: BoxBufferGeometry = new BoxBufferGeometry(
+    let param = merge(defaultParams, modelInfo);
+    let cube: BoxGeometry = new BoxGeometry(
       param.base.width,
       param.base.height,
       param.base.depth,
@@ -392,42 +497,325 @@ export class TModel {
   }
 
   /**
-   * @description 添加圆锥
+   * @description 创建平面
    * @author LL
-   * @date 2021/08/19
-   * @param {string} name 圆锥名称
-   * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radius: 10,height: 20,},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }   * @param {object} [userData] 填入模型的userData
+   * @date 2025/03/26
+   * @param {modelInfoParams} [modelInfo]
+   * @returns {*}  {Object3D}
+   * @memberof TModel
+   */
+  public initPlane(modelInfo?: modelInfoParams): any {
+    let defaultParams = {
+      modelName: "plane-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      normal: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        width: 10,
+        height: 10,
+        widthSegments: 32,
+        heightSegments: 32,
+      },
+      material: {
+        color: "#f00",
+        type: "MeshBasicMaterial",
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+
+    let geometry: PlaneGeometry = this.initPlaneGeometry(
+      param.base.width,
+      param.base.height
+    );
+
+    let material = new MeshBasicMaterial({
+      color: param.material.color,
+    });
+    const plane = new Mesh(geometry, material);
+
+    // 计算旋转四元数（将Z轴对齐到法向量方向）
+    const quaternion = new Quaternion();
+    const up = new Vector3(0, 0, 1); // 默认平面法向量方向
+    const target = new Vector3(param.normal.x, param.normal.y, param.normal.z)
+      .clone()
+      .normalize(); // 确保法向量是单位向量
+
+    // 设置四元数旋转（从up到target方向）
+    quaternion.setFromUnitVectors(up, target);
+    plane.setRotationFromQuaternion(quaternion);
+
+    return this.setModelConfig(plane, param);
+  }
+
+  /**
+   * @description 创建面板
+   * @author LL
+   * @date 2024/06/03
+   * @param {modelInfoParams} modelInfo 模型参数
+   * @memberof TModel
+   */
+  public initPlaneHelper(modelInfo?: modelInfoParams): Object3D {
+    let defaultParams = {
+      modelName: "planeHelper-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        face: {
+          x: 1,
+          y: 0,
+          z: 0,
+        },
+        distance: 0,
+        size: 1,
+      },
+      material: {
+        color: "0xffff00",
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+    const plane = new Plane(
+      new Vector3(param.base.face.x, param.base.face.y, param.base.face.z),
+      param.base.distance
+    );
+    const helper = new PlaneHelper(
+      plane,
+      param.base.size,
+      new Color(param.material.color).getHex()
+    );
+
+    return this.setModelConfig(helper, param);
+  }
+
+  /**
+   * @description 自动生成货架
+   * @author LL
+   * @date 2024/09/02
+   * @param {modelInfoParams} modelInfo
+   * @returns {*}  {Promise<Object3D>}
+   * @memberof TModel
+   */
+  public async initShelf(modelInfo?: modelInfoParams): Promise<Object3D> {
+    let defaultParams = {
+      modelName: "shelf-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        rows: 3,
+        columns: 4,
+        height: 7.9,
+        depth: 9,
+        width: 9,
+        children: [
+          {
+            name: "shelf-Footer",
+            id: 300,
+            modelType: "gltf",
+            base: {
+              modelUrl:
+                "http://124.70.30.193:8084/model2/load/ae5636a6-99f4-4780-9e3d-7affeb1c62da/shelf-Footer.gltf",
+            },
+          },
+          {
+            name: "shelf-OneSide",
+            id: 301,
+            modelType: "gltf",
+            base: {
+              modelUrl:
+                "http://124.70.30.193:8084/model2/load/ae5636a6-99f4-4780-9e3d-7affeb1c62da/shelf-OneSide.gltf",
+            },
+          },
+          {
+            name: "shelf-ThreeSide",
+            id: 302,
+            modelType: "gltf",
+            base: {
+              modelUrl:
+                "http://124.70.30.193:8084/model2/load/ae5636a6-99f4-4780-9e3d-7affeb1c62da/shelf-ThreeSide.gltf",
+            },
+          },
+        ],
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+
+    let footer, threeSide, oneSide;
+    for (let i = 0; i < param.base.children.length; i++) {
+      await this.initFileModel(param.base.children[i]).then(
+        (fileModel: any) => {
+          if (param.base.children[i].name == "shelf-Footer") {
+            footer = fileModel.scene;
+          } else if (param.base.children[i].name == "shelf-ThreeSide") {
+            threeSide = fileModel.scene;
+          } else if (param.base.children[i].name == "shelf-OneSide") {
+            oneSide = fileModel.scene;
+          }
+        }
+      );
+    }
+
+    let shelf = this.initGroup();
+    let oneRow = this.initGroup();
+    let rightSide = this.initGroup();
+
+    for (let i = 0; i < param.base.columns; i++) {
+      let threeSideClone = threeSide.clone();
+      threeSideClone.name = "threeSide" + (i + 1);
+      threeSideClone.position.set(0, i * param.base.height, 0);
+      threeSide.name = "shelf-row-column" + (i + 1);
+      oneRow.add(threeSideClone);
+
+      let oneSideClone = oneSide.clone();
+      oneSideClone.position.set(
+        param.base.width * param.base.rows,
+        i * param.base.height,
+        0
+      );
+      oneSideClone.name = "shelf-right-column" + (i + 1);
+      rightSide.add(oneSideClone);
+    }
+    rightSide.name = "shelf-right";
+    shelf.add(rightSide);
+    for (let i = 0; i < param.base.rows; i++) {
+      let oneRowClone = oneRow.clone();
+      oneRowClone.position.set(param.base.width * i, 0, 0);
+      oneRowClone.name = "shelf-row" + (i + 1);
+      shelf.add(oneRowClone);
+    }
+
+    return this.setModelConfig(shelf, param);
+  }
+
+  /**
+   * @description 创建球体
+   * @author LL
+   * @date 2021/07/23
+   * @param {modelInfoParams} modelInfo 模型参数
+   * @param {*} [material] 材质
    * @returns {*}  {Object3D}
    */
-  public initCone(modelInfo: any): Object3D {
+  public initSphere(modelInfo?: modelInfoParams, material?: any): Object3D {
     let defaultParams = {
+      modelName: "sphere-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        radius: 10,
+        widthSegments: 15,
+        heightSegments: 15,
+      },
+      material: {
+        color: "#f00",
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+    let sphere: SphereGeometry;
+    sphere = new SphereGeometry(
+      param.base.radius,
+      param.base.widthSegments,
+      param.base.heightSegments,
+      param.base?.phiStart,
+      param.base?.phiLength,
+      param.base?.thetaStart,
+      param.base?.thetaLength
+    );
+
+    if (!material) {
+      material = new MeshLambertMaterial({
+        color: param.material.color,
+      });
+    }
+    const geometryObject = new Mesh(sphere, material);
+    return this.setModelConfig(geometryObject, param);
+  }
+
+  /**
+   * @description 创建圆锥
+   * @author LL
+   * @date 2021/08/19
+   * @param {modelInfoParams} modelInfo 模型参数
+   * @returns {*}  {Object3D}
+   */
+  public initCone(modelInfo?: modelInfoParams): Object3D {
+    let defaultParams = {
+      modelName: "cone-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
       base: {
         radius: 10,
         height: 20,
       },
-      config: {
+      material: {
         color: "#f00",
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
       },
     };
-    let param = Object.assign(defaultParams, modelInfo);
+    let param = merge(defaultParams, modelInfo);
 
-    let cone: ConeBufferGeometry;
-    cone = new ConeBufferGeometry(
+    let cone: ConeGeometry;
+    cone = new ConeGeometry(
       param.base?.radius,
       param.base?.height,
       param.base?.radialSegments,
@@ -437,7 +825,7 @@ export class TModel {
       param.base?.thetaLength
     );
     let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: param.config.color,
+      color: param.material.color,
     });
     const geometryObject = new Mesh(cone, material);
     geometryObject.name = param.name;
@@ -445,44 +833,44 @@ export class TModel {
   }
 
   /**
-   * @description 添加圆柱体
+   * @description 创建圆柱体
    * @author LL
    * @date 2021/08/19
-   * @param {string} name 圆柱体名称
-   * @param {any} modelInfo 几何通用参数 modelInfo = { base:{radiusTop: 10,radiusBottom: 10,},config:{color: "#f00",position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}  }
+   * @param {modelInfoParams} modelInfo 模型参数
    * @returns {*}  {Object3D}
    */
-  public initCylinder(modelInfo: any): Object3D {
+  public initCylinder(modelInfo?: modelInfoParams): Object3D {
     let defaultParams = {
+      modelName: "cylinder-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
       base: {
         radiusTop: 10,
         radiusBottom: 10,
         height: 20,
         radialSegments: 32,
       },
-      config: {
+      material: {
         color: "#f00",
-        position: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
-        scale: {
-          x: 1,
-          y: 1,
-          z: 1,
-        },
-        rotation: {
-          x: 0,
-          y: 0,
-          z: 0,
-        },
       },
     };
-    let param = Object.assign(defaultParams, modelInfo);
+    let param = merge(defaultParams, modelInfo);
 
-    let cylinder: CylinderBufferGeometry;
-    cylinder = new CylinderBufferGeometry(
+    let cylinder: CylinderGeometry;
+    cylinder = new CylinderGeometry(
       param.base?.radiusTop,
       param.base?.radiusBottom,
       param.base?.height,
@@ -494,72 +882,11 @@ export class TModel {
     );
 
     let material: MeshLambertMaterial = new MeshLambertMaterial({
-      color: param.config.color,
+      color: param.material.color,
     });
     const geometryObject = new Mesh(cylinder, material);
     geometryObject.name = param.name;
     return this.setModelConfig(geometryObject, param);
-  }
-
-  /**
-   * @description
-   * @author LL
-   * @date 2022-04-28
-   * @param {number[]} p1
-   * @param {number[]} p2
-   * @param {LineParams} [params={ color: "#f00" }]
-   * @returns {*}
-   */
-  public initLine(
-    p1: number[],
-    p2: number[],
-    params: LineParams = { color: "#f00" }
-  ) {
-    let lineGeometry = new Geometry();
-    let lineMaterial = new LineBasicMaterial({ color: params.color });
-    lineGeometry.vertices.push(
-      new Vector3(p1[0], p1[1], p1[2]),
-      new Vector3(p2[0], p2[1], p2[2])
-    );
-
-    return new Line(lineGeometry, lineMaterial);
-  }
-
-  /**
-   * @description 生成箭头
-   * @author LL
-   * @date 24/12/2021
-   * @param {string} name 箭头名称
-   * @param {number[]} dir 指向方向
-   * @param {number[]} origin 源头位置
-   * @param {number} length 长度
-   * @param {number} hex 颜色
-   * @param {number} [headLength] 箭头长度
-   * @param {number} [headWidth] 箭头宽度
-   * @returns {*}  {ArrowHelper}
-   */
-  public initArrow(
-    name: string,
-    dir: number[],
-    origin: number[],
-    length: number,
-    hex: string,
-    headLength?: number,
-    headWidth?: number
-  ): ArrowHelper {
-    const dirVector3 = new Vector3(dir[0], dir[1], dir[2]);
-    dirVector3.normalize();
-    const originVector3 = new Vector3(origin[0], origin[1], origin[2]);
-    const arrowHelper = new ArrowHelper(
-      dirVector3,
-      originVector3,
-      length,
-      new Color(hex).getHex(),
-      headLength,
-      headWidth
-    );
-    arrowHelper.name = name;
-    return arrowHelper;
   }
 
   /**
@@ -576,238 +903,91 @@ export class TModel {
   }
 
   /**
-   * @description 生成点云
+   * @description 创建圆形（平面）
    * @author LL
-   * @date 2021/08/25
-   * @param {string} GroupName 点云组名称
-   * @param {pointsData[]} positions 点云位置数组
-   * @param {pointConfigsParams} pointConfigs 点云参数
-   * @param {object} [userData] 自定义数据
+   * @date 2024/10/18
+   * @param {modelInfoParams} [modelInfo] 模型参数
+   * @returns {*}  {Mesh}
+   * @memberof TModel
    */
-  public initPoints(
-    GroupName: string,
-    positions: pointsData[],
-    pointConfigs: pointConfigsParams,
-    userData?: object
-  ): Points {
-    var geometry = new Geometry(); //声明一个几何体对象Geometry
-    for (var i = 0; i < positions.length; i++) {
-      //绑定顶点到几何体
-      geometry.vertices.push(
-        new Vector3(positions[i]["X"], positions[i]["Y"], positions[i]["Z"])
-      );
-      //如果需要每个点展示不同颜色，需要给每个顶点添加颜色，也可以通过材质设置统一颜色
-      // geometry.colors.push(new Color(pointConfigs.color));
-    }
-
-    var pointMaterial = ThingOrigin.material.initPointsMaterial(
-      pointConfigs.color,
-      false,
-      pointConfigs.size
-    );
-
-    //生成点模型
-    var points = new Points(geometry, pointMaterial);
-    points.name = GroupName;
-    if (userData) points.userData = userData;
-
-    return points;
-  }
-
-  /**
-   * @description 添加3d文字
-   * @author gj LL
-   * @date 2021/09/16
-   * @param {string} text 文字
-   * @param {string} fontUrl 字体json文件地址
-   * @param {any} modelInfo 描线文字样式+通用参数 modelInfo={ base:{color: "#f00", size: 100,height: 50 },config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}}   * @param {geometryConfigs} geometryConfigs 几何通用参数 [geometryConfigs={ color: "#f00", position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0] }]
-   * @returns {*}  {Promise<Object3D>}
-   */
-  public initText(
-    text: string,
-    fontUrl: string,
-    modelInfo: any
-  ): Promise<Object3D> {
-    console.log(fontUrl);
+  public initCircle(modelInfo?: any): Object3D {
     let defaultParams = {
-      base: {
-        color: "#f00",
-        size: 100,
-        height: 50,
-        curveSegments: 12,
-        bevelEnabled: false,
-        bevelThickness: 20,
-        bevelSize: 8,
-        bevelSegments: 3,
-        sideColor: "#fff",
+      modelName: "circle-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
       },
-      config: {
-        position: [0, 0, 0],
-        scale: [1, 1, 1],
-        rotation: [0, 0, 0],
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        radius: 5,
+        segments: 32,
+        thetaStart: 0,
+        thetaLength: Math.PI * 2,
+      },
+      material: {
+        color: "#f00",
+        doubleSide: true,
       },
     };
-    let param = Object.assign(defaultParams, modelInfo);
-    const loader = new FontLoader();
-    return new Promise((resolve) =>
-      loader.load(fontUrl, (font) => {
-        const geometry = new TextGeometry(text, {
-          font: font,
-          size: param.base.size,
-          height: param.base.height,
-          curveSegments: param.base.curveSegments,
-          bevelEnabled: param.base.bevelEnabled,
-          bevelThickness: param.base.bevelThickness,
-          bevelSize: param.base.bevelSize,
-          bevelSegments: param.base.bevelSegments,
-        });
+    let param = merge(defaultParams, modelInfo);
 
-        var meshMaterial = [
-          new MeshPhongMaterial({ color: param.base.color, flatShading: true }), // front
-          new MeshPhongMaterial({ color: param.base.sideColor }), // side
-        ];
-
-        const geometryObject = new Mesh(geometry, meshMaterial);
-        geometryObject.name = text;
-
-        console.log(fontUrl);
-        resolve(this.setModelConfig(geometryObject, param));
-      })
+    let geometry = new CircleGeometry(
+      param.base.radius,
+      param.base.segments,
+      param.base.thetaStart,
+      param.base.thetaLength
     );
+    let material = new MeshBasicMaterial({ color: param.material.color });
+    material.side = DoubleSide;
+    let circle = new Mesh(geometry, material);
+    return this.setModelConfig(circle, param);
   }
 
   /**
-   * @description 字体描线文字
-   * @author LL
-   * @date 2021/09/17
-   * @param {string} text 文字内容
-   * @param {string} fontUrl 字体文件
-   * @param {any} modelInfo 描线文字样式+通用参数 modelInfo={ base:{color: "#f00", transparent: true, opacity: 0.4, size: 100, },config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}}
-   * @returns {*}  {Promise<Object3D>}
-   */
-  public initTextShape(
-    text: string,
-    fontUrl: string,
-    modelInfo: any
-  ): Promise<Object3D> {
-    let defaultParams = {
-      base: {
-        color: "#f00",
-        transparent: true,
-        opacity: 0.4,
-        size: 100,
-      },
-      config: {
-        position: [0, 0, 0],
-        scale: [1, 1, 1],
-        rotation: [0, 0, 0],
-      },
-    };
-    let param = Object.assign(defaultParams, modelInfo);
-    const loader = new FontLoader();
-    return new Promise((resolve) =>
-      loader.load(fontUrl, (font) => {
-        var matLite = new MeshBasicMaterial({
-          color: param.base.color,
-          transparent: param.base.transparent,
-          opacity: param.base.opacity,
-        });
-
-        var shapes = font.generateShapes(text, param.base.size);
-        var geometry = new ShapeBufferGeometry(shapes);
-        geometry.computeBoundingBox();
-
-        const geometryObject = new Mesh(geometry, matLite);
-        geometryObject.name = text;
-
-        resolve(this.setModelConfig(geometryObject, param));
-      })
-    );
-  }
-
-  /**
-   * @description 字体描线文字
-   * @author LL
-   * @date 2021/09/17
-   * @param {string} text 文字内容
-   * @param {string} fontUrl 字体文件
-   * @param {any} modelInfo 描线文字样式+通用参数 modelInfo={ base:{color: "#f00", size: 100, lineWidth: 2, opacity: 1 },config:{position: [0, 0, 0], scale: [1, 1, 1], rotation: [0, 0, 0]}}
-   * @returns {*}  {Promise<Object3D>}
-   */
-  public initTextLine(
-    text: string,
-    fontUrl: string,
-    modelInfo: any
-  ): Promise<Object3D> {
-    let defaultParams = {
-      base: {
-        color: "#f00",
-        size: 100,
-        lineWidth: 2,
-        opacity: 1,
-      },
-      config: {
-        position: [0, 0, 0],
-        scale: [1, 1, 1],
-        rotation: [0, 0, 0],
-      },
-    };
-    let param = Object.assign(defaultParams, modelInfo);
-    const loader = new FontLoader();
-    return new Promise((resolve) =>
-      loader.load(fontUrl, (font) => {
-        var matDark = new LineBasicMaterial({
-          color: param.base.color,
-          transparent: true,
-          opacity: param.base.opacity,
-          linewidth: param.base.lineWidth,
-        });
-
-        var shapes = font.generateShapes(text, param.base.size);
-        var geometry = new ShapeBufferGeometry(shapes);
-        geometry.computeBoundingBox();
-
-        var holeShapes = [];
-        for (var i = 0; i < shapes.length; i++) {
-          var shape = shapes[i];
-          if (shape.holes && shape.holes.length > 0) {
-            for (var j = 0; j < shape.holes.length; j++) {
-              var hole = shape.holes[j];
-              holeShapes.push(hole);
-            }
-          }
-        }
-        shapes.push.apply(shapes, holeShapes);
-
-        var lineText = new Object3D();
-        lineText.name = text;
-        for (var i = 0; i < shapes.length; i++) {
-          var shape = shapes[i];
-
-          var points = shape.getPoints();
-          var geometry = new BufferGeometry().setFromPoints(points);
-
-          var lineMesh = new Line(geometry, matDark);
-          lineText.add(lineMesh);
-        }
-
-        resolve(this.setModelConfig(lineText, param));
-      })
-    );
-  }
-
-  /**
-   * @description
+   * @description 创建地图
    * @author LL
    * @date 2021/09/16
-   * @param {string} url 地图数据文件地址
+   * @param {modelInfoParams} [modelInfo] 模型参数
    */
-  public initMap(url: string): Promise<Object3D> {
+  public initMap(modelInfo?: any): Promise<Object3D> {
+    let defaultParams = {
+      modelName: "map-" + new Date().getTime(),
+      base: {
+        url: "",
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+
     // 加载json文件
     let loader = new FileLoader();
 
     return new Promise((resolve) => {
-      loader.load(url, (data) => {
+      loader.load(param.base.url, (data) => {
         let jsonData = JSON.parse(data as string);
         // 建一个空对象存放对象
         var map = new Object3D();
@@ -828,17 +1008,19 @@ export class TModel {
           coordinates.forEach((multiPolygon) => {
             multiPolygon.forEach((polygon) => {
               const shape = new Shape();
-              const lineMaterial = new LineBasicMaterial({ color: "white" });
-              const lineGeometry = new Geometry();
 
+              const lineMaterial = new LineBasicMaterial({ color: "white" });
+
+              let points = [];
               for (let i = 0; i < polygon.length; i++) {
                 const [x, y] = projection(polygon[i]);
                 if (i === 0) {
                   shape.moveTo(x, -y);
                 }
                 shape.lineTo(x, -y);
-                lineGeometry.vertices.push(new Vector3(x, -y, 4.01));
+                points.push(new Vector3(x, -y, 4.01));
               }
+              const lineGeometry = new BufferGeometry().setFromPoints(points);
 
               const extrudeSettings = {
                 depth: 4,
@@ -873,7 +1055,7 @@ export class TModel {
           map.add(province);
         });
 
-        resolve(map);
+        resolve(this.setModelConfig(map, param));
       });
     });
   }
@@ -882,48 +1064,258 @@ export class TModel {
    * @description 添加视频面板
    * @author LL
    * @date 2021/09/03
-   * @param {number} width 面板宽度
-   * @param {number} height 面板高度
-   * @param {HTMLVideoElement} dom 视频所在的dom
+   * @param {HTMLVideoElement} dom video标签
+   * @param {modelInfoParams} [modelInfo] 模型参数
+   * @returns {*}  {Object3D}
+   * @memberof TModel
    */
   public initVideoPlane(
-    width: number,
-    height: number,
-    dom: HTMLVideoElement
-  ): Mesh {
-    var planeGeometry = new PlaneGeometry(width, height);
+    dom: HTMLVideoElement,
+    modelInfo?: modelInfoParams
+  ): Object3D {
+    let defaultParams = {
+      modelName: "videoPlane-" + new Date().getTime(),
+      base: {
+        width: 250,
+        height: 100,
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+
+    var planeGeometry = new PlaneGeometry(param.base.width, param.base.height);
     var material = new MeshPhongMaterial();
     material.side = DoubleSide;
 
-    material.map = ThingOrigin.material.initVideoMaterial(dom);
+    material.map = this.material.initVideoMaterial(dom);
     var mesh = new Mesh(planeGeometry, material);
 
-    return mesh;
+    return this.setModelConfig(mesh, param);
+  }
+
+  /**
+   * @description 生成点云
+   * @author LL
+   * @date 2021/08/25
+   * @param {modelInfoParams} [modelInfo] 模型参数
+   */
+  public initPoints(modelInfo?: modelInfoParams): Object3D {
+    let defaultParams = {
+      modelName: "points-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        positions: [],
+        pointConfigs: {
+          color: "#f00",
+          size: 1.5,
+        },
+        offset: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: 1,
+      },
+    };
+
+    for (let i = 0; i < 100; i++) {
+      defaultParams.base.positions.push({
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        z: Math.random() * 100,
+      });
+    }
+
+    let param = merge(defaultParams, modelInfo);
+
+    let pointArr = [];
+    for (let i = 0; i < param.base.positions.length; i++) {
+      pointArr.push(
+        new Vector3(
+          (param.base.positions[i]["x"] + param.base.offset.x) *
+            param.base.scale,
+          (param.base.positions[i]["y"] + param.base.offset.y) *
+            param.base.scale,
+          (param.base.positions[i]["z"] + param.base.offset.z) *
+            param.base.scale
+        )
+      );
+    }
+
+    var geometry = new BufferGeometry().setFromPoints(pointArr); //声明一个几何体对象Geometry
+
+    var pointMaterial = this.material.initPointsMaterial(
+      param.base.pointConfigs.color,
+      false,
+      param.base.pointConfigs.size
+    );
+
+    //生成点模型
+    var points = new Points(geometry, pointMaterial);
+
+    return this.setModelConfig(points, param);
+  }
+
+  public initPoints2(modelInfo?: modelInfoParams): Object3D {
+    let defaultParams = {
+      modelName: "points-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        positions: [],
+        pointConfigs: {
+          colorType: "unite", //unite 统一    onself 单个自定义  random 随机
+          color: {
+            r: 1,
+            g: 0,
+            b: 0,
+          },
+          size: 1.5,
+        },
+        offset: {
+          x: 0,
+          y: 0,
+          z: 0,
+        },
+        scale: 1,
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+
+    let positions = new Float32Array(param.base.positions.length * 3);
+    let colors = new Float32Array(param.base.positions.length * 3);
+
+    for (let i = 0; i < param.base.positions.length; i++) {
+      positions[i * 3] =
+        (param.base.positions[i][param.base.property.x] + param.base.offset.x) *
+        param.base.scale;
+      positions[i * 3 + 1] =
+        (param.base.positions[i][param.base.property.y] + param.base.offset.y) *
+        param.base.scale;
+      positions[i * 3 + 2] =
+        (param.base.positions[i][param.base.property.z] + param.base.offset.z) *
+        param.base.scale;
+
+      if (param.base.pointConfigs.colorType === "unite") {
+        colors[i * 3] = param.base.pointConfigs.color.r;
+        colors[i * 3 + 1] = param.base.pointConfigs.color.g;
+        colors[i * 3 + 2] = param.base.pointConfigs.color.b;
+      } else if (param.base.pointConfigs.colorType === "onself") {
+        colors[i * 3] = param.base.pointConfigs[i].r;
+        colors[i * 3 + 1] = param.base.pointConfigs[i].g;
+        colors[i * 3 + 2] = param.base.pointConfigs[i].b;
+      } else if (param.base.pointConfigs.colorType === "random") {
+        colors[i * 3] = Math.random();
+        colors[i * 3 + 1] = Math.random();
+        colors[i * 3 + 2] = Math.random();
+      }
+    }
+
+    var geometry = new BufferGeometry();
+    geometry.setAttribute("position", new BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new BufferAttribute(colors, 3));
+
+    const material = new PointsMaterial({
+      size: param.base.pointConfigs.size,
+      vertexColors: true,
+    });
+    let points = new Points(geometry, material);
+
+    return this.setModelConfig(points, param);
   }
 
   /**
    * @description 精灵图形
    * @author LL
    * @date 2021/08/25
-   * @param {string} groupName 精灵组名称
-   * @param {object[]} positions 精灵组数据
-   * @param {spriteShape} spriteShape 精灵图形参数
-   * @param {object} [userData] 用户自定义数据
+   * @param {modelInfoParams} [modelInfo] 模型参数
    */
-  public initSpriteShape(
-    groupName: string,
-    positions: spriteData[],
-    spriteShape: spriteShapeParams,
-    userData?: object
-  ): Group {
+  public initSpriteShape(modelInfo?: any): Object3D {
+    let defaultParams = {
+      modelName: "spriteShape-" + new Date().getTime(),
+      base: {
+        positions: [],
+        spriteShape: {
+          shape: "sphere", //形状类型 例:'sphere'||'triangle'
+          color: "#f00",
+          radius: 5,
+        },
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+    };
+    for (let i = 0; i < 100; i++) {
+      defaultParams.base.positions.push({
+        name: "sprite" + i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        z: Math.random() * 100,
+      });
+    }
+    let param = merge(defaultParams, modelInfo);
+
     let canvas = document.createElement("canvas");
     canvas.width = 20;
     canvas.height = 20;
 
     let ctx = canvas.getContext("2d");
-    if (spriteShape.shape == "sphere") {
+    if (param.base.spriteShape.shape == "sphere") {
       ctx.arc(10, 10, 10, 0, 2 * Math.PI);
-    } else if (spriteShape.shape == "triangle") {
+    } else if (param.base.spriteShape.shape == "triangle") {
       ctx.beginPath();
       ctx.moveTo(10, 15);
       ctx.lineTo(20, 0);
@@ -931,7 +1323,7 @@ export class TModel {
       ctx.closePath(); //闭合路径
       ctx.lineWidth = 10; //线的边框为10像素
     }
-    ctx.fillStyle = spriteShape.color;
+    ctx.fillStyle = param.base.spriteShape.color;
     ctx.fill();
 
     let texture = new Texture(canvas);
@@ -939,18 +1331,25 @@ export class TModel {
     let material1 = new SpriteMaterial({ map: texture });
 
     let spriteGroup = new Group();
-    spriteGroup.name = groupName;
 
-    for (var i = 0; i < positions.length; i++) {
+    for (var i = 0; i < param.base.positions.length; i++) {
       var sprite = new Sprite(material1.clone());
-      if (positions[i].name) sprite.name = positions[i].name;
-      sprite.position.set(positions[i].x, positions[i].y, positions[i].z);
-      sprite.scale.set(spriteShape.radius, spriteShape.radius, 1);
-      if (userData) sprite.userData = userData;
+      if (param.base.positions[i].name)
+        sprite.name = param.base.positions[i].name;
+      sprite.position.set(
+        param.base.positions[i].x,
+        param.base.positions[i].y,
+        param.base.positions[i].z
+      );
+      sprite.scale.set(
+        param.base.spriteShape.radius,
+        param.base.spriteShape.radius,
+        1
+      );
       spriteGroup.add(sprite);
     }
 
-    return spriteGroup;
+    return this.setModelConfig(spriteGroup, param);
 
     // sprite.position.normalize();
     // sprite.position.multiplyScalar(700);
@@ -960,30 +1359,136 @@ export class TModel {
    * @description 精灵图片材质
    * @author LL
    * @date 2021/08/25
-   * @param {string} groupName 精灵组名称
-   * @param {object[]} positions 精灵组位置数据
-   * @param {spritePic} spritePic 精灵图片参数
-   * @param {object} userData 用户自定义数据
+   * @param {modelInfoParams} [modelInfo] 模型参数
    */
-  public initSpritePic(
-    groupName: string,
-    positions: spriteData[],
-    spritePic: spritePicParams,
-    userData: object
-  ): Group {
-    const map = new TextureLoader().load(spritePic.url);
+  public initSpritePic(modelInfo?: modelInfoParams): Object3D {
+    let defaultParams = {
+      modelName: "spritePic-" + new Date().getTime(),
+      base: {
+        positions: [],
+        spriteShape: {
+          url: "",
+          size: 10,
+        },
+      },
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+    };
+    for (let i = 0; i < 100; i++) {
+      defaultParams.base.positions.push({
+        name: "sprite" + i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        z: Math.random() * 100,
+      });
+    }
+    let param = merge(defaultParams, modelInfo);
+
+    const map = new TextureLoader().load(param.base.spritePic.url);
     const material = new SpriteMaterial({ map: map });
 
     let spriteGroup = new Group();
-    spriteGroup.name = groupName;
-    for (var i = 0; i < positions.length; i++) {
+    for (var i = 0; i < param.base.positions.length; i++) {
       var sprite = new Sprite(material.clone());
-      if (positions[i].name) sprite.name = positions[i].name;
-      sprite.position.set(positions[i].x, positions[i].y, positions[i].z);
-      sprite.scale.set(spritePic.size, spritePic.size, 1);
-      if (userData) sprite.userData = userData;
+      if (param.base.positions[i].name)
+        sprite.name = param.base.positions[i].name;
+      sprite.position.set(
+        param.base.positions[i].x,
+        param.base.positions[i].y,
+        param.base.positions[i].z
+      );
+      sprite.scale.set(param.base.spritePic.size, param.base.spritePic.size, 1);
       spriteGroup.add(sprite);
     }
-    return spriteGroup;
+
+    return this.setModelConfig(spriteGroup, param);
+  }
+
+  /**
+   * @description 统一处理模型
+   * @author LL
+   * @date 2024/06/20
+   * @private
+   * @param {Object3D} model
+   * @param {modelInfoParams} modelInfo
+   * @returns {*}  {Object3D}
+   * @memberof TModel
+   */
+  public setModelConfig(model: Object3D, modelInfo: modelInfoParams): Object3D {
+    model.traverse((child) => {
+      child.userData = merge(child.userData, {
+        parent: modelInfo.modelName,
+      });
+    });
+
+    //处理缩放
+    if (modelInfo.scale)
+      model.scale.set(modelInfo.scale.x, modelInfo.scale.y, modelInfo.scale.z);
+
+    if (modelInfo.rotation) {
+      //处理旋转
+      if ("x" in modelInfo.rotation) {
+        model.rotation.set(
+          modelInfo.rotation.x,
+          modelInfo.rotation.y,
+          modelInfo.rotation.z
+        );
+      } else if ("_x" in modelInfo.rotation) {
+        model.rotation.set(
+          modelInfo.rotation._x,
+          modelInfo.rotation._y,
+          modelInfo.rotation._z
+        );
+      }
+    }
+
+    //处理位置
+    if (modelInfo.position)
+      model.position.set(
+        modelInfo.position.x,
+        modelInfo.position.y,
+        modelInfo.position.z
+      );
+
+    model.name = modelInfo.modelName;
+    model.userData = merge(modelInfo.userData ? modelInfo.userData : {}, {
+      by: "ThingOrigin3D",
+      base: modelInfo.base,
+      material: modelInfo.material,
+      loadType: modelInfo.loadType,
+      modelType: modelInfo.modelType,
+    });
+
+    model.updateMatrixWorld(true);
+
+    // 放开有很多奇怪问题   模型莫名其妙消失
+    //model.visible如果为undefined或者null，就会被设置为true
+    model.visible = modelInfo.visible ?? true;
+    return model;
+  }
+
+  public initBufferGeometry() {
+    return new BufferGeometry();
+  }
+
+  public initBufferAttribute(array, itemSize) {
+    return new BufferAttribute(array, itemSize);
+  }
+
+  public initMesh(geometry?, material?) {
+    return new Mesh(geometry, material);
   }
 }

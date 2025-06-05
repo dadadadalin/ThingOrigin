@@ -1,21 +1,30 @@
+import { merge, cloneDeep } from "lodash";
+import { ThingOrigin } from "../ThingOrigin";
+import { Object3D } from "three";
+import sceneData from "../../public/data/sceneParams";
+
 export class TIndexedDB {
+  public TO: ThingOrigin;
   public DBs: Map<string, IDBDatabase> = new Map<string, IDBDatabase>();
+  /** 场景参数 */
+  public sceneData: ThingOriginParams = sceneData;
+
+  // 0-10 存放字体
+
+  constructor() {}
 
   /**
    * @description 判断是否已缓存此模型，返回是否存储，若已缓存返回模型参数
    * @author LL
    * @date 2022-07-14
-   * @param {string} dataBaseName
-   * @param {string} tableName
-   * @param {IDBParams} modelInfo
+   * @param {modelParams} modelInfo
    * @returns {*}  {Promise<object>}
    */
-  public accessModel(
-    dataBaseName: string,
-    tableName: string,
-    modelInfo: IDBParams
-  ): Promise<modelResultParams> {
-    let request = window.indexedDB.open(dataBaseName, 1);
+  public accessModel(modelInfo: modelInfoParams): PromiseLike<accessResult> {
+    let request = window.indexedDB.open(
+      this.sceneData.params.indexedDB.dataBaseName,
+      1
+    );
     let db: IDBDatabase;
 
     return new Promise((resolve) => {
@@ -24,58 +33,42 @@ export class TIndexedDB {
       };
 
       request.onsuccess = (event) => {
-        console.log("数据库打开成功");
         db = request.result;
 
-        if (!this.DBs.get(dataBaseName)) {
-          this.DBs.set(dataBaseName, db);
+        if (!this.DBs.get(this.sceneData.params.indexedDB.dataBaseName)) {
+          this.DBs.set(this.sceneData.params.indexedDB.dataBaseName, db);
         }
 
-        var transaction = db.transaction(tableName, "readwrite");
-        var store = transaction.objectStore(tableName);
+        var transaction = db.transaction(
+          this.sceneData.params.indexedDB.tableName,
+          "readwrite"
+        );
+        var store = transaction.objectStore(
+          this.sceneData.params.indexedDB.tableName
+        );
+
         var dataRequest = store.index("id").get(modelInfo.id);
 
-        dataRequest.onsuccess = (e) => {
-          console.log("结果", e);
+        dataRequest.onsuccess = (e: any) => {
+          console.log("缓存结果", e);
           //@ts-ignore
           if (e.target.result != undefined) {
-            //创建blob对象路径。​
-            //@ts-ignore
-            let url = URL.createObjectURL(e.target.result.model);
-            //@ts-ignore
-            let modelSize = e.target.result.modelSize;
-            //@ts-ignore
-            let scale = e.target.result.scale;
-            //@ts-ignore
-            let type = e.target.result.type;
-            //@ts-ignore
-            let loadType = e.target.result.loadType;
-            //@ts-ignore
-            let name = e.target.result.name;
-            //@ts-ignore
-            let position = e.target.result.position;
-            //@ts-ignore
-            let rotation = e.target.result.rotation;
-            //@ts-ignore
-            let userData = e.target.result.userData;
-            //@ts-ignore
-            let modelName = e.target.result.modelName;
+            let result = Object.assign(modelInfo, {
+              saved: true,
+            });
+
+            let blobUrl = URL.createObjectURL(
+              new Blob([e.target.result.model], {
+                type: "application/octet-stream",
+              })
+            );
 
             resolve({
-              saved: true,
-              name: name,
-              modelName: modelName,
-              url: url,
-              modelSize: modelSize,
-              type: type,
-              loadType: loadType,
-              scale: scale,
-              position: position,
-              rotation: rotation,
-              userData: userData,
+              info: result,
+              modelUrl: blobUrl,
             });
           } else {
-            resolve({ saved: false });
+            resolve({ info: { saved: false } });
           }
         };
       };
@@ -85,20 +78,29 @@ export class TIndexedDB {
         db = event.target.result;
 
         var objectStore;
-        if (!db.objectStoreNames.contains(tableName)) {
-          objectStore = db.createObjectStore(tableName, { keyPath: "id" });
+        if (
+          !db.objectStoreNames.contains(
+            this.sceneData.params.indexedDB.tableName
+          )
+        ) {
+          objectStore = db.createObjectStore(
+            this.sceneData.params.indexedDB.tableName,
+            { keyPath: "id" }
+          );
           // 定义存储对象的数据项
           objectStore.createIndex("id", "id", { unique: true });
           objectStore.createIndex("name", "name");
           objectStore.createIndex("modelName", "modelName");
           objectStore.createIndex("model", "model");
-          objectStore.createIndex("url", "url");
+          objectStore.createIndex("modelUrl", "modelUrl");
           objectStore.createIndex("modelSize", "modelSize");
-          objectStore.createIndex("type", "type");
+          objectStore.createIndex("modelType", "modelType");
           objectStore.createIndex("loadType", "loadType");
           objectStore.createIndex("position", "position");
           objectStore.createIndex("scale", "scale");
           objectStore.createIndex("rotation", "rotation");
+          objectStore.createIndex("dataBaseName", "dataBaseName");
+          objectStore.createIndex("tableName", "tableName");
           objectStore.createIndex("userData", "userData");
         }
         console.log("数据库升级成功");
@@ -110,79 +112,60 @@ export class TIndexedDB {
    * @description 向indexedDB数据表中，存储模型
    * @author LL
    * @date 2022-07-14
-   * @param {string} dataBaseName
-   * @param {string} tableName
    * @param {modelInfoParams} modelInfo
    * @returns {*}  {Promise<object>}
    */
-  public insertModel(
-    dataBaseName: string,
-    tableName: string,
-    modelInfo: IDBParams
-  ): Promise<modelResultParams> {
+  public insertModel(modelInfo: modelInfoParams): Promise<modelInfoParams> {
     return new Promise((resolve) => {
       var ajax = new XMLHttpRequest();
 
-      ajax.open("get", modelInfo.url);
+      let url =
+        modelInfo.modelType == "text"
+          ? modelInfo.base.fontUrl
+          : modelInfo.base.modelUrl;
+
+      ajax.open("get", url);
+      ajax.responseType = "blob";
       ajax.send();
       ajax.onreadystatechange = () => {
-        // && ajax.responseText.substring(0, 9) == "<!DOCTYPE"
         if (ajax.readyState == 4 && ajax.status == 200) {
-          modelInfo.model = new Blob([ajax.responseText]);
-          let db = this.DBs.get(dataBaseName);
+          modelInfo = Object.assign(modelInfo, {
+            // modelSize: ajax.responseText.length,
+            // model: new Blob([ajax.responseText]),
+            modelSize: ajax.response.size,
+            model: new Blob([ajax.response]),
+            dataBaseName: this.sceneData.params.indexedDB.dataBaseName,
+            tableName: this.sceneData.params.indexedDB.tableName,
+          });
+
+          let db = this.DBs.get(this.sceneData.params.indexedDB.dataBaseName);
 
           let indexedTable = db
-            .transaction([tableName], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
-            .objectStore(tableName); //拿到IDBObjectStore 对象
+            .transaction(
+              [this.sceneData.params.indexedDB.tableName],
+              "readwrite"
+            ) //新建事务，readwrite, readonly(默认), versionchange
+            .objectStore(this.sceneData.params.indexedDB.tableName); //拿到IDBObjectStore 对象
 
-          console.log("insetModel", modelInfo);
-
-          var request1 = indexedTable.add(modelInfo);
+          let info = cloneDeep(modelInfo);
+          var request1 = indexedTable.add(info);
           request1.onsuccess = (event) => {
             console.log("数据写入成功", event);
 
             // try {
             let dataRequest2 = indexedTable.index("id").get(modelInfo.id);
-            dataRequest2.onsuccess = (e2) => {
-              //@ts-ignore
-              let url = URL.createObjectURL(e2.target.result.model);
-              //@ts-ignore
-              let modelSize = e2.target.result.modelSize;
-              //@ts-ignore
-              let scale = e2.target.result.scale;
-              //@ts-ignore
-              let type = e2.target.result.type;
-              //@ts-ignore
-              let loadType = e2.target.result.loadType;
-              //@ts-ignore
-              let name = e2.target.result.name;
-              //@ts-ignore
-              let position = e2.target.result.position;
-              //@ts-ignore
-              let rotation = e2.target.result.rotation;
-              //@ts-ignore
-              let userData = e2.target.result.userData;
-              //@ts-ignore
-              let modelName = e2.target.result.modelName;
+            dataRequest2.onsuccess = (e2: any) => {
+              let result = merge(modelInfo, {
+                saved: true,
+              });
+
+              let blobUrl = window.URL.createObjectURL(e2.target.result.model);
 
               resolve({
-                saved: true,
-                name: name,
-                modelName: modelName,
-                url: url,
-                modelSize: modelSize,
-                type: type,
-                loadType: loadType,
-                scale: scale,
-                position: position,
-                rotation: rotation,
-                userData: userData,
+                info: result,
+                modelUrl: blobUrl,
               });
             };
-            // } catch (error) {
-            //   console.warn("写入失败，请检查文件路径");
-            //   resolve({ saved: false, url: undefined });
-            // }
           };
           request1.onerror = (event) => {
             console.log("数据写入失败");
@@ -200,21 +183,15 @@ export class TIndexedDB {
    * @description 删除模型
    * @author LL
    * @date 2022-07-15
-   * @param {string} dataBaseName
-   * @param {string} tableName
    * @param {number} id
    */
-  public deleteModel(
-    dataBaseName: string,
-    tableName: string,
-    id: number
-  ): Promise<boolean> {
-    let db = this.DBs.get(dataBaseName);
+  public deleteModel(id: number): Promise<boolean> {
+    let db = this.DBs.get(this.sceneData.params.indexedDB.dataBaseName);
 
     return new Promise((resolve) => {
       let request = db
-        .transaction([tableName], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
-        .objectStore(tableName) //拿到IDBObjectStore 对象、
+        .transaction([this.sceneData.params.indexedDB.tableName], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
+        .objectStore(this.sceneData.params.indexedDB.tableName) //拿到IDBObjectStore 对象、
         .delete(id);
 
       request.onsuccess = (event) => {
@@ -232,16 +209,115 @@ export class TIndexedDB {
    * @description 更新模型
    * @author LL
    * @date 2022-07-15
-   * @param {string} dataBaseName
-   * @param {string} tableName
-   * @param {IDBParams} modelInfo
+   * @param {modelParams} modelInfo
    */
-  public updateModel(
-    dataBaseName: string,
-    tableName: string,
-    modelInfo: IDBParams
-  ) {
-    this.deleteModel(dataBaseName, tableName, modelInfo.id);
-    this.insertModel(dataBaseName, tableName, modelInfo);
+  public updateModel(info: updateInfoParams): Promise<void> {
+    if (!info.modelInfo.id) {
+      console.warn("请传入id");
+      return;
+    }
+
+    return new Promise((resolve, reject) => {
+      const dbName = this.sceneData.params.indexedDB.dataBaseName;
+      const tableName = this.sceneData.params.indexedDB.tableName;
+
+      const request = window.indexedDB.open(dbName);
+
+      request.onerror = (event) => {
+        console.error("Database open failed:", event);
+        reject(new Error("Database open failed"));
+      };
+
+      request.onsuccess = (event) => {
+        const db: IDBDatabase = request.result;
+
+        if (!this.DBs.has(dbName)) {
+          this.DBs.set(dbName, db);
+        }
+
+        const transaction = db.transaction(tableName, "readwrite");
+        const store = transaction.objectStore(tableName);
+
+        transaction.onerror = (event) => {
+          console.error("Transaction error:", event);
+          reject(new Error("Transaction failed"));
+        };
+
+        const getRequest = store.index("id").get(info.modelInfo.id);
+
+        getRequest.onsuccess = () => {
+          const existingData = getRequest.result;
+          const updatedData = { ...existingData, ...info.modelInfo };
+
+          const putRequest = store.put(updatedData);
+
+          putRequest.onsuccess = () => resolve();
+          putRequest.onerror = (event) => {
+            console.error("Data update failed:", event);
+            reject(new Error("Data update failed"));
+          };
+        };
+
+        getRequest.onerror = (event) => {
+          console.error("Data retrieval failed:", event);
+          reject(new Error("Data retrieval failed"));
+        };
+      };
+    });
+  }
+
+  /**
+   * @description 查询并缓存模型
+   * @author LL
+   * @date 2025/01/09
+   * @param {modelInfoParams} modelInfo
+   * @returns {*}  {Promise<accessInsetResult>}
+   * @memberof TIndexedDB
+   */
+  public async accessInsertModel(
+    modelInfo: modelInfoParams
+  ): Promise<accessInsetResult> {
+    const accessRes = await this.accessModel(modelInfo);
+    return new Promise(async (resolve, reject) => {
+      //如果缓存了   直接导入
+      if (accessRes.info.saved) {
+        resolve({
+          saved: true,
+          inserted: false,
+          modelUrl: accessRes.modelUrl,
+        });
+      } else {
+        const insertRes = await this.insertModel(modelInfo);
+        if (insertRes.info.saved) {
+          resolve({
+            saved: true,
+            inserted: true,
+            modelUrl: insertRes.modelUrl,
+          });
+        } else {
+          resolve({
+            saved: false,
+            inserted: false,
+          });
+        }
+      }
+    });
+  }
+
+  /**
+   * @description 加载indexedDB模型  未缓存的缓存后加载，缓存的直接加载
+   * @author LL
+   * @date 2025/01/07
+   * @param {modelInfoParams} modelInfo
+   * @returns {*}
+   * @memberof TIndexedDB
+   */
+  public async getIDBModelInfo(modelInfo: modelInfoParams): Promise<any> {
+    let accessInsetResult = await this.accessInsertModel(modelInfo);
+
+    let cloneInfo = cloneDeep(modelInfo);
+    cloneInfo.base.modelUrl = accessInsetResult.modelUrl;
+
+    return cloneInfo;
   }
 }

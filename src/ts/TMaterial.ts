@@ -29,8 +29,7 @@ import {
   CanvasTexture,
   CubeTexture,
   Color,
-  Geometry,
-  BufferGeometry,
+  PlaneGeometry,
   RepeatWrapping,
   Vector3,
   IUniform,
@@ -40,10 +39,14 @@ import {
   PixelFormat,
   TextureDataType,
 } from "three";
+
 import { Water } from "three/examples/jsm/objects/Water";
-import { ThingOrigin } from "./../ThingOrigin";
 
 export class TMaterial {
+  initImageTexture(url: string): Texture {
+    return new TextureLoader().load(url);
+  }
+
   /**
    * @description 创建精灵材质
    * @author LL
@@ -111,15 +114,15 @@ export class TMaterial {
    * @return {*} {MeshPhysicalMaterial} 物理网格材质
    */
   public initPhysicalMaterial(
-      color: string | number | Color,
-      map?: Texture,
-      envMap?: Texture,
-      metalness?: number,
-      roughness?: number,
-      clearcoat?: number,
-      clearcoatRoughness?: number,
-      envMapIntensity?: number,
-      side?: number
+    color: string | number | Color,
+    map?: Texture,
+    envMap?: Texture,
+    metalness?: number,
+    roughness?: number,
+    clearcoat?: number,
+    clearcoatRoughness?: number,
+    envMapIntensity?: number,
+    side?: number
   ): MeshPhysicalMaterial {
     return new MeshPhysicalMaterial({
       color: color,
@@ -130,7 +133,12 @@ export class TMaterial {
       clearcoat: clearcoat,
       clearcoatRoughness: clearcoatRoughness,
       envMapIntensity: envMapIntensity,
-      side: (side === 0 || side == null) ? FrontSide : (side === 1 ? BackSide : DoubleSide)
+      side:
+        side === 0 || side == null
+          ? FrontSide
+          : side === 1
+          ? BackSide
+          : DoubleSide,
     });
   }
 
@@ -145,16 +153,16 @@ export class TMaterial {
    * @return {*} {PointsMaterial} 点材质
    */
   public initPointsMaterial(
-      color: string | number | Color,
-      vertexColors: boolean,
-      size?: number,
-      map?: Texture
+    color: string | number | Color,
+    vertexColors: boolean,
+    size?: number,
+    map?: Texture
   ): PointsMaterial {
     return new PointsMaterial({
       color: color,
       vertexColors: vertexColors,
       size: size,
-      map: map
+      map: map,
     });
   }
 
@@ -169,16 +177,16 @@ export class TMaterial {
    * @return {*} {MeshToonMaterial} 卡通材质
    */
   public initToonMaterial(
-      color: string | number | Color,
-      emissive?: string | number | Color,
-      map?: Texture,
-      gradientMap? : Texture
+    color: string | number | Color,
+    emissive?: string | number | Color,
+    map?: Texture,
+    gradientMap?: Texture
   ): MeshToonMaterial {
     return new MeshToonMaterial({
       color: color,
       emissive: emissive,
       map: map,
-      gradientMap: gradientMap
+      gradientMap: gradientMap,
     });
   }
 
@@ -194,18 +202,23 @@ export class TMaterial {
    * @return {*} {RawShaderMaterial} 原始着色器材质
    */
   public initRawShaderMaterial(
-      vertexShader: string,
-      fragmentShader: string,
-      uniforms?: {[p: string]: IUniform},
-      vertexColors?: boolean,
-      side?: number
+    vertexShader: string,
+    fragmentShader: string,
+    uniforms?: { [p: string]: IUniform },
+    vertexColors?: boolean,
+    side?: number
   ): RawShaderMaterial {
     return new RawShaderMaterial({
       vertexShader: vertexShader,
       fragmentShader: fragmentShader,
       uniforms: uniforms ?? null,
       vertexColors: vertexColors ? vertexColors : false,
-      side: (side === 0 || side == null) ? FrontSide : (side === 1 ? BackSide : DoubleSide)
+      side:
+        side === 0 || side == null
+          ? FrontSide
+          : side === 1
+          ? BackSide
+          : DoubleSide,
     });
   }
 
@@ -219,9 +232,9 @@ export class TMaterial {
    * @return {*} {ShaderMaterial} 着色器材质
    */
   public initShaderMaterial(
-      uniforms: {[p: string]: IUniform},
-      vertexShader: string,
-      fragmentShader: string,
+    uniforms: { [p: string]: IUniform },
+    vertexShader: string,
+    fragmentShader: string
   ): ShaderMaterial {
     return new ShaderMaterial({
       uniforms: uniforms,
@@ -229,7 +242,6 @@ export class TMaterial {
       fragmentShader: fragmentShader,
     });
   }
-
 
   /**
    * @description 阴影材质; 此材质可以接收阴影，但在其他方面完全透明。
@@ -258,7 +270,7 @@ export class TMaterial {
    * @memberof TMaterial
    */
   public setWaterSkin(
-    geometry: Geometry | BufferGeometry,
+    geometry: PlaneGeometry,
     width: number,
     height: number,
     url: string,
@@ -291,17 +303,17 @@ export class TMaterial {
    * @return {*} {LineBasicMaterial} 基础线条材质
    */
   public initLineBasicMaterial(
-      color: string | number | Color,
-      linecap?: string,
-      linejoin?: string,
-      map?: Texture,
+    color: string | number | Color,
+    linecap?: string,
+    linejoin?: string,
+    map?: Texture
   ): LineBasicMaterial {
     return new LineBasicMaterial({
       color: color,
       linecap: linecap,
       linejoin: linejoin,
       //@ts-ignore
-      map: map
+      map: map,
     });
   }
 
@@ -316,10 +328,10 @@ export class TMaterial {
    * @return {*} {LineDashedMaterial} 虚线材质
    */
   public initLineDashedMaterial(
-      color: string | number | Color,
-      scale?: number,
-      dashSize?: number,
-      gapSize?: number,
+    color: string | number | Color,
+    scale?: number,
+    dashSize?: number,
+    gapSize?: number
   ): LineDashedMaterial {
     return new LineDashedMaterial({
       color: color,
@@ -337,10 +349,10 @@ export class TMaterial {
    * @return {*} {MeshBasicMaterial} 基础网格材质
    */
   public initMeshBasicMaterial(
-      color: string | number | Color,
+    color: string | number | Color
   ): MeshBasicMaterial {
     return new MeshBasicMaterial({
-      color:color
+      color: color,
     });
   }
 
@@ -354,14 +366,14 @@ export class TMaterial {
    * @return {*} {MeshBasicMaterial} 深度网格材质
    */
   public initMeshDepthMaterial(
-      alphaMap?: Texture,
-      map?: Texture,
-      wireframe?: boolean
+    alphaMap?: Texture,
+    map?: Texture,
+    wireframe?: boolean
   ): MeshDepthMaterial {
     return new MeshDepthMaterial({
       alphaMap: alphaMap,
       map: map,
-      wireframe: wireframe
+      wireframe: wireframe,
     });
   }
 
@@ -374,15 +386,14 @@ export class TMaterial {
    * @return {*} {MeshDistanceMaterial} MeshDistanceMaterial材质
    */
   public initMeshDistanceMaterial(
-      alphaMap?: Texture,
-      map?: Texture,
+    alphaMap?: Texture,
+    map?: Texture
   ): MeshDistanceMaterial {
     return new MeshDistanceMaterial({
       alphaMap: alphaMap,
       map: map,
     });
   }
-
 
   /**
    * @description 从原始数据创建一个纹理贴图
@@ -396,11 +407,11 @@ export class TMaterial {
    * @return {*} {DataTexture} 原始数据纹理贴图
    */
   public initDataTexture(
-      data: TypedArray,
-      width: number,
-      height: number,
-      format?: PixelFormat,
-      type?: TextureDataType
+    data: TypedArray,
+    width: number,
+    height: number,
+    format?: PixelFormat,
+    type?: TextureDataType
   ): DataTexture {
     const texture = new DataTexture(data, width, height, format, type);
     texture.needsUpdate = true;
@@ -438,12 +449,11 @@ export class TMaterial {
    * @return {*}  {CubeTexture} 立方纹理
    */
   public initCubeTexture(
-      pathPrefix: string,
-      picNameList: string[]
+    pathPrefix: string,
+    picNameList: string[]
   ): CubeTexture {
     const loader = new CubeTextureLoader();
     loader.setPath(pathPrefix);
     return loader.load(picNameList);
   }
-
 }

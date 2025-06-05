@@ -1,25 +1,24 @@
-interface IDBParams {
-  id: number;
-  name: string;
-  type: string;
-  url: string;
-  userData?: string;
-  position?: number[];
-  rotation?: number[];
-  scale?: number[];
-  model?: Blob;
-}
-
 interface modelResultParams {
   saved: boolean;
   url?: string;
+  id?: number;
   scale?: number[];
-  type?: string;
+  modelType?: string;
   name?: string;
   position?: number[];
   rotation?: number[];
   userData?: any;
   modelName?: string;
   modelSize?: string;
-  loadType?: string;
+}
+
+interface accessResult {
+  info: any;
+  modelUrl?: string;
+}
+
+interface accessInsetResult {
+  saved: boolean;
+  inserted: boolean;
+  modelUrl?: string;
 }

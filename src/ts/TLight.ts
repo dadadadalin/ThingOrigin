@@ -1,5 +1,12 @@
-import { Color, DirectionalLight, Light, AmbientLight } from "three";
-import { TScene } from "./TScene/TScene";
+import {
+  Color,
+  DirectionalLight,
+  Light,
+  AmbientLight,
+  SpotLight,
+  PointLight,
+} from "three";
+import { TScene } from "./TScene";
 
 /** 自定义光源的基类，用于 */
 export class TLight {
@@ -46,13 +53,14 @@ export class TLight {
    * @param {string} name
    * @param {(Color | string | number)} [color]
    * @param {number} [intensity]
+   * @param lightConfig
    * @return {*}  {DirectionalLight}
    */
   public addDirectionalLight(
     name: string,
     color?: Color | string | number,
     intensity?: number,
-    lightConfig = { position: { x: 100, y: 100, z: 100 } }
+    lightConfig = { position: { x: 100, y: 100, z: 100 } },
   ): DirectionalLight {
     const light = new DirectionalLight(color, intensity);
     light.name = name;
@@ -70,13 +78,35 @@ export class TLight {
    * @description 添加环境光
    * @author gj
    * @date 2023/10/27
+   * @param name
    * @param {(Color | string | number)} [color]
    * @param {number} [intensity]
    * @return {*}
    */
-  public addAmbientLight(color?: Color | string | number, intensity?: number) {
+  public addAmbientLight(name:string,color?: Color | string | number, intensity?: number): any {
     const ambientLight = new AmbientLight(color, intensity);
+    ambientLight.name = name
     this.tScene.add(ambientLight);
+    return ambientLight
+  }
+
+  /**
+   * @description 添加点光源
+   * @author LL
+   * @param {(Color | string | number)} [color]
+   * @param {number} [intensity]
+   * @param {number} [distance]
+   * @param {number} [decay]
+   * @memberof TLight
+   */
+  public addPointLight(
+    color?: Color | string | number,
+    intensity?: number,
+    distance?: number,
+    decay?: number
+  ) {
+    let light = new PointLight(color, intensity);
+    this.tScene.add(light);
   }
 
   /**
