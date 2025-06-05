@@ -1,6 +1,6 @@
 {
   "name": "thingorigin2.0",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "ThingOrigin.js  基于three.js-r165",
   "main": "index.js",
   "scripts": {
