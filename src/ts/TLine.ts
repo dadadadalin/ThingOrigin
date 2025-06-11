@@ -6,21 +6,22 @@ import {
   Line,
   LineBasicMaterial,
   Mesh,
-  MeshBasicMaterial,
   MeshPhongMaterial,
   Object3D,
-  RepeatWrapping,
-  TextureLoader,
   TubeGeometry,
   Vector3,
 } from "three";
-import { merge, cloneDeep } from "lodash";
+import { merge } from "lodash";
 import { setModelConfig } from "../private/privateTool";
 import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
 import { Line2 } from "three/examples/jsm/lines/Line2";
 
+import { TMaterial } from "./TMaterial";
+
 export class TLine {
+  /** 材质 */
+  public material: TMaterial = new TMaterial();
   constructor() {}
 
   /**
@@ -204,15 +205,12 @@ export class TLine {
             z: 20,
           },
         ],
-        radius: 5,
+        radius: 1,
         imgUrl: "",
-        speed: 100,
+        repeatX: "auto",
+        repeatY: 4,
       },
-      material: {
-        lineWidth: 5,
-        dash: false,
-        imgUrl: "",
-      },
+      userData: {},
     };
     let param = merge(defaultParams, modelInfo);
 
@@ -224,28 +222,35 @@ export class TLine {
 
     const curve = new CatmullRomCurve3(curveArr);
 
-    // 创建纹理加载器
-    const textureLoader = new TextureLoader();
+    let wholeLength = curve.getLength();
+    let repeatX =
+      param.base.repeatX == "auto"
+        ? Math.ceil(wholeLength / 10)
+        : param.base.repeatX;
 
     // 加载图片材质
-    const texture = textureLoader.load(param.material.imgUrl);
-
-    // 设置阵列模式 RepeatWrapping
-    texture.wrapS = RepeatWrapping;
-    texture.wrapT = RepeatWrapping;
-    // 设置x方向的重复数(沿着管道路径方向)
-    // 设置y方向的重复数(环绕管道方向)
-    texture.repeat.x = 10;
-    texture.repeat.y = 4;
+    const texture = this.material.initImageTexture(param.base.imgUrl, {
+      active: true,
+      x: repeatX,
+      y: param.base.repeatY,
+    });
 
     // 创建一个管状几何体，基于曲线
-    const tubeGeometry = new TubeGeometry(curve, 100, 1, 8, false);
+    const tubeGeometry = new TubeGeometry(curve, 64, param.base.radius);
 
     // 创建材质
-    const material = new MeshBasicMaterial({ map: texture });
+    const material = new MeshPhongMaterial({
+      map: texture,
+      transparent: true,
+    });
 
     // 创建网格对象
     const mesh = new Mesh(tubeGeometry, material);
+
+    param.userData.repeat = {
+      x: repeatX,
+      y: param.base.repeatY,
+    };
 
     return setModelConfig(mesh, param);
   }
@@ -289,16 +294,13 @@ export class TLine {
             z: 20,
           },
         ],
-        radius: 3,
+        radius: 1,
         imgUrl: "",
         speed: 100,
-        repeatX: 5,
+        repeatX: "auto",
         repeatY: 4,
       },
-      material: {
-        lineWidth: 5,
-        dash: false,
-      },
+      userData: {},
     };
     let param = merge(defaultParams, modelInfo);
 
@@ -309,26 +311,20 @@ export class TLine {
       curveArr.push(v3);
     });
     var curve = new CatmullRomCurve3(curveArr);
-    /**
-     * TubeGeometry(path : Curve, tubularSegments : Integer, radius : Float, radialSegments : Integer, closed : Boolean)
-     */
-    var tubeGeometry = new TubeGeometry(
-      curve,
-      100,
-      param.base.radius,
-      50,
-      false
-    );
-    var textureLoader = new TextureLoader();
-    var texture = textureLoader.load(param.base.imgUrl);
 
-    // 设置阵列模式 RepeatWrapping
-    texture.wrapS = RepeatWrapping;
-    texture.wrapT = RepeatWrapping;
-    // 设置x方向的重复数(沿着管道路径方向)
-    // 设置y方向的重复数(环绕管道方向)
-    texture.repeat.x = param.base.repeatX;
-    texture.repeat.y = param.base.repeatY;
+    var tubeGeometry = new TubeGeometry(curve, 64, param.base.radius);
+    let wholeLength = curve.getLength();
+    let repeatX =
+      param.base.repeatX == "auto"
+        ? Math.ceil(wholeLength / 10)
+        : param.base.repeatX;
+    // 加载图片材质
+    let texture = this.material.initImageTexture(param.base.imgUrl, {
+      active: true,
+      x: repeatX,
+      y: param.base.repeatY,
+    });
+
     // 设置管道纹理偏移数,便于对中
     texture.offset.y = 0.5;
     var tubeMaterial = new MeshPhongMaterial({
@@ -340,6 +336,11 @@ export class TLine {
     setInterval(() => {
       texture.offset.x -= 0.0076;
     }, param.base.speed);
+
+    param.userData.repeat = {
+      x: repeatX,
+      y: param.base.repeatY,
+    };
     return setModelConfig(tube, param);
   }
 

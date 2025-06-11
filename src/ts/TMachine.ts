@@ -50,7 +50,17 @@ export class TMachine {
     if (urlList.length == 1) {
       return Number(data[urlList[0]]);
     } else {
-      return this.getData(data[urlList[0]], urlList.slice(1));
+      let data1 = data[urlList[0]];
+      let list1 = urlList.slice(1);
+
+      //如果生成的数据格式为{'aa.bb':3}
+      if (data1 == undefined) {
+        return Number(data[urlList.join(".")]);
+      }
+      //普通json格式
+      else {
+        return this.getData(data1, list1);
+      }
     }
   };
 

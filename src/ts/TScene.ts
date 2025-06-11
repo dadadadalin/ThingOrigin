@@ -19,6 +19,7 @@ import {
   SphereGeometry,
   TextureLoader,
   Vector3,
+  Vector2,
 } from "three";
 import { ThingOrigin } from "../ThingOrigin";
 import _ from "lodash";
@@ -394,4 +395,64 @@ export class TScene extends Scene {
     }
     model.visible = visible;
   }
+
+  /**
+   * @description 生成模型快照（支持异步、Blob）
+   * @author gj
+   * @date 2025/06/09
+   * @param resolutionScale 分辨率缩放倍数（默认为 1）
+   * @returns Promise<Blob | null> 返回一个包含图像数据的Blob对象或null
+   */
+  public generateSnapshot(resolutionScale: number = 1): Promise<Blob | null> {
+      return new Promise((resolve, reject) => {
+          // 渲染当前场景
+          this.TO.renderer.renderer.render(this.TO.scene, this.TO.camera.camera);
+
+          try {
+              const { width, height } = this.TO.renderer.renderer.getSize(new Vector2());
+              console.log(width, height);
+              const canvasWidth = Math.floor(width * resolutionScale);
+              const canvasHeight = Math.floor(height * resolutionScale);
+
+              let tempCanvas: HTMLCanvasElement = document.createElement("canvas");
+              tempCanvas.width = canvasWidth;
+              tempCanvas.height = canvasHeight;
+
+              const tempContext = tempCanvas.getContext("2d");
+              if (!tempContext) {
+                  throw new Error("无法获取canvas上下文");
+              }
+
+              // 将WebGL内容绘制到临时canvas中
+              const webglCanvas = this.TO.renderer.renderer.domElement;
+              if (tempCanvas instanceof HTMLCanvasElement) {
+                  const destCtx = tempCanvas.getContext("2d");
+                  if (destCtx) {
+                      destCtx.drawImage(webglCanvas, 0, 0, canvasWidth, canvasHeight);
+                  }
+              }
+
+              // 使用 toBlob 异步导出图片
+              if (tempCanvas instanceof HTMLCanvasElement) {
+                  tempCanvas.toBlob(
+                      (blob) => {
+                          if (blob) {
+                              resolve(blob); // 返回Blob对象
+                          } else {
+                              reject(new Error("生成Blob失败"));
+                          }
+                      },
+                      "image/webp",
+                      1
+                  );
+              } else {
+                  reject(new Error("不支持的canvas类型"));
+              }
+
+          } catch (error) {
+              console.error("生成快照失败:", error);
+              reject(error);
+          }
+      });
+    }
 }

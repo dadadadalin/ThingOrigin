@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Title</title>
+  <script src="./ThingOrigin2.0.js"></script>
+  <!-- <script src="./three.module.js"></script> -->
+</head>
+
+<body>
+  <div id="container" style="width: 1000px; height: 1000px"></div>
+  <!-- <script type="importmap">
+      			{
+      				"imports": {
+      					"three": "../node_modules/three/build/three.module.js",
+      					"three/addons/": "./jsm/"
+      				}
+      			}
+      		</script> -->
+  <script type="module">
+    // import * as THREE from 'three';
+    // console.dir(ThingOrigin);
+    let mainScene = new ThingOrigin('test', document.getElementById("container"))
+
+    // // 创建立方体
+    // const geometry = new THREE.BoxGeometry(1, 1, 1);
+    // const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // const cube = new THREE.Mesh(geometry, material);
+    // cube.position.set(0, 0, 0);
+
+    // console.log(mainScene.scene);
+
+    // mainScene.scene.add(cube);
+  </script>
+</body>
+
+</html>

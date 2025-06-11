@@ -210,7 +210,11 @@ export class TControl {
    * @memberof TControl
    */
   public clearTransform() {
-    this.transform.detach();
+    if (this.transform) {
+      this.transform.detach();
+    } else {
+      console.log("未开启变换器");
+    }
   }
 
   /**

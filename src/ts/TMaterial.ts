@@ -3,15 +3,9 @@ import {
   DoubleSide,
   FrontSide,
   LinearFilter,
-  Mesh,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
-  MeshStandardMaterial,
   MeshDepthMaterial,
-  MeshMatcapMaterial,
-  MeshNormalMaterial,
-  MeshLambertMaterial,
-  MeshPhongMaterial,
   MeshToonMaterial,
   LineBasicMaterial,
   LineDashedMaterial,
@@ -33,7 +27,6 @@ import {
   RepeatWrapping,
   Vector3,
   IUniform,
-  Side,
   DataTexture,
   TypedArray,
   PixelFormat,
@@ -43,8 +36,59 @@ import {
 import { Water } from "three/examples/jsm/objects/Water";
 
 export class TMaterial {
-  initImageTexture(url: string): Texture {
-    return new TextureLoader().load(url);
+  // 创建纹理加载器
+  textureLoader = new TextureLoader();
+
+  /**
+   * @description 创建图片材质
+   * @author LL
+   * @date 2025/06/11
+   * @param {string} url
+   * @param {{
+   *       active: boolean;
+   *       x: number;
+   *       y: number;
+   *     }} [repeat]
+   * @returns {*}  {Texture}
+   * @memberof TMaterial
+   */
+  initImageTexture(
+    url: string,
+    repeat?: {
+      active: boolean;
+      x: number;
+      y: number;
+    }
+  ): Texture {
+    // 加载图片材质
+    const texture = this.textureLoader.load(url);
+
+    if (repeat?.active) {
+      // 设置阵列模式 RepeatWrapping
+      texture.wrapS = RepeatWrapping;
+      texture.wrapT = RepeatWrapping;
+
+      // 设置x方向的重复数(沿着管道路径方向)
+      texture.repeat.x = repeat.x;
+      // 设置y方向的重复数(环绕管道方向)
+      texture.repeat.y = repeat.y;
+    }
+    return texture;
+  }
+
+  /**
+   * @description 图片材质
+   * @author LL
+   * @date 2022/5/24
+   * @param {string} url
+   * @returns {*}  {MeshBasicMaterial}
+   * @memberof TMaterial
+   */
+  public initImageMaterial(url: string): MeshBasicMaterial {
+    const texture = this.textureLoader.load(url);
+    let material = new MeshBasicMaterial();
+    material.map = texture;
+    return material;
   }
 
   /**
@@ -60,9 +104,7 @@ export class TMaterial {
     color: string,
     fog: boolean
   ): SpriteMaterial {
-    var textureLoader = new TextureLoader();
-
-    var mapB = textureLoader.load(url);
+    var mapB = this.textureLoader.load(url);
     var materialB = new SpriteMaterial({ map: mapB, color: color, fog: fog });
 
     return materialB;
@@ -81,21 +123,6 @@ export class TMaterial {
     texture.format = RGBFormat;
 
     return texture;
-  }
-
-  /**
-   * @description 图片材质
-   * @author LL
-   * @date 2022/5/24
-   * @param {string} url
-   * @returns {*}  {MeshBasicMaterial}
-   * @memberof TMaterial
-   */
-  public initPicMaterial(url: string): MeshBasicMaterial {
-    const texture = new TextureLoader().load(url);
-    let material = new MeshBasicMaterial();
-    material.map = texture;
-    return material;
   }
 
   /**
@@ -281,7 +308,7 @@ export class TMaterial {
     let water = new Water(geometry, {
       textureWidth: width,
       textureHeight: height,
-      waterNormals: new TextureLoader().load(url, function (texture) {
+      waterNormals: this.textureLoader.load(url, function (texture) {
         texture.wrapS = texture.wrapT = RepeatWrapping;
       }),
       sunDirection: sunDirection,
@@ -426,7 +453,7 @@ export class TMaterial {
    * @return {*}  {Texture}  基础纹理贴图
    */
   public initBasicTexture(url: string): Texture {
-    return new TextureLoader().load(url);
+    return this.textureLoader.load(url);
   }
 
   /**
