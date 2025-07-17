@@ -7,7 +7,6 @@ interface ThingOriginParams {
   controls?: controlsParams;
   modelList?: modelInfoParams[];
   markerList?: markerListParams[];
-  views?: cameraViewParams[];
   helper?: helperParams;
   effectComposer?: effectComposerParams;
   [key: string]: any;
@@ -60,12 +59,6 @@ interface markerListParams {
   [key: string]: any;
 }
 
-interface css2dFormParams {
-  label?: string;
-  content?: any;
-  type?: string;
-}
-
 interface helperParams {
   axes?: axesParams;
   grid?: gridParams;
@@ -115,14 +108,15 @@ interface gridParams {
 interface sceneParam {
   renderQuality?: renderQualityParam;
   background?: backgroundParams;
+  ground?: groundParams;
   environment?: environmentParams;
   stats?: statsParams;
   fog?: fogParams;
 }
 /**
- * @description
+ * 渲染质量参数
  * @author LL
- * @date 2023/11/06
+ * @since 2023/11/06
  * @param {boolean} antialias 抗锯齿
  * @param {boolean} toneMapping 景深
  * @interface renderQualityParam
@@ -133,6 +127,7 @@ interface renderQualityParam {
   antialias?: boolean; //
   shadowMap?: shadowMapParams;
   toneMapping?: toneMappingParams;
+  logarithmicDepthBuffer?: boolean;
 }
 interface shadowMapParams {
   enabled: boolean;
@@ -143,12 +138,26 @@ interface toneMappingParams {
   typeList: string[];
 }
 interface backgroundParams {
-  type?: string;
+  type?: "color" | "sky" | "img" | "cubeMap" | "workshop";
   sky?: skyParams;
   color?: colorParams;
-  img?: imgParams;
+  img?: imageParams;
   cubeMap?: cubeMapParams;
+  workshop?: workshopParams;
 }
+
+interface groundParams {
+  active: boolean;
+  size: xyz;
+  material: groundMaterialParams;
+}
+
+interface groundMaterialParams {
+  type: string;
+  color?: colorParams;
+  image?: imageParams;
+}
+
 interface environmentParams {
   type: string;
   typeList: string[];
@@ -159,31 +168,35 @@ interface EquirectangularReflectionMappingConfigParams {
   url: string;
 }
 interface skyParams {
-  color?: skyColorParams;
-  params?: skyParams;
-}
-interface skyColorParams {
-  top?: string;
-  line?: string;
-  bottom?: string;
-}
-interface skyParams {
   radius?: number;
   widthSegments?: number;
   heightSegments?: number;
-  skyCenter?: number[];
+  skyCenter?: xyz;
 }
+
 interface colorParams {
   alpha?: number; //透明度 取值范围0~1
   color?: string;
+  opacity?: number;
 }
 
-interface imgParams {
+interface imageParams {
   url?: string;
+  repeat?: repeatParams;
+}
+
+interface repeatParams {
+  width: number;
+  height: number;
 }
 
 interface cubeMapParams {
   url?: string[];
+}
+
+interface workshopParams {
+  modelType: string;
+  url: string;
 }
 
 interface statsParams {
@@ -210,22 +223,12 @@ interface perspectiveParams {
   far: number;
 }
 
-interface cameraViewParams {
-  name: string;
-  domID?: string;
-  background?: string;
-  offset?: xyz;
-  up?: xyz;
-  lookAt?: string;
-  camera?: any;
-  renderer?: any;
-}
-
 interface lightParams {
   type?: string;
   name?: string;
   color?: string;
   intensity?: number;
+  distance?: number;
   position?: xyz;
   visible: boolean;
 }
@@ -260,7 +263,7 @@ interface skyConfigsParams {
   radius?: number;
   widthSegments?: number;
   heightSegments?: number;
-  skyCenter?: number[];
+  skyCenter?: xyz;
 }
 
 interface AnimationParams {

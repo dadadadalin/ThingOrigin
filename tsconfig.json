@@ -11,9 +11,8 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "skipLibCheck": true,
-    "types": ["three"]
+    "skipLibCheck": true
   },
-  "include": ["src/**/*.ts", "test/main.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["public", "node_modules"]
 }

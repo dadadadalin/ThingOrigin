@@ -1,12 +1,14 @@
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min.js";
 
-interface controlInfo {}
+/**
+ * 交互面板
+ */
 
-export class TGUI{
+export class TGUI {
   panel: any;
 
   public init() {}
-  public initControls(controlInfo: controlInfo) {
+  public initControls() {
     this.panel = new GUI();
 
     let menu = {

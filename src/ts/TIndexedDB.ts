@@ -1,28 +1,28 @@
-import { merge, cloneDeep } from "lodash";
+import { merge, cloneDeep } from "lodash-es";
 import { ThingOrigin } from "../ThingOrigin";
-import { Object3D } from "three";
-import sceneData from "../../public/data/sceneParams";
+
+/**
+ * 本地缓存
+ */
 
 export class TIndexedDB {
-  public TO: ThingOrigin;
   public DBs: Map<string, IDBDatabase> = new Map<string, IDBDatabase>();
-  /** 场景参数 */
-  public sceneData: ThingOriginParams = sceneData;
 
   // 0-10 存放字体
 
-  constructor() {}
+  constructor() {
+    // console.log("TINde", ThingOrigin.sceneData);
+  }
 
   /**
-   * @description 判断是否已缓存此模型，返回是否存储，若已缓存返回模型参数
+   * 判断是否已缓存此模型，返回是否存储，若已缓存返回模型参数
    * @author LL
-   * @date 2022-07-14
+   * @since 2022-07-14
    * @param {modelParams} modelInfo
-   * @returns {*}  {Promise<object>}
    */
   public accessModel(modelInfo: modelInfoParams): PromiseLike<accessResult> {
     let request = window.indexedDB.open(
-      this.sceneData.params.indexedDB.dataBaseName,
+      ThingOrigin.sceneData.params.indexedDB.dataBaseName,
       1
     );
     let db: IDBDatabase;
@@ -35,16 +35,18 @@ export class TIndexedDB {
       request.onsuccess = (event) => {
         db = request.result;
 
-        if (!this.DBs.get(this.sceneData.params.indexedDB.dataBaseName)) {
-          this.DBs.set(this.sceneData.params.indexedDB.dataBaseName, db);
+        if (
+          !this.DBs.get(ThingOrigin.sceneData.params.indexedDB.dataBaseName)
+        ) {
+          this.DBs.set(ThingOrigin.sceneData.params.indexedDB.dataBaseName, db);
         }
 
         var transaction = db.transaction(
-          this.sceneData.params.indexedDB.tableName,
+          ThingOrigin.sceneData.params.indexedDB.tableName,
           "readwrite"
         );
         var store = transaction.objectStore(
-          this.sceneData.params.indexedDB.tableName
+          ThingOrigin.sceneData.params.indexedDB.tableName
         );
 
         var dataRequest = store.index("id").get(modelInfo.id);
@@ -80,11 +82,11 @@ export class TIndexedDB {
         var objectStore;
         if (
           !db.objectStoreNames.contains(
-            this.sceneData.params.indexedDB.tableName
+            ThingOrigin.sceneData.params.indexedDB.tableName
           )
         ) {
           objectStore = db.createObjectStore(
-            this.sceneData.params.indexedDB.tableName,
+            ThingOrigin.sceneData.params.indexedDB.tableName,
             { keyPath: "id" }
           );
           // 定义存储对象的数据项
@@ -109,11 +111,10 @@ export class TIndexedDB {
   }
 
   /**
-   * @description 向indexedDB数据表中，存储模型
+   * 向indexedDB数据表中，存储模型
    * @author LL
-   * @date 2022-07-14
+   * @since 2022-07-14
    * @param {modelInfoParams} modelInfo
-   * @returns {*}  {Promise<object>}
    */
   public insertModel(modelInfo: modelInfoParams): Promise<modelInfoParams> {
     return new Promise((resolve) => {
@@ -134,18 +135,20 @@ export class TIndexedDB {
             // model: new Blob([ajax.responseText]),
             modelSize: ajax.response.size,
             model: new Blob([ajax.response]),
-            dataBaseName: this.sceneData.params.indexedDB.dataBaseName,
-            tableName: this.sceneData.params.indexedDB.tableName,
+            dataBaseName: ThingOrigin.sceneData.params.indexedDB.dataBaseName,
+            tableName: ThingOrigin.sceneData.params.indexedDB.tableName,
           });
 
-          let db = this.DBs.get(this.sceneData.params.indexedDB.dataBaseName);
+          let db = this.DBs.get(
+            ThingOrigin.sceneData.params.indexedDB.dataBaseName
+          );
 
           let indexedTable = db
             .transaction(
-              [this.sceneData.params.indexedDB.tableName],
+              [ThingOrigin.sceneData.params.indexedDB.tableName],
               "readwrite"
             ) //新建事务，readwrite, readonly(默认), versionchange
-            .objectStore(this.sceneData.params.indexedDB.tableName); //拿到IDBObjectStore 对象
+            .objectStore(ThingOrigin.sceneData.params.indexedDB.tableName); //拿到IDBObjectStore 对象
 
           let info = cloneDeep(modelInfo);
           var request1 = indexedTable.add(info);
@@ -180,18 +183,21 @@ export class TIndexedDB {
   }
 
   /**
-   * @description 删除模型
+   * 删除模型
    * @author LL
-   * @date 2022-07-15
+   * @since 2022-07-15
    * @param {number} id
    */
   public deleteModel(id: number): Promise<boolean> {
-    let db = this.DBs.get(this.sceneData.params.indexedDB.dataBaseName);
+    let db = this.DBs.get(ThingOrigin.sceneData.params.indexedDB.dataBaseName);
 
     return new Promise((resolve) => {
       let request = db
-        .transaction([this.sceneData.params.indexedDB.tableName], "readwrite") //新建事务，readwrite, readonly(默认), versionchange
-        .objectStore(this.sceneData.params.indexedDB.tableName) //拿到IDBObjectStore 对象、
+        .transaction(
+          [ThingOrigin.sceneData.params.indexedDB.tableName],
+          "readwrite"
+        ) //新建事务，readwrite, readonly(默认), versionchange
+        .objectStore(ThingOrigin.sceneData.params.indexedDB.tableName) //拿到IDBObjectStore 对象、
         .delete(id);
 
       request.onsuccess = (event) => {
@@ -206,10 +212,10 @@ export class TIndexedDB {
   }
 
   /**
-   * @description 更新模型
+   * 更新模型
    * @author LL
-   * @date 2022-07-15
-   * @param {modelParams} modelInfo
+   * @since 2022-07-15
+   * @param {updateInfoParams} info 更新模型参数
    */
   public updateModel(info: updateInfoParams): Promise<void> {
     if (!info.modelInfo.id) {
@@ -218,8 +224,8 @@ export class TIndexedDB {
     }
 
     return new Promise((resolve, reject) => {
-      const dbName = this.sceneData.params.indexedDB.dataBaseName;
-      const tableName = this.sceneData.params.indexedDB.tableName;
+      const dbName = ThingOrigin.sceneData.params.indexedDB.dataBaseName;
+      const tableName = ThingOrigin.sceneData.params.indexedDB.tableName;
 
       const request = window.indexedDB.open(dbName);
 
@@ -267,12 +273,10 @@ export class TIndexedDB {
   }
 
   /**
-   * @description 查询并缓存模型
+   * 查询并缓存模型
    * @author LL
-   * @date 2025/01/09
+   * @since 2025/01/09
    * @param {modelInfoParams} modelInfo
-   * @returns {*}  {Promise<accessInsetResult>}
-   * @memberof TIndexedDB
    */
   public async accessInsertModel(
     modelInfo: modelInfoParams
@@ -305,12 +309,10 @@ export class TIndexedDB {
   }
 
   /**
-   * @description 加载indexedDB模型  未缓存的缓存后加载，缓存的直接加载
+   * 加载indexedDB模型  未缓存的缓存后加载，缓存的直接加载
    * @author LL
-   * @date 2025/01/07
+   * @since 2025/01/07
    * @param {modelInfoParams} modelInfo
-   * @returns {*}
-   * @memberof TIndexedDB
    */
   public async getIDBModelInfo(modelInfo: modelInfoParams): Promise<any> {
     let accessInsetResult = await this.accessInsertModel(modelInfo);

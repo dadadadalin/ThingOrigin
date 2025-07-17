@@ -1,26 +1,27 @@
 import { Object3D } from "three";
-import { merge, cloneDeep } from "lodash";
+import { cloneDeep } from "lodash-es";
 // @ts-ignore
 import machines from "../../public/data/machines.js";
-import { TAnimate } from "./TAnimate";
-import { Tool } from "./Tool";
 import { ThingOrigin } from "../ThingOrigin";
 
+/**
+ * 特定型号设备
+ */
+
 export class TMachine {
-  TO: ThingOrigin;
+  private TO: ThingOrigin;
 
   constructor(TO: ThingOrigin) {
     this.TO = TO;
   }
 
   /**
-   * @description 设置模型姿态
+   * 设置模型姿态
    * @author LL
-   * @date 2024/06/14
+   * @since 2024/06/14
    * @param {Object3D} model
    * @param {jointsParams[]} animateInfo
    * @param {*} data
-   * @memberof TMachine
    */
   public setModel(model: Object3D, animateInfo: jointsParams[], data: any) {
     animateInfo.forEach((element) => {
@@ -34,13 +35,15 @@ export class TMachine {
             this.getData(data, dataUrl) * element.reverse;
           break;
         case "rotate":
+          let correct = element.correct ? element.correct : 0;
+          let reverse = element.reverse ? element.reverse : 1;
+
           if (element.rotateUnit == "rad") {
             m.rotation[element.axis] =
-              this.getData(data, dataUrl) * element.reverse + element.correct;
+              this.getData(data, dataUrl) * reverse + correct;
           } else {
             m.rotation[element.axis] =
-              (this.getData(data, dataUrl) * element.reverse * Math.PI) / 180 +
-              element.correct;
+              (this.getData(data, dataUrl) * reverse * Math.PI) / 180 + correct;
           }
       }
     });
@@ -65,15 +68,14 @@ export class TMachine {
   };
 
   /**
-   * @description 设置模型动作
+   * 设置模型动作
    * @author LL
-   * @date 2024/06/14
+   * @since 2024/06/14
    * @param {Object3D} model
    * @param {jointsParams[]} animateInfo
    * @param {*} preData
    * @param {*} curData
    * @param {number} time
-   * @memberof TMachine
    */
   public twinModel(
     model: Object3D,
@@ -82,7 +84,7 @@ export class TMachine {
     curData: any,
     time: number
   ) {
-    animateInfo.forEach((element) => {
+    animateInfo.forEach((element: any) => {
       let m = model.getObjectByName(element.modelName);
       let dataUrl = element.dataUrl.split("root.")[1].split(".");
 
@@ -97,24 +99,22 @@ export class TMachine {
           );
           break;
         case "rotate":
+          let correct = element.correct ? element.correct : 0;
+          let reverse = element.reverse ? element.reverse : 1;
           if (element.rotateUnit == "rad") {
             this.TO.animate.rotateRadian(
               m,
               element.axis,
-              this.getData(preData, dataUrl) * element.reverse +
-                element.correct,
-              this.getData(curData, dataUrl) * element.reverse +
-                element.correct,
+              this.getData(preData, dataUrl) * reverse + correct,
+              this.getData(curData, dataUrl) * reverse + correct,
               time
             );
           } else {
             this.TO.animate.rotateAngle(
               m,
               element.axis,
-              this.getData(preData, dataUrl) * element.reverse +
-                element.correct,
-              this.getData(curData, dataUrl) * element.reverse +
-                element.correct,
+              this.getData(preData, dataUrl) * reverse + correct,
+              this.getData(curData, dataUrl) * reverse + correct,
               time
             );
           }
@@ -123,9 +123,9 @@ export class TMachine {
   }
 
   /**
-   * @description 重置机器人关节(角度)
+   * 重置机器人关节(角度)
    * @author LL
-   * @date 2022-05-09
+   * @since 2022-05-09
    * @param {Object3D} robot 机器人
    * @param {jointsParams[]} joints 关节参数
    * @param {jointDataParams} jointData 关节动作数据
@@ -166,9 +166,9 @@ export class TMachine {
   }
 
   /**
-   * @description 重置机器人关节(弧度)
+   * 重置机器人关节(弧度)
    * @author LL
-   * @date 2022-06-20
+   * @since 2022-06-20
    * @param {Object3D} robot 机器人
    * @param {jointsParams[]} joints 关节参数
    * @param {jointDataParams} jointData 关节动作数据
@@ -206,13 +206,12 @@ export class TMachine {
   }
 
   /**
-   * @description 通过欧拉角控制旋转
+   * 通过欧拉角控制旋转
    * @author LL
-   * @date 2024/09/18
+   * @since 2024/09/18
    * @param {Object3D} robot
    * @param {jointsParams[]} joints
    * @param {jointDataParams} jointData
-   * @memberof TMachine
    */
   public setJointEuler(
     robot: Object3D,
@@ -244,9 +243,9 @@ export class TMachine {
   }
 
   /**
-   * @description 模型孪生旋转动画（角度）
+   * 模型孪生旋转动画（角度）
    * @author LL
-   * @date 2022-05-09
+   * @since 2022-05-09
    * @param {Object3D} robot 机器人
    * @param {jointsParams[]} joints 关节参数
    * @param {jointDataParams} preData 上一次动作数据
@@ -270,7 +269,7 @@ export class TMachine {
         if (preData[dataUrl] != curData[dataUrl]) {
           this.TO.animate.rotateAngle(
             robot.getObjectByName(joints[i].modelName),
-            joints[i].axis,
+            joints[i].axis as "x" | "y" | "z",
             joints[i].reverse * Number(preData[dataUrl]),
             joints[i].reverse * Number(curData[dataUrl]),
             time
@@ -289,9 +288,9 @@ export class TMachine {
   }
 
   /**
-   * @description 模型孪生旋转动画（弧度）
+   * 模型孪生旋转动画（弧度）
    * @author LL
-   * @date 2022-06-15
+   * @since 2022-06-15
    * @param {Object3D} robot 机器人
    * @param {jointsParams[]} joints 关节参数
    * @param {jointDataParams} preData 上一次动作数据
@@ -316,7 +315,7 @@ export class TMachine {
         if (preData[dataUrl] != curData[dataUrl]) {
           this.TO.animate.rotateRadian(
             robot.getObjectByName(joints[i].modelName),
-            joints[i].axis,
+            joints[i].axis as "x" | "y" | "z",
             joints[i].reverse * Number(preData[dataUrl]),
             joints[i].reverse * Number(curData[dataUrl]),
             time
@@ -335,15 +334,13 @@ export class TMachine {
   }
 
   /**
-   * @description 播放模型自定义动画
+   * 播放模型自定义动画
    * @author LL
-   * @date 2024/09/24
+   * @since 2024/09/24
    * @param {Object3D} robot 机器人模型
    * @param {jointsParams[]} joints 关节说明
    * @param {jointDataParams[]} actions 动作数组
    * @param {number} time 每个动作间隔时间（毫秒）
-   * @returns {*}
-   * @memberof TMachine
    */
   public playRadian(
     robot: Object3D,
@@ -372,9 +369,9 @@ export class TMachine {
   }
 
   /**
-   * @description aubo机器人的孪生动画
+   * aubo机器人的孪生动画
    * @author LL
-   * @date 2022-05-09
+   * @since 2022-05-09
    * @param {Object3D} aubo aubo机器人
    * @param {jointDataParams} preData 上一次动作数据
    * @param {jointDataParams} curData 当前动作数据
@@ -386,25 +383,24 @@ export class TMachine {
     curData: jointDataParams,
     time: number
   ) {
-    this.twinAngle(aubo, machines.aubo.joints, preData, curData, time);
+    this.twinAngle(aubo, machines.aubo.joints as any, preData, curData, time);
   }
 
   /**
-   * @description aobo机器人的孪生动画
+   * aobo机器人的孪生动画
    * @author LL
-   * @date 2022-05-09
+   * @since 2022-05-09
    * @param {Object3D} aubo aobo机器人
    * @param {jointDataParams} jointData 关节数据
    */
   public resetAobo(aubo: Object3D, jointData: jointDataParams) {
-    this.setJointAngle(aubo, machines.aubo.joints, jointData);
+    this.setJointAngle(aubo, machines.aubo.joints as any, jointData);
   }
 
   /**
-   * @description 获取模型姿态信息
+   * 获取模型姿态信息
    * @author LL
-   * @date 2025/02/21
-   * @memberof Tool
+   * @since 2025/02/21
    */
   public getModelPose(model: Object3D) {
     let hierarchy = model.userData.hierarchy;
@@ -455,12 +451,11 @@ export class TMachine {
   }
 
   /**
-   * @description 设置模型姿态
+   * 设置模型姿态
    * @author LL
-   * @date 2025/02/21
+   * @since 2025/02/21
    * @param {Object3D} model
    * @param {*} poseData
-   * @memberof TMachine
    */
   public setPose(model: Object3D, poseData: any) {
     for (let i = 0; i < poseData.length; i++) {

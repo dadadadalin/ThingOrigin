@@ -1,25 +1,24 @@
 import { Object3D } from "three";
-import { TAnimate } from "./TAnimate";
-import { Tool } from "./Tool";
 import { ThingOrigin } from "../ThingOrigin";
 
+/**
+ * 爆炸图
+ */
 export class TExplode {
-  TO: ThingOrigin;
+  private TO: ThingOrigin;
 
   constructor(TO: ThingOrigin) {
     this.TO = TO;
   }
 
   /**
-   * @description 展示爆炸图
+   * 展示爆炸图
    * @author LL
-   * @date 2021/09/01
+   * @since 2021/09/01
    * @param {Object3D} model 模型
-   * @param {number} ratio 爆炸图偏移系数
-   * @param {number} time 完成时间（毫秒）
-   * @returns {*}
+   * @param {explodeInfo} explodeInfo 爆炸参数
    */
-  explode(model: Object3D, explodeIfo: explodeInfo) {
+  explode(model: Object3D, explodeInfo: explodeInfo) {
     if (!model) {
       console.warn("爆炸失败，物体不存在");
       return;
@@ -32,32 +31,32 @@ export class TExplode {
         child,
         "x",
         a[i].position.x,
-        a[i].position.x * explodeIfo.ratio,
-        explodeIfo.time
+        a[i].position.x * explodeInfo.ratio,
+        explodeInfo.time
       );
       this.TO.animate.move(
         child,
         "y",
         a[i].position.y,
-        a[i].position.y * explodeIfo.ratio,
-        explodeIfo.time
+        a[i].position.y * explodeInfo.ratio,
+        explodeInfo.time
       );
       this.TO.animate.move(
         child,
         "z",
         a[i].position.z,
-        a[i].position.z * explodeIfo.ratio,
-        explodeIfo.time
+        a[i].position.z * explodeInfo.ratio,
+        explodeInfo.time
       );
     }
   }
 
   /**
-   * @description 展示爆炸图（流程）
+   * 展示爆炸图（流程）
    * @author LL
-   * @date 2024/07/10
-   * @param {Object3D} origin 目标克隆模型
-   * @memberof TExplode
+   * @since 2024/07/10
+   * @param {Object3D} origin 源模型
+   * @param {explodeInfo} explodeInfo 爆炸参数
    */
   showExplode(origin: Object3D, explodeInfo: explodeInfo): Object3D {
     let explodeModel = origin.clone();

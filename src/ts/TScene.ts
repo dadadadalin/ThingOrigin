@@ -6,7 +6,6 @@ import {
   Color,
   CubeTextureLoader,
   EquirectangularReflectionMapping,
-  Group,
   LinearToneMapping,
   LoopOnce,
   Mesh,
@@ -15,24 +14,33 @@ import {
   PMREMGenerator,
   ReinhardToneMapping,
   Scene,
-  ShaderMaterial,
-  SphereGeometry,
   TextureLoader,
+  SphereGeometry,
+  ShaderMaterial,
   Vector3,
   Vector2,
+  MathUtils,
+  Group,
 } from "three";
 import { ThingOrigin } from "../ThingOrigin";
-import _ from "lodash";
+import { merge, cloneDeep } from "lodash-es";
 
+import { Sky } from "three/examples/jsm/objects/Sky";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment";
 import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
-import { CSS2DObject } from "three/examples/jsm/renderers/CSS2DRenderer";
+import { TModel } from "./TModel";
 
+/**
+ * 场景
+ */
 export class TScene extends Scene {
-  public TO: ThingOrigin;
+  private TO: ThingOrigin;
+  private model: TModel = new TModel();
   constructor(TO: ThingOrigin) {
     super();
     this.TO = TO;
+
+    console.log("TScene", ThingOrigin.sceneData);
   }
 
   // 添加 traverse 方法
@@ -45,32 +53,52 @@ export class TScene extends Scene {
     }
   }
 
+  /**
+   * 根据模型名称获取模型
+   * @author LL
+   * @since 2025/06/17
+   * @param {string} name
+   */
+  public getModelByName(name: string): Object3D | null {
+    let model = this.getObjectByProperty("name", name);
+    return model;
+  }
+
+  /**
+   * 设置场景背景
+   * @author LL
+   * @since 2024/06/17
+   */
   public setBackground() {
-    switch (this.TO.sceneData.scene.background.type) {
+    switch (ThingOrigin.sceneData.scene.background.type) {
       case "sky":
-        this.initSky({
-          top: this.TO.sceneData.scene.background.sky.color.top,
-          line: this.TO.sceneData.scene.background.sky.color.line,
-          bottom: this.TO.sceneData.scene.background.sky.color.bottom,
-        });
+        this.initSky();
         break;
       case "color":
         this.setBackgroundColor({
-          color: this.TO.sceneData.scene.background.color.color,
-          alpha: this.TO.sceneData.scene.background.color.alpha,
+          color: ThingOrigin.sceneData.scene.background.color.color,
+          alpha: ThingOrigin.sceneData.scene.background.color.alpha,
         });
         break;
       case "img":
-        this.setBackgroundImg(this.TO.sceneData.scene.background.img.url);
+        this.setBackgroundImg(ThingOrigin.sceneData.scene.background.img.url);
         break;
       case "cubeMap": //环境贴图
-        this.setBackgroundCubeMap(this.TO.sceneData.scene.background.cubeMap);
+        this.setBackgroundCubeMap(
+          ThingOrigin.sceneData.scene.background.cubeMap
+        );
         break;
-      default:
+      case "workshop": //车间
+        this.setWorkshop(ThingOrigin.sceneData.scene.background.workshop);
         break;
     }
   }
 
+  /**
+   * 创建天空盒
+   * @author LL
+   * @since 25/04/2022
+   */
   /**
    * @description 创建天空盒
    * @author LL
@@ -88,7 +116,11 @@ export class TScene extends Scene {
       radius: 4000,
       widthSegments: 32,
       heightSegments: 15,
-      skyCenter: [0, 0, 0],
+      skyCenter: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
     }
   ) {
     // note that the camera's far distance should bigger than the radius,
@@ -108,9 +140,9 @@ export class TScene extends Scene {
         skyCenter: {
           value:
             new Vector3(
-              skyConfigs.skyCenter[0],
-              skyConfigs.skyCenter[1],
-              skyConfigs.skyCenter[2]
+              skyConfigs.skyCenter.x,
+              skyConfigs.skyCenter.y,
+              skyConfigs.skyCenter.z
             ) || new Vector3(),
         },
       },
@@ -151,10 +183,9 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 将背景设置为颜色
+   * 设置背景颜色
    * @author LL
-   * @date 2023/11/09
-   * @memberof TScene
+   * @since 2023/11/09
    */
   public setBackgroundColor(bgColor: any) {
     let sky = this.getObjectByName("sky");
@@ -171,25 +202,50 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 将背景设置为环境贴图
+   * 设置背景环境贴图
    * @author LL
-   * @date 2023/11/09
+   * @since 2023/11/09
    * @param {cubeMapParams} cubeMap
-   * @memberof TScene
    */
   public setBackgroundCubeMap(cubeMap: cubeMapParams) {
     const envMap = new CubeTextureLoader().load(cubeMap.url);
     this.background = envMap;
   }
 
+  public setWorkshop(workShopInfo: workshopParams) {
+    this.background = null;
+
+    let workshop = this.getObjectByName("TO_workshop");
+    if (workshop) {
+      this.remove(workshop);
+    }
+
+    this.model
+      .initFileModel({
+        modelType: workShopInfo.modelType,
+        modelName: "TO_workshop",
+        base: {
+          modelUrl: workShopInfo.url,
+        },
+        scale: {
+          x: 15,
+          y: 15,
+          z: 15,
+        },
+      })
+      .then((model: any) => {
+        this.add(model.scene);
+      });
+  }
+
   public setEnvironment() {
-    switch (this.TO.sceneData.scene.environment.type) {
+    switch (ThingOrigin.sceneData.scene.environment.type) {
       case "roomEnvironment":
         this.setRoomEnvironment();
         break;
       case "EquirectangularReflectionMapping":
         this.setEquirectangularReflectionMapping(
-          this.TO.sceneData.scene.environment
+          ThingOrigin.sceneData.scene.environment
             .EquirectangularReflectionMappingConfig
         );
         break;
@@ -199,10 +255,9 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 将环境设置为环境光
+   * 设置环境光
    * @author LL
-   * @date 2023/11/08
-   * @memberof TScene
+   * @since 2023/11/08
    */
   public setRoomEnvironment() {
     const pmremGenerator = new PMREMGenerator(this.TO.renderer.renderer);
@@ -213,11 +268,10 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 将环境设置为经纬线映射贴图
+   * 设置环境经纬线映射贴图
    * @author gj
-   * @date 2023/11/07
+   * @since 2023/11/07
    * @param {EquirectangularReflectionMappingConfigParams} config
-   * @memberof TScene
    */
   public setEquirectangularReflectionMapping(
     config: EquirectangularReflectionMappingConfigParams
@@ -228,9 +282,14 @@ export class TScene extends Scene {
     });
   }
 
+  /**
+   * 设置色调映射
+   * @author LL
+   * @since 2025/06/20
+   */
   public setToneMapping() {
     //色调映射
-    switch (this.TO.sceneData.scene.renderQuality.toneMapping.type) {
+    switch (ThingOrigin.sceneData.scene.renderQuality.toneMapping.type) {
       case "NoToneMapping":
         this.TO.renderer.renderer.toneMapping = NoToneMapping;
         break;
@@ -252,9 +311,9 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 修改背景图片
+   * 设置背景图片
    * @author LL
-   * @date 2021/08/26
+   * @since 2021/08/26
    * @param {string} url
    */
   public setBackgroundImg(url: string) {
@@ -262,7 +321,40 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 删除模型
+   * 克隆模型
+   * @author LL
+   * @param {Object3D} targetModel 被克隆的模型
+   * @param {xyz} position 克隆模型摆放位置
+   * @category 方法
+   */
+  public cloneObject(targetModel: Object3D, position: xyz): Group {
+    if (!targetModel) {
+      console.warn("克隆失败失败，物体不存在");
+      return;
+    }
+
+    let group = new Group();
+    let cloneObj = targetModel.clone();
+    targetModel.parent.matrixWorld.decompose(
+      group.position,
+      group.quaternion,
+      group.scale
+    );
+    group.updateMatrixWorld(true);
+    targetModel.matrixWorld.decompose(
+      cloneObj.position,
+      cloneObj.quaternion,
+      cloneObj.scale
+    );
+    cloneObj.updateMatrixWorld(true);
+    cloneObj.position.set(position.x, position.y, position.z);
+    group.attach(cloneObj);
+
+    return group;
+  }
+
+  /**
+   * 删除模型（模型名称）
    * @author gj
    * @param {string} modelName
    */
@@ -298,13 +390,12 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 播放模型内置动画(gltf)
+   * 播放模型内置动画(gltf)
    * @author LL
-   * @date 2023/10/08
+   * @since 2023/10/08
    * @param {GLTF} model 含动画模型
    * @param {(number[] | number)} index 播放动画的下标
    * @param {boolean} loop 是否循环播放
-   * @memberof TModel
    */
   public playAnimation(
     model: Object3D,
@@ -335,12 +426,10 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 获取升序模型名称
+   * 获取升序模型名称
    * @author LL
-   * @date 2024/10/21
+   * @since 2024/10/21
    * @param {string} modelName
-   * @returns {*}
-   * @memberof ThingOrigin
    */
   public getOrderModelName(modelName: string) {
     let id = 1;
@@ -351,12 +440,10 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 克隆模型
+   * 克隆模型
    * @author LL
-   * @date 2024/09/10
+   * @since 2024/09/10
    * @param {Object3D} model
-   * @returns {*}
-   * @memberof Tool
    */
   public cloneModel(model: Object3D, modelInfo: modelInfoParams) {
     if (!model) {
@@ -375,15 +462,15 @@ export class TScene extends Scene {
     cloneModel.position.x = model.position.x + (box.max.x - box.min.x) * 1.1;
 
     let cloneInfo = this.TO.tool.getModelInfo(cloneModel);
-    let info = _.merge(_.cloneDeep(modelInfo), cloneInfo);
+    let info = merge(cloneDeep(modelInfo), cloneInfo);
 
     return { model: cloneModel, info: info };
   }
 
   /**
-   * @description 控制模型显示隐藏
+   * 控制模型显示隐藏
    * @author LL
-   * @date 2021/08/16
+   * @since 2021/08/16
    * @param {string} name 模型名称
    * @param {boolean} visible 是否可见
    */
@@ -397,62 +484,62 @@ export class TScene extends Scene {
   }
 
   /**
-   * @description 生成模型快照（支持异步、Blob）
+   * 生成场景截图
    * @author gj
-   * @date 2025/06/09
+   * @since 2025/06/09
    * @param resolutionScale 分辨率缩放倍数（默认为 1）
    * @returns Promise<Blob | null> 返回一个包含图像数据的Blob对象或null
    */
   public generateSnapshot(resolutionScale: number = 1): Promise<Blob | null> {
-      return new Promise((resolve, reject) => {
-          // 渲染当前场景
-          this.TO.renderer.renderer.render(this.TO.scene, this.TO.camera.camera);
+    return new Promise((resolve, reject) => {
+      // 渲染当前场景
+      this.TO.renderer.renderer.render(this.TO.scene, this.TO.camera.camera);
 
-          try {
-              const { width, height } = this.TO.renderer.renderer.getSize(new Vector2());
-              console.log(width, height);
-              const canvasWidth = Math.floor(width * resolutionScale);
-              const canvasHeight = Math.floor(height * resolutionScale);
+      try {
+        const { width, height } = this.TO.renderer.renderer.getSize(
+          new Vector2()
+        );
+        const canvasWidth = Math.floor(width * resolutionScale);
+        const canvasHeight = Math.floor(height * resolutionScale);
 
-              let tempCanvas: HTMLCanvasElement = document.createElement("canvas");
-              tempCanvas.width = canvasWidth;
-              tempCanvas.height = canvasHeight;
+        let tempCanvas: HTMLCanvasElement = document.createElement("canvas");
+        tempCanvas.width = canvasWidth;
+        tempCanvas.height = canvasHeight;
 
-              const tempContext = tempCanvas.getContext("2d");
-              if (!tempContext) {
-                  throw new Error("无法获取canvas上下文");
-              }
+        const tempContext = tempCanvas.getContext("2d");
+        if (!tempContext) {
+          throw new Error("无法获取canvas上下文");
+        }
 
-              // 将WebGL内容绘制到临时canvas中
-              const webglCanvas = this.TO.renderer.renderer.domElement;
-              if (tempCanvas instanceof HTMLCanvasElement) {
-                  const destCtx = tempCanvas.getContext("2d");
-                  if (destCtx) {
-                      destCtx.drawImage(webglCanvas, 0, 0, canvasWidth, canvasHeight);
-                  }
-              }
-
-              // 使用 toBlob 异步导出图片
-              if (tempCanvas instanceof HTMLCanvasElement) {
-                  tempCanvas.toBlob(
-                      (blob) => {
-                          if (blob) {
-                              resolve(blob); // 返回Blob对象
-                          } else {
-                              reject(new Error("生成Blob失败"));
-                          }
-                      },
-                      "image/webp",
-                      1
-                  );
-              } else {
-                  reject(new Error("不支持的canvas类型"));
-              }
-
-          } catch (error) {
-              console.error("生成快照失败:", error);
-              reject(error);
+        // 将WebGL内容绘制到临时canvas中
+        const webglCanvas = this.TO.renderer.renderer.domElement;
+        if (tempCanvas instanceof HTMLCanvasElement) {
+          const destCtx = tempCanvas.getContext("2d");
+          if (destCtx) {
+            destCtx.drawImage(webglCanvas, 0, 0, canvasWidth, canvasHeight);
           }
-      });
-    }
+        }
+
+        // 使用 toBlob 异步导出图片
+        if (tempCanvas instanceof HTMLCanvasElement) {
+          tempCanvas.toBlob(
+            (blob) => {
+              if (blob) {
+                resolve(blob); // 返回Blob对象
+              } else {
+                reject(new Error("生成Blob失败"));
+              }
+            },
+            "image/webp",
+            1
+          );
+        } else {
+          reject(new Error("不支持的canvas类型"));
+        }
+      } catch (error) {
+        console.error("生成快照失败:", error);
+        reject(error);
+      }
+    });
+  }
 }

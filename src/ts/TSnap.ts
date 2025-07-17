@@ -1,19 +1,23 @@
 import { TLine } from "./TLine";
 import { Tool } from "./Tool";
 
+/**
+ * 吸附
+ */
+
 export class TSnap {
   /** 工具函数 */
-  public tool: Tool = new Tool();
+  private tool: Tool = new Tool();
 
-  public line: TLine = new TLine();
+  /** 线条模型 */
+  private line: TLine = new TLine();
 
   /**
-   * @description 点吸附
+   * 点吸附
    * @author LL
-   * @date 2025/03/24
+   * @since 2025/03/24
    * @param {snapPointParams} modelA 模型A相关信息
    * @param {snapPointParams} modelB 模型B相关信息
-   * @memberof TSnap
    */
   snapPoint(modelA: snapPointParams, modelB: snapPointParams) {
     // 计算偏移量
@@ -29,12 +33,11 @@ export class TSnap {
   }
 
   /**
-   * @description 线吸附
+   * 线吸附
    * @author LL
-   * @date 2025/03/26
+   * @since 2025/03/26
    * @param {snapLineParams} modelA
    * @param {snapLineParams} modelB
-   * @memberof TSnap
    */
   public snapLine(modelA: snapLineParams, modelB: snapLineParams) {
     // 步骤1：计算两个线段的方向向量
@@ -73,12 +76,11 @@ export class TSnap {
   }
 
   /**
-   * @description 面吸附
+   * 面吸附
    * @author LL
-   * @date 2025/03/24
+   * @since 2025/03/24
    * @param {snapFaceParams} modelA 模型A相关信息
    * @param {snapFaceParams} modelB 模型B相关信息
-   * @memberof TSnap
    */
   snapFace(modelA: snapFaceParams, modelB: snapFaceParams) {
     // ===== 1. 法线对齐 =====

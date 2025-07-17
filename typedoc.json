@@ -1,9 +1,17 @@
 {
-  "entryPoints": "src",
+  "entryPoints": ["./src"], //指定需要生成文档的入口文件或目录。
+  "entryPointStrategy": "expand", //定义如何处理 entryPoints 中的路径。
+  "excludeExternals": true, //是否排除外部依赖（如 node_modules 中的模块）的文档。
+  "excludeTags": ["@author", "@since", "@since"],
   "out": "./doc",
-  "exclude": ["**/__private__/**"],
-  "excludePrivate": true,
-  "excludeProtected": true,
-  "excludeInternal": true,
-  "readme": "none"
+  "exclude": ["**/private/**", "node_modules/**"],
+  "excludePrivate": true, //是否排除标记为 private 的成员（如类的私有属性 / 方法）。
+  "excludeProtected": false, //是否排除标记为 protected 的成员（如类的受保护属性 / 方法）。
+  "excludeInternal": false, //是否排除标记为 “内部” 的成员（非公共 API）。
+  // "plugin": ["typedoc-plugin-markdown"],
+  "readme": "README.md",
+  "hideGenerator": false, //是否隐藏文档底部的 “由 TypeDoc 生成” 标识。
+  "disableSources": true,
+  "categorizeByGroup": false, //是否按 @group 标签对 API 进行分组。
+  "categoryOrder": ["构造函数", "核心属性", "普通属性", "方法", "*"]
 }

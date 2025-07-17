@@ -1,7 +1,4 @@
 import {
-  BackSide,
-  DoubleSide,
-  FrontSide,
   LinearFilter,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
@@ -12,7 +9,6 @@ import {
   MeshDistanceMaterial,
   PointsMaterial,
   ShadowMaterial,
-  RGBFormat,
   SpriteMaterial,
   RawShaderMaterial,
   ShaderMaterial,
@@ -20,282 +16,408 @@ import {
   CubeTextureLoader,
   VideoTexture,
   Texture,
-  CanvasTexture,
   CubeTexture,
   Color,
   PlaneGeometry,
   RepeatWrapping,
   Vector3,
-  IUniform,
   DataTexture,
-  TypedArray,
-  PixelFormat,
-  TextureDataType,
+  RGBAFormat,
+  Vector2,
+  LinearMipmapLinearFilter,
+  UnsignedByteType,
+  ClampToEdgeWrapping,
+  UVMapping,
+  MeshLambertMaterial,
+  MeshPhongMaterial,
+  MeshStandardMaterial,
+  FrontSide,
+  MeshBasicMaterialParameters,
+  MeshLambertMaterialParameters,
+  MeshPhongMaterialParameters,
+  MeshStandardMaterialParameters,
+  MeshPhysicalMaterialParameters,
+  PointsMaterialParameters,
+  MeshToonMaterialParameters,
+  SpriteMaterialParameters,
+  ShadowMaterialParameters,
+  MeshDepthMaterialParameters,
+  BasicDepthPacking,
+  MeshDistanceMaterialParameters,
+  LineBasicMaterialParameters,
+  LineDashedMaterialParameters,
+  ShaderMaterialParameters,
+  MeshNormalMaterialParameters,
+  MeshNormalMaterial,
+  RGBFormat,
 } from "three";
 
 import { Water } from "three/examples/jsm/objects/Water";
+import {
+  CubeTextureParams,
+  MapType,
+  BaseMapParams,
+  NormalMapParams,
+  MaterialMapsParams,
+  VideoTextureParams,
+  DataTextureParams,
+} from "./TMaterialInterfaces";
 
+/**
+ * 材质、贴图
+ */
 export class TMaterial {
   // 创建纹理加载器
   textureLoader = new TextureLoader();
 
-  /**
-   * @description 创建图片材质
-   * @author LL
-   * @date 2025/06/11
-   * @param {string} url
-   * @param {{
-   *       active: boolean;
-   *       x: number;
-   *       y: number;
-   *     }} [repeat]
-   * @returns {*}  {Texture}
-   * @memberof TMaterial
-   */
-  initImageTexture(
-    url: string,
-    repeat?: {
-      active: boolean;
-      x: number;
-      y: number;
+  public async initImageMaterial(params: imageParams) {
+
+    let texture = await this.textureLoader.load(params.url);
+
+    if(params.repeat){
+      if(params.repeat.width && params.repeat.width > 1){
+        texture.wrapS = RepeatWrapping;
+      }
+      if(params.repeat.height && params.repeat.height > 1){
+        texture.wrapT = RepeatWrapping;
+      }
+      texture.repeat.set(params.repeat.width, params.repeat.height);
     }
-  ): Texture {
-    // 加载图片材质
-    const texture = this.textureLoader.load(url);
 
-    if (repeat?.active) {
-      // 设置阵列模式 RepeatWrapping
-      texture.wrapS = RepeatWrapping;
-      texture.wrapT = RepeatWrapping;
+    let material = new MeshPhongMaterial({ color: "#fff", map: texture });
 
-      // 设置x方向的重复数(沿着管道路径方向)
-      texture.repeat.x = repeat.x;
-      // 设置y方向的重复数(环绕管道方向)
-      texture.repeat.y = repeat.y;
-    }
-    return texture;
-  }
-
-  /**
-   * @description 图片材质
-   * @author LL
-   * @date 2022/5/24
-   * @param {string} url
-   * @returns {*}  {MeshBasicMaterial}
-   * @memberof TMaterial
-   */
-  public initImageMaterial(url: string): MeshBasicMaterial {
-    const texture = this.textureLoader.load(url);
-    let material = new MeshBasicMaterial();
-    material.map = texture;
     return material;
   }
 
   /**
-   * @description 创建精灵材质
-   * @author LL
-   * @param {string} url
-   * @param {string} color
-   * @param {boolean} fog
-   * @return {*}  {SpriteMaterial}
+   * 创建基础材质
+   * @author my
+   * @since 2023/12/12
+   * @param [params] 材质参数配置
    */
-  public initSpriteMaterial(
-    url: string,
-    color: string,
-    fog: boolean
-  ): SpriteMaterial {
-    var mapB = this.textureLoader.load(url);
-    var materialB = new SpriteMaterial({ map: mapB, color: color, fog: fog });
+  public initBasicMaterial(
+    params: Partial<MeshBasicMaterialParameters> = {}
+  ): MeshBasicMaterial {
+    // 定义默认参数
+    const defaultParams: MeshBasicMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      wireframe: false,
+      side: FrontSide,
+    };
 
-    return materialB;
+    // 合并默认参数和用户参数
+    const mergedParams = { ...defaultParams, ...params };
+
+    // 创建并返回材质实例
+    return new MeshBasicMaterial(mergedParams);
   }
-
   /**
-   * @description 生成视频材质
-   * @author LL
-   * @date 2021/09/02
-   * @param {HTMLVideoElement} videoDom
-   */
-  public initVideoMaterial(videoDom: HTMLVideoElement): VideoTexture {
-    var texture = new VideoTexture(videoDom);
-    texture.minFilter = LinearFilter;
-    texture.magFilter = LinearFilter;
-    texture.format = RGBFormat;
-
-    return texture;
-  }
-
-  /**
-   * @description 创建物理网格材质
+   * 创建漫反射材质（受光照影响）
    * @author gj
-   * @date 2023/11/09
-   * @param color 材质的颜色
-   * @param map 颜色贴图
-   * @param envMap 环境贴图
-   * @param metalness 金属度  非金属材质0.0，金属使用1.0 范围从0.0-1.0
-   * @param roughness 粗糙度 0.0表示平滑的镜面反射，1.0表示完全漫反射。默认值为1.0
-   * @param clearcoat 表示clear coat层的强度 范围从0.0到1.0m,默认为0.0
-   * @param clearcoatRoughness clear coat层的粗糙度，由0.0到1.0。 默认为0.0
-   * @param envMapIntensity 通过乘以环境贴图的颜色来缩放环境贴图的效果
-   * @param side 定义将要渲染哪一面  正面0，背面1, 双面2 默认为正面
-   * @return {*} {MeshPhysicalMaterial} 物理网格材质
+   * @since 2025/07/09
+   * @param [params] 材质参数配置
+   */
+  public initLambertMaterial(
+    params: Partial<MeshLambertMaterialParameters> = {}
+  ): MeshLambertMaterial {
+    const defaultParams: MeshLambertMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      side: FrontSide,
+      emissive: 0x000000,
+      emissiveIntensity: 1,
+    };
+    return new MeshLambertMaterial({ ...defaultParams, ...params });
+  }
+
+  /**
+   * 创建高光材质（支持高光反射）
+   * @author gj
+   * @since 2025/07/09
+   * @param [params] 材质参数配置
+   */
+  public initPhongMaterial(
+    params: Partial<MeshPhongMaterialParameters> = {}
+  ): MeshPhongMaterial {
+    const defaultParams: MeshPhongMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      side: FrontSide,
+      emissive: 0x000000,
+      emissiveIntensity: 1,
+      shininess: 30,
+    };
+    return new MeshPhongMaterial({ ...defaultParams, ...params });
+  }
+  /**
+   * 标准网格材质（PBR标准材质基于物理的渲染）
+   * @author gj
+   * @since 2025/07/09
+   * @param [params] 材质参数配置
+   */
+  public initStandardMaterial(
+    params: Partial<MeshStandardMaterialParameters> = {}
+  ): MeshStandardMaterial {
+    const defaultParams: MeshStandardMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      side: FrontSide,
+      emissive: 0x000000,
+      emissiveIntensity: 1,
+      metalness: 0,
+      roughness: 1,
+    };
+    return new MeshStandardMaterial({ ...defaultParams, ...params });
+  }
+  /**
+   * 物理网格材质（PBR标准材质基于物理的渲染）
+   * @author gj
+   * @since 2023/11/10
+   * @param [params] 材质参数配置
    */
   public initPhysicalMaterial(
-    color: string | number | Color,
-    map?: Texture,
-    envMap?: Texture,
-    metalness?: number,
-    roughness?: number,
-    clearcoat?: number,
-    clearcoatRoughness?: number,
-    envMapIntensity?: number,
-    side?: number
+    params: Partial<MeshPhysicalMaterialParameters> = {}
   ): MeshPhysicalMaterial {
-    return new MeshPhysicalMaterial({
-      color: color,
-      map: map,
-      envMap: envMap,
-      metalness: metalness,
-      roughness: roughness,
-      clearcoat: clearcoat,
-      clearcoatRoughness: clearcoatRoughness,
-      envMapIntensity: envMapIntensity,
-      side:
-        side === 0 || side == null
-          ? FrontSide
-          : side === 1
-          ? BackSide
-          : DoubleSide,
-    });
+    const defaultParams: MeshPhysicalMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      side: FrontSide,
+      emissive: 0x000000,
+      emissiveIntensity: 1,
+      metalness: 0,
+      roughness: 1,
+      clearcoat: 0,
+      clearcoatRoughness: 0,
+    };
+    return new MeshPhysicalMaterial({ ...defaultParams, ...params });
   }
-
   /**
-   * @description 创建点材质
+   * 创建点云材质
    * @author gj
-   * @date 2023/11/10
-   * @param color 材质的颜色
-   * @param vertexColors 定义材料是否使用顶点颜色，默认false ---如果该选项设置为true，则color属性失效
-   * @param size 设置点的大小 默认值为1.0
-   * @param map 颜色贴图
-   * @return {*} {PointsMaterial} 点材质
+   * @since 2023/11/10
+   * @param [params] 材质参数配置
    */
   public initPointsMaterial(
-    color: string | number | Color,
-    vertexColors: boolean,
-    size?: number,
-    map?: Texture
+    params: Partial<PointsMaterialParameters> = {}
   ): PointsMaterial {
-    return new PointsMaterial({
-      color: color,
-      vertexColors: vertexColors,
-      size: size,
-      map: map,
-    });
+    const defaultParams: PointsMaterialParameters = {
+      color: 0xffffff,
+      size: 1,
+      sizeAttenuation: true,
+      transparent: false,
+      opacity: 1.0,
+    };
+    return new PointsMaterial({ ...defaultParams, ...params });
   }
 
   /**
-   * @description 创建卡通材质
+   * 创建卡通渲染材质（Toon）
    * @author gj
-   * @date 2023/11/10
-   * @param color 材质的颜色
-   * @param emissive 发射（光）颜色
-   * @param map 颜色贴图
-   * @param gradientMap 卡通着色的渐变贴图
-   * @return {*} {MeshToonMaterial} 卡通材质
+   * @since 2023/11/10
+   * @param [params] 材质参数配置
    */
   public initToonMaterial(
-    color: string | number | Color,
-    emissive?: string | number | Color,
-    map?: Texture,
-    gradientMap?: Texture
+    params: Partial<MeshToonMaterialParameters> = {}
   ): MeshToonMaterial {
-    return new MeshToonMaterial({
-      color: color,
-      emissive: emissive,
-      map: map,
-      gradientMap: gradientMap,
-    });
+    const defaultParams: MeshToonMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      side: FrontSide,
+      emissive: 0x000000,
+      emissiveIntensity: 1,
+    };
+    return new MeshToonMaterial({ ...defaultParams, ...params });
+  }
+  /**
+   * 创建Sprite材质
+   * @author LL
+   * @since 2023/11/10
+   * @param [params] 材质参数配置
+   */
+  public initSpriteMaterial(
+    params: Partial<SpriteMaterialParameters> = {}
+  ): SpriteMaterial {
+    const defaultParams: SpriteMaterialParameters = {
+      color: 0xffffff,
+      transparent: false,
+      opacity: 1.0,
+      rotation: 0,
+      fog: true,
+    };
+    return new SpriteMaterial({ ...defaultParams, ...params });
   }
 
   /**
-   * @description 创建原始着色器材质
+   * 创建阴影材质（用于投射和接收阴影的特殊材质）
+   * @author LL
+   * @since 2023/11/13
+   * @param [params] 材质参数配置
+   */
+  public initShadowMaterial(
+    params: Partial<ShadowMaterialParameters> = {}
+  ): ShadowMaterial {
+    const defaultParams: ShadowMaterialParameters = {
+      color: 0x000000,
+      transparent: true,
+      opacity: 0.5,
+    };
+    return new ShadowMaterial({ ...defaultParams, ...params });
+  }
+
+  /**
+   * 创建深度材质（基于距离相机的深度渲染的材质）
+   * @author my
+   * @since 2023/11/13
+   * @param [params] 材质参数配置
+   */
+  public initDepthMaterial(
+    params: Partial<MeshDepthMaterialParameters> = {}
+  ): MeshDepthMaterial {
+    const defaultParams: MeshDepthMaterialParameters = {
+      depthPacking: BasicDepthPacking,
+      wireframe: false,
+      side: FrontSide,
+    };
+    return new MeshDepthMaterial({ ...defaultParams, ...params });
+  }
+
+  /**
+   * 创建距离材质（基于到参考点的距离渲染的材质）
+   * @author my
+   * @since 2023/12/12
+   * @param [params] 材质参数配置
+   */
+  public initDistanceMaterial(
+    params: Partial<MeshDistanceMaterialParameters> = {}
+  ): MeshDistanceMaterial {
+    const defaultParams: MeshDistanceMaterialParameters = {
+      referencePosition: new Vector3(),
+      nearDistance: 0,
+      farDistance: 1,
+      side: FrontSide,
+    };
+    return new MeshDistanceMaterial({ ...defaultParams, ...params });
+  }
+  /**
+   * 创建法线网格材质
    * @author gj
-   * @date 2023/11/13
-   * @param vertexShader 顶点着色器的GLSL代码
-   * @param fragmentShader 片元着色器的GLSL代码
-   * @param uniforms uniforms
-   * @param vertexColors 定义是否使用顶点着色。默认为false
-   * @param side 定义将要渲染哪一面  正面0，背面1, 双面2 默认为正面
-   * @return {*} {RawShaderMaterial} 原始着色器材质
+   * @since 2025/07/12
+   * @param [params] 材质参数配置
+   */
+  public initNormalMaterial(
+    params: Partial<MeshNormalMaterialParameters> = {}
+  ): MeshNormalMaterial {
+    const defaultParams: MeshNormalMaterialParameters = {
+      flatShading: false,
+      transparent: false,
+      opacity: 1.0,
+      wireframe: false,
+      side: FrontSide,
+    };
+    return new MeshNormalMaterial({ ...defaultParams, ...params });
+  }
+
+  /**
+   * 创建线框材质
+   * @author my
+   * @since 2023/12/08
+   * @param [params] 材质参数配置
+   */
+  public initLineMaterial(
+    params: Partial<LineBasicMaterialParameters> = {}
+  ): LineBasicMaterial {
+    const defaultParams: LineBasicMaterialParameters = {
+      color: 0xffffff,
+      linewidth: 1,
+      linecap: "round",
+      linejoin: "round",
+      transparent: false,
+      opacity: 1.0,
+    };
+    return new LineBasicMaterial({ ...defaultParams, ...params });
+  }
+
+  /**
+   * 创建虚线材质
+   * @author my
+   * @since 2023/12/08
+   * @param [params] 材质参数配置
+   */
+  public initLineDashedMaterial(
+    params: Partial<LineDashedMaterialParameters> = {}
+  ): LineDashedMaterial {
+    const defaultParams: LineDashedMaterialParameters = {
+      color: 0xffffff,
+      linewidth: 1,
+      scale: 1,
+      dashSize: 3,
+      gapSize: 1,
+      transparent: false,
+      opacity: 1.0,
+    };
+    return new LineDashedMaterial({ ...defaultParams, ...params });
+  }
+  /**
+   * 创建自定义着色器材质
+   * @author gj
+   * @since 2023/11/13
+   * @param [params] 材质参数配置
    */
   public initRawShaderMaterial(
-    vertexShader: string,
-    fragmentShader: string,
-    uniforms?: { [p: string]: IUniform },
-    vertexColors?: boolean,
-    side?: number
+    params: Partial<ShaderMaterialParameters> = {}
   ): RawShaderMaterial {
-    return new RawShaderMaterial({
-      vertexShader: vertexShader,
-      fragmentShader: fragmentShader,
-      uniforms: uniforms ?? null,
-      vertexColors: vertexColors ? vertexColors : false,
-      side:
-        side === 0 || side == null
-          ? FrontSide
-          : side === 1
-          ? BackSide
-          : DoubleSide,
-    });
+    const defaultParams: ShaderMaterialParameters = {
+      vertexShader: "",
+      fragmentShader: "",
+      uniforms: {},
+      transparent: false,
+      side: FrontSide,
+    };
+    return new RawShaderMaterial({ ...defaultParams, ...params });
   }
 
   /**
-   * @description 创建着色器材质
+   * 创建Shader材质
    * @author gj
-   * @date 2023/11/13
-   * @param uniforms uniforms
-   * @param vertexShader 顶点着色器的GLSL代码
-   * @param fragmentShader 片元着色器的GLSL代码
-   * @return {*} {ShaderMaterial} 着色器材质
+   * @since 2023/11/13
+   * @param [params] 材质参数配置
    */
   public initShaderMaterial(
-    uniforms: { [p: string]: IUniform },
-    vertexShader: string,
-    fragmentShader: string
+    params: Partial<ShaderMaterialParameters> = {}
   ): ShaderMaterial {
-    return new ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: vertexShader,
-      fragmentShader: fragmentShader,
-    });
+    const defaultParams: ShaderMaterialParameters = {
+      vertexShader: "",
+      fragmentShader: "",
+      uniforms: {},
+      transparent: false,
+      side: FrontSide,
+      wireframe: false,
+    };
+    return new ShaderMaterial({ ...defaultParams, ...params });
   }
 
   /**
-   * @description 阴影材质; 此材质可以接收阴影，但在其他方面完全透明。
-   * @author LL
-   * @date 2023/11/13
-   * @returns {*}
-   * @memberof TMaterial
-   */
-  public initShadowMaterial(): ShadowMaterial {
-    const material = new ShadowMaterial();
-    return material;
-  }
-
-  /**
-   * @description 给模型设置水波纹材质（需要将色调映射 设置为 NoToneMapping）
-   * @author LL
-   * @date 2023/11/13
-   * @param {(Geometry | BufferGeometry)} geometry 模型
-   * @param {number} width
-   * @param {number} height
-   * @param {string} url
-   * @param {(string | number | Color)} [waterColor] 水颜色
-   * @param {Vector3} [sunDirection] 太阳方向
-   * @param {(string | number | Color)} [sunColor] 太阳颜色
-   * @returns {*}
-   * @memberof TMaterial
-   */
+     * 给模型设置水波纹材质
+     * @author LL
+     * @since 2023/11/13
+     * @param {(Geometry | BufferGeometry)} geometry 模型
+     * @param {number} width
+     * @param {number} height
+     * @param {string} url
+     * @param {(string | number | Color)} [waterColor] 水颜色
+     * @param {Vector3} [sunDirection] 太阳方向
+     * @param {(string | number | Color)} [sunColor] 太阳颜色
+     > [!NOTE]
+     > 需要将色调映射 设置为 NoToneMapping
+     *
+     */
   public setWaterSkin(
     geometry: PlaneGeometry,
     width: number,
@@ -320,167 +442,368 @@ export class TMaterial {
   }
 
   /**
-   * @description 创建基础线条材质
-   * @author my
-   * @date 2023/12/08
-   * @param color 线条材质颜色
-   * @param linecap 线条两端样式，可选值为 'butt', 'round' 和 'square'。默认值为 'round'
-   * @param linejoin 线连接节点样式，可选值为 'round', 'bevel' 和 'miter'。默认值为 'round'
-   * @param map 纹理贴图
-   * @return {*} {LineBasicMaterial} 基础线条材质
-   */
-  public initLineBasicMaterial(
-    color: string | number | Color,
-    linecap?: string,
-    linejoin?: string,
-    map?: Texture
-  ): LineBasicMaterial {
-    return new LineBasicMaterial({
-      color: color,
-      linecap: linecap,
-      linejoin: linejoin,
-      //@ts-ignore
-      map: map,
-    });
-  }
-
-  /**
-   * @description 创建虚线材质
-   * @author my
-   * @date 2023/12/08
-   * @param color 虚线材质颜色
-   * @param scale 虚线材质线条中虚线部分的占比，默认值为1
-   * @param dashSize 虚线材质虚线的大小，默认值为3
-   * @param gapSize 虚线材质间隙大小，默认值为1
-   * @return {*} {LineDashedMaterial} 虚线材质
-   */
-  public initLineDashedMaterial(
-    color: string | number | Color,
-    scale?: number,
-    dashSize?: number,
-    gapSize?: number
-  ): LineDashedMaterial {
-    return new LineDashedMaterial({
-      color: color,
-      scale: scale,
-      dashSize: dashSize,
-      gapSize: gapSize,
-    });
-  }
-
-  /**
-   * @description 创建基础网格材质
-   * @author my
-   * @date 2023/12/12
-   * @param color 基础网格材质颜色
-   * @return {*} {MeshBasicMaterial} 基础网格材质
-   */
-  public initMeshBasicMaterial(
-    color: string | number | Color
-  ): MeshBasicMaterial {
-    return new MeshBasicMaterial({
-      color: color,
-    });
-  }
-
-  /**
-   * @description 创建深度网格材质
-   * @author my
-   * @date 2023/11/13
-   * @param alphaMap 灰度纹理贴图
-   * @param map 颜色贴图
-   * @param wireframe 将几何体渲染为线框。默认为false（即渲染为平滑着色）
-   * @return {*} {MeshBasicMaterial} 深度网格材质
-   */
-  public initMeshDepthMaterial(
-    alphaMap?: Texture,
-    map?: Texture,
-    wireframe?: boolean
-  ): MeshDepthMaterial {
-    return new MeshDepthMaterial({
-      alphaMap: alphaMap,
-      map: map,
-      wireframe: wireframe,
-    });
-  }
-
-  /**
-   * @description 创建MeshDistanceMaterial
-   * @author my
-   * @date 2023/12/12
-   * @param alphaMap 灰度纹理贴图,默认为null
-   * @param map 颜色贴图
-   * @return {*} {MeshDistanceMaterial} MeshDistanceMaterial材质
-   */
-  public initMeshDistanceMaterial(
-    alphaMap?: Texture,
-    map?: Texture
-  ): MeshDistanceMaterial {
-    return new MeshDistanceMaterial({
-      alphaMap: alphaMap,
-      map: map,
-    });
-  }
-
-  /**
-   * @description 从原始数据创建一个纹理贴图
+   * 创建并配置纹理贴图
    * @author gj
-   * @date 2023/11/10
-   * @param data 包含纹理数据的数组或类型化数组
-   * @param width 纹理的宽度
-   * @param height 纹理的高度
-   * @param format 纹理的格式
-   * @param type 纹理的数据类型
-   * @return {*} {DataTexture} 原始数据纹理贴图
+   * @since 2025/07/13
+   * @param params 贴图参数
    */
-  public initDataTexture(
-    data: TypedArray,
-    width: number,
-    height: number,
-    format?: PixelFormat,
-    type?: TextureDataType
-  ): DataTexture {
-    const texture = new DataTexture(data, width, height, format, type);
-    texture.needsUpdate = true;
+  public initTextureMap(params: BaseMapParams | NormalMapParams): Texture {
+    // 根据贴图类型设置默认参数
+    const defaultParams = this.getDefaultMapParams(params.mapType);
+
+    // 合并默认参数和用户参数
+    const mergedParams = { ...defaultParams, ...params };
+
+    // 创建纹理加载器
+    const loader = new TextureLoader(mergedParams.loadingManager);
+
+    // 加载纹理
+    const texture = loader.load(
+      mergedParams.url,
+      mergedParams.onLoad,
+      mergedParams.onProgress,
+      mergedParams.onError ||
+        ((err) => {
+          console.error(`未能加载${mergedParams.mapType}映射：`, err);
+        })
+    );
+    // 配置通用纹理属性
+    this.configureCommonTextureProperties(texture, mergedParams);
     return texture;
   }
 
   /**
-   * @description 创建基础纹理贴图
+   * 批量创建材质贴图
    * @author gj
-   * @date 2023/11/09
-   * @param {url} url 图片路径
-   * @return {*}  {Texture}  基础纹理贴图
+   * @since 2025/07/13
+   * @param params 贴图参数集合
    */
-  public initBasicTexture(url: string): Texture {
-    return this.textureLoader.load(url);
+  public initTextureMaps(params: MaterialMapsParams): {
+    [key in MapType]?: Texture;
+  } {
+    const maps: { [key in MapType]?: Texture } = {} as any;
+
+    // 为每种贴图类型创建纹理
+    if (params.map)
+      maps["map"] = this.initTextureMap({ ...params.map, mapType: "map" });
+    if (params.normal)
+      maps["normal"] = this.initTextureMap({
+        ...params.normal,
+        mapType: "normal",
+        // normalScale: new Vector2(1, 1) 
+      });
+    if (params.roughness)
+      maps["roughness"] = this.initTextureMap({
+        ...params.roughness,
+        mapType: "roughness",
+      });
+    if (params.metalness)
+      maps["metalness"] = this.initTextureMap({
+        ...params.metalness,
+        mapType: "metalness",
+      });
+    if (params.ao)
+      maps["ao"] = this.initTextureMap({ ...params.ao, mapType: "ao" });
+    if (params.emissive)
+      maps["emissive"] = this.initTextureMap({
+        ...params.emissive,
+        mapType: "emissive",
+      });
+    if (params.displacement)
+      maps["displacement"] = this.initTextureMap({
+        ...params.displacement,
+        mapType: "displacement",
+      });
+    if (params.alpha)
+      maps["alpha"] = this.initTextureMap({
+        ...params.alpha,
+        mapType: "alpha",
+      });
+    if (params.bump)
+      maps["bump"] = this.initTextureMap({
+        ...params.bump,
+        mapType: "bump",
+      });
+
+    return maps;
   }
 
   /**
-   * @description 从Canvas元素中创建纹理贴图
-   * @author gj
-   * @date 2023/11/09
-   * @param {canvasDom} canvasDom 画布元素
-   * @return {*}  {CanvasTexture} Canvas纹理贴图
+   * 配置通用纹理属性
    */
-  public initCanvasTexture(canvasDom: HTMLCanvasElement): CanvasTexture {
-    return new CanvasTexture(canvasDom);
+  private configureCommonTextureProperties(
+    texture: Texture,
+    params: BaseMapParams
+  ) {
+    // 配置纹理基础属性
+    if (params.wrapS !== undefined) texture.wrapS = params.wrapS;
+    if (params.wrapT !== undefined) texture.wrapT = params.wrapT;
+    if (params.magFilter !== undefined) texture.magFilter = params.magFilter;
+    if (params.minFilter !== undefined) texture.minFilter = params.minFilter;
+    if (params.anisotropy !== undefined) texture.anisotropy = params.anisotropy;
+
+    // 配置纹理变换属性
+    if (params.repeat !== undefined) {
+      if (Array.isArray(params.repeat)) {
+        texture.repeat.set(params.repeat[0], params.repeat[1]);
+      } else {
+        texture.repeat.copy(params.repeat);
+      }
+    }
+
+    if (params.offset !== undefined) {
+      if (Array.isArray(params.offset)) {
+        texture.offset.set(params.offset[0], params.offset[1]);
+      } else {
+        texture.offset.copy(params.offset);
+      }
+    }
+
+    if (params.flipY !== undefined) texture.flipY = params.flipY;
+    if (params.mapping !== undefined) texture.mapping = params.mapping;
+
+    // 配置纹理高级属性
+    if (params.format !== undefined) texture.format = params.format;
+    if (params.type !== undefined) texture.type = params.type;
+    //   if (params.encoding !== undefined) texture.encoding = params.encoding;
+    if (params.generateMipmaps !== undefined)
+      texture.generateMipmaps = params.generateMipmaps;
+    if (params.premultiplyAlpha !== undefined)
+      texture.premultiplyAlpha = params.premultiplyAlpha;
+    if (params.unpackAlignment !== undefined)
+      texture.unpackAlignment = params.unpackAlignment;
   }
 
   /**
-   * @description 创建一个由6张图片组成的立方纹理
-   * @author gj
-   * @date 2023/11/09
-   * @param {pathPrefix} pathPrefix 图片路径前缀
-   * @param {picNameList} picNameList 图片名称集合
-   * @return {*}  {CubeTexture} 立方纹理
+   * 获取特定贴图类型的默认参数
    */
-  public initCubeTexture(
-    pathPrefix: string,
-    picNameList: string[]
-  ): CubeTexture {
-    const loader = new CubeTextureLoader();
-    loader.setPath(pathPrefix);
-    return loader.load(picNameList);
+  private getDefaultMapParams(mapType: MapType): BaseMapParams {
+    const baseDefaults: BaseMapParams = {
+      url: "",
+      mapType,
+      wrapS: RepeatWrapping,
+      wrapT: RepeatWrapping,
+      magFilter: LinearFilter,
+      minFilter: LinearMipmapLinearFilter,
+      anisotropy: 1,
+      repeat: new Vector2(1, 1),
+      offset: new Vector2(0, 0),
+      flipY: true,
+      mapping: UVMapping,
+      format: RGBFormat,
+      type: UnsignedByteType,
+      // encoding: mapType === 'map' || mapType === 'emissive' || mapType === 'alpha'
+      //   ? sRGBEncoding
+      //   : LinearEncoding,
+      generateMipmaps: true,
+      premultiplyAlpha: false,
+      unpackAlignment: 4,
+
+      // 默认强度参数
+      aoMapIntensity: 1,
+      bumpScale: 1,
+      roughnessScale: 1,
+      metalnessScale: 1,
+      displacementScale: 1,
+      emissiveIntensity: 1,
+    };
+    return baseDefaults;
+  }
+
+
+  /**
+   * 加载立方体环境贴图
+   * @author gj
+   * @since 2025/07/09
+   * @param [params] 纹理参数配置
+   */
+  public initCubeTexture(params: Partial<CubeTextureParams>): CubeTexture {
+    const loader = new CubeTextureLoader(params.loadingManager);
+    if (params.urls && params.urls.length !== 6) {
+      console.warn("CubeTextureParams.urls 必须是长度为 6 的数组。");
+    }
+    // 构建6个面的纹理路径
+    const prefix = params.pathPrefix || "";
+    const paths = [
+      `${prefix}${params.urls[0]}`,
+      `${prefix}${params.urls[1]}`,
+      `${prefix}${params.urls[2]}`,
+      `${prefix}${params.urls[3]}`,
+      `${prefix}${params.urls[4]}`,
+      `${prefix}${params.urls[5]}`,
+    ];
+
+    // 加载立方体贴图
+    const texture = loader.load(
+      paths,
+      params.onLoad,
+      params.onProgress,
+      params.onError ||
+        ((err) => {
+          console.error(`未能加载 cube texture:`, err);
+        })
+    );
+
+    // 配置纹理属性
+    if (params.magFilter !== undefined) texture.magFilter = params.magFilter;
+    if (params.minFilter !== undefined) texture.minFilter = params.minFilter;
+    if (params.anisotropy !== undefined) texture.anisotropy = params.anisotropy;
+    if (params.format !== undefined) texture.format = params.format;
+    if (params.type !== undefined) texture.type = params.type;
+    //   if (params.encoding !== undefined) texture.encoding = params.encoding;
+    if (params.generateMipmaps !== undefined)
+      texture.generateMipmaps = params.generateMipmaps;
+    if (params.unpackAlignment !== undefined)
+      texture.unpackAlignment = params.unpackAlignment;
+
+    return texture;
+  }
+
+  /**
+   * 从原始数据创建一个纹理贴图
+   * @author gj
+   * @since 2025/07/09
+   * @param [params] 纹理参数配置
+   */
+  public initDataTexture(params: DataTextureParams): DataTexture {
+    // 定义默认参数
+    const defaultParams: Omit<
+      DataTextureParams,
+      "data" | "width" | "height" | "format"
+    > = {
+      type: UnsignedByteType,
+      magFilter: LinearFilter,
+      minFilter: LinearMipmapLinearFilter,
+      anisotropy: 1,
+      wrapS: ClampToEdgeWrapping,
+      wrapT: ClampToEdgeWrapping,
+      repeat: new Vector2(1, 1),
+      offset: new Vector2(0, 0),
+      flipY: false,
+      mapping: UVMapping,
+      // encoding: LinearEncoding,
+      generateMipmaps: true,
+      premultiplyAlpha: false,
+      unpackAlignment: 4,
+    };
+
+    // 合并用户参数和默认参数
+    const mergedParams = { ...defaultParams, ...params };
+
+    // 创建数据纹理
+    const texture = new DataTexture(
+      mergedParams.data,
+      mergedParams.width,
+      mergedParams.height,
+      mergedParams.format,
+      mergedParams.type
+    );
+
+    // 配置纹理属性
+    texture.magFilter = mergedParams.magFilter;
+    texture.minFilter = mergedParams.minFilter;
+    texture.anisotropy = mergedParams.anisotropy;
+    texture.wrapS = mergedParams.wrapS;
+    texture.wrapT = mergedParams.wrapT;
+
+    // 配置纹理变换属性
+    if (Array.isArray(mergedParams.repeat)) {
+      texture.repeat.set(mergedParams.repeat[0], mergedParams.repeat[1]);
+    } else {
+      texture.repeat.copy(mergedParams.repeat);
+    }
+
+    if (Array.isArray(mergedParams.offset)) {
+      texture.offset.set(mergedParams.offset[0], mergedParams.offset[1]);
+    } else {
+      texture.offset.copy(mergedParams.offset);
+    }
+
+    texture.flipY = mergedParams.flipY;
+    texture.mapping = mergedParams.mapping;
+
+    // 配置纹理高级属性
+    //   texture.encoding = mergedParams.encoding;
+    texture.generateMipmaps = mergedParams.generateMipmaps;
+    texture.premultiplyAlpha = mergedParams.premultiplyAlpha;
+    texture.unpackAlignment = mergedParams.unpackAlignment;
+
+    // 标记纹理需要更新
+    texture.needsUpdate = true;
+
+    return texture;
+  }
+
+  /**
+   * 生成视频纹理
+   * @author LL
+   * @since 2021/09/02
+   * @param [params] 纹理参数配置
+   */
+  public initVideoTexture(params: Partial<VideoTextureParams>): VideoTexture {
+    // 定义默认参数
+    const defaultParams: VideoTextureParams = {
+      videoDom: null,
+      wrapS: ClampToEdgeWrapping,
+      wrapT: ClampToEdgeWrapping,
+      magFilter: LinearFilter,
+      minFilter: LinearFilter,
+      anisotropy: 1,
+      repeat: new Vector2(1, 1),
+      offset: new Vector2(0, 0),
+      flipY: true,
+      mapping: UVMapping,
+      format: RGBFormat,
+      type: UnsignedByteType,
+      // encoding: sRGBEncoding,
+      generateMipmaps: true,
+      premultiplyAlpha: false,
+      unpackAlignment: 4,
+      needsUpdate: true,
+      autoplay: true,
+      loop: true,
+      muted: true,
+      playsinline: true,
+    };
+    // 合并用户参数和默认参数
+    const mergedParams = { ...defaultParams, ...params };
+    // 创建视频纹理
+    const texture = new VideoTexture(mergedParams.videoDom);
+
+    // 配置纹理属性
+    texture.wrapS = mergedParams.wrapS;
+    texture.wrapT = mergedParams.wrapT;
+    texture.magFilter = mergedParams.magFilter;
+    texture.minFilter = mergedParams.minFilter;
+    texture.anisotropy = mergedParams.anisotropy;
+
+    // 配置纹理变换属性
+    if (Array.isArray(mergedParams.repeat)) {
+      texture.repeat.set(mergedParams.repeat[0], mergedParams.repeat[1]);
+    } else {
+      texture.repeat.copy(mergedParams.repeat);
+    }
+
+    if (Array.isArray(mergedParams.offset)) {
+      texture.offset.set(mergedParams.offset[0], mergedParams.offset[1]);
+    } else {
+      texture.offset.copy(mergedParams.offset);
+    }
+
+    texture.flipY = mergedParams.flipY;
+    texture.mapping = mergedParams.mapping;
+
+    // 配置纹理高级属性
+    texture.format = mergedParams.format;
+    texture.type = mergedParams.type;
+    //   texture.encoding = params.encoding;
+    texture.generateMipmaps = mergedParams.generateMipmaps;
+    texture.premultiplyAlpha = mergedParams.premultiplyAlpha;
+    texture.unpackAlignment = mergedParams.unpackAlignment;
+
+    // 设置自动更新
+    texture.needsUpdate = mergedParams.needsUpdate;
+
+    return texture;
   }
 }

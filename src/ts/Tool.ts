@@ -12,6 +12,7 @@ import {
   Euler,
   EulerOrder,
   Quaternion,
+  Vector2,
 } from "three";
 
 /**
@@ -19,17 +20,28 @@ import {
  */
 export class Tool {
   /**
-   * @description 创建Three.js颜色
+   * 创建Three.js颜色
    * @author LL
    */
-  public Color(color?: string): Color {
+  public initColor(color?: string): Color {
     return color ? new Color(color) : new Color();
+  }
+    /**
+   * 创建Vector2向量
+   * @author gj
+   * @since 2025/07/10
+   * @param {number} x
+   * @param {number} y
+   * @returns {*}  {Vector2}
+   */
+  public initVector2(x?: number, y?: number): Vector2 {
+    return new Vector2(x, y);
   }
 
   /**
-   * @description 创建Vector3向量
+   * 创建Vector3向量
    * @author LL
-   * @date 2021/08/24
+   * @since 2021/08/24
    * @param {number} x
    * @param {number} y
    * @param {number} z
@@ -40,29 +52,27 @@ export class Tool {
   }
 
   /**
-   * @description 创建Vector4向量
+   * 创建Vector4向量
    * @author LL
-   * @date 2024/07/19
+   * @since 2024/07/19
    * @param {number} [x]
    * @param {number} [y]
    * @param {number} [z]
    * @param {number} [w]
-   * @returns {*}  {Vector4}
-   * @memberof Tool
    */
   public initVector4(x?: number, y?: number, z?: number, w?: number): Vector4 {
     return new Vector4(x, y, z, w);
   }
 
   /**
-   * @description 获取轴向量
+   * 获取轴向量
    * @author LL
-   * @date 2022/04/25
+   * @since 2022/04/25
    * @param {string} axis 轴
    * @param {number} [value=1]
    * @returns {*}  {Vector3}
    */
-  public initVector3ByAxis(axis: string, value: number = 1): Vector3 {
+  public initVector3ByAxis(axis: "x" | "y" | "z", value: number = 1): Vector3 {
     let vec3: Vector3;
     if (axis == "x") {
       vec3 = new Vector3(value, 0, 0);
@@ -76,20 +86,18 @@ export class Tool {
   }
 
   /**
-   * @description 创建3x3矩阵
+   * 创建3x3矩阵
    * @author LL
-   * @date 2024/07/19
-   * @returns {*}  {Matrix3}
-   * @memberof Tool
+   * @since 2024/07/19
    */
   public initMatrix3(): Matrix3 {
     return new Matrix3();
   }
 
   /**
-   * @description 创建4x4矩阵
+   * 创建4x4矩阵
    * @author gj
-   * @date 2023/11/20
+   * @since 2023/11/20
    * @returns {*}  {Matrix4}
    */
   public initMatrix4(): Matrix4 {
@@ -97,44 +105,38 @@ export class Tool {
   }
 
   /**
-   * @description 创建Quaternion
+   * 创建Quaternion
    * @author LL
-   * @date 2025/03/17
-   * @returns {*}
-   * @memberof Tool
+   * @since 2025/03/17
    */
   public initQuaternion() {
     return new Quaternion();
   }
 
   /**
-   * @description 创建Box3
+   * 创建Box3
    * @author LL
-   * @date 2025/03/26
-   * @returns {*}
-   * @memberof Tool
+   * @since 2025/03/26
    */
   public initBox3() {
     return new Box3();
   }
 
   /**
-   * @description 创建欧拉角
+   * 创建欧拉角
    * @author LL
-   * @date 2024/07/19
+   * @since 2024/07/19
    * @param {number} [x]
    * @param {number} [y]
    * @param {number} [z]
    * @param {EulerOrder} [order]
-   * @returns {*}
-   * @memberof Tool
    */
   public initEuler(x?: number, y?: number, z?: number, order?: EulerOrder) {
     return new Euler(x, y, z, order);
   }
 
   /**
-   * @description 获取模型中心点位置
+   * 获取模型中心点位置
    * @author LL
    * @param {Object3D} obj 模型
    * @return {*}  {Vector3}
@@ -145,7 +147,7 @@ export class Tool {
   }
 
   /**
-   * @description 获取模型包围盒
+   * 获取模型包围盒
    * @author LL
    * @param {Object3D} obj 模型
    * @return {*}  {Box3}
@@ -159,12 +161,10 @@ export class Tool {
   }
 
   /**
-   * @description 获取模型包围盒尺寸
+   * 获取模型包围盒尺寸
    * @author LL
-   * @date 2024/09/18
+   * @since 2024/09/18
    * @param {Object3D} obj
-   * @returns {*}
-   * @memberof Tool
    */
   public getModelSize(obj: Object3D) {
     let box = this.getModelBox(obj);
@@ -179,7 +179,7 @@ export class Tool {
   }
 
   /**
-   * @description 获取模型的包裹球
+   * 获取模型的包裹球
    * @author LL
    * @param {Object3D} obj
    * @return {*}  {Sphere}
@@ -201,9 +201,8 @@ export class Tool {
   }
 
   /**
-   * @description
+   * 获取模型的子模型信息
    * @author LL
-   * @date 2021/10/15 获取模型的子模型信息
    * @param {Object3D} model 模型
    * @returns {*}  {Object3D[]}
    */
@@ -233,9 +232,9 @@ export class Tool {
   }
 
   /**
-   * @description 获取模型信息
+   * 获取模型信息
    * @author LL
-   * @date 2021/08/19
+   * @since 2021/08/19
    * @param {Object3D} model 模型
    * @returns {*}  {object}
    */
@@ -261,9 +260,9 @@ export class Tool {
   }
 
   /**
-   * @description 获取模型顶点数
+   * 获取模型顶点数
    * @author gj
-   * @date 2023/5/16
+   * @since 2023/5/16
    * @update LL 24/6/19
    * @param {Object3D} model 模型
    * @returns {*}  {number} 顶点数
@@ -287,30 +286,9 @@ export class Tool {
   }
 
   /**
-   * @description 获取点到线的最小距离
-   * @author LL
-   * @date 2025/03/26
-   * @param {*} point
-   * @param {*} lineStart
-   * @param {*} lineEnd
-   * @returns {*}  {number}
-   * @memberof Tool
-   */
-  public getDistanceToLine(point, lineStart, lineEnd): number {
-    const lineVec = new Vector3().subVectors(lineEnd, lineStart);
-    const pointVec = new Vector3().subVectors(point, lineStart);
-    const t = pointVec.dot(lineVec) / lineVec.lengthSq();
-    const clampedT = Math.max(0, Math.min(1, t));
-    const closestPoint = this.initVector3()
-      .copy(lineStart)
-      .add(lineVec.multiplyScalar(clampedT));
-    return point.distanceTo(closestPoint);
-  }
-
-  /**
-   * @description 获取模型三角面数
+   * 获取模型三角面数
    * @author gj
-   * @date 2023/5/16
+   * @since 2023/5/16
    * @update LL 24/6/20
    * @param {Object3D} model 模型
    * @returns {*}  {number} 三角面数
@@ -336,25 +314,52 @@ export class Tool {
   }
 
   /**
-   * @description 计算两点间距离
+   * 计算两点间距离
    * @author LL
    * @param {xyz} start
    * @param {xyz} end
    * @return {*}  {number}
    */
-  public getDistance(start: xyz, end: xyz): number {
+  public getPointDistance(start: xyz, end: xyz): number {
     return new Vector3(start.x, start.y, start.z).distanceTo(
       new Vector3(end.x, end.y, end.z)
     );
   }
 
   /**
-   * @description 获取模型世界坐标位置
+   * 获取点到线的最小距离
    * @author LL
-   * @date 2024/09/04
-   * @param {Object3D} obj
-   * @returns {*}  {Vector3}
-   * @memberof Tool
+   * @since 2025/03/26
+   * @param {*} point
+   * @param {*} lineStart
+   * @param {*} lineEnd
+   */
+  public getPointLineDistance(
+    point: xyz,
+    line: {
+      start: xyz;
+      end: xyz;
+    }
+  ): number {
+    let lineStart = new Vector3(line.start.x, line.start.y, line.start.z);
+    let lineEnd = new Vector3(line.end.x, line.end.y, line.end.z);
+    let pointV3 = new Vector3(point.x, point.y, point.z);
+
+    const lineVec = new Vector3().subVectors(lineEnd, lineStart);
+    const pointVec = new Vector3().subVectors(pointV3, lineStart);
+    const t = pointVec.dot(lineVec) / lineVec.lengthSq();
+    const clampedT = Math.max(0, Math.min(1, t));
+    const closestPoint = this.initVector3()
+      .copy(lineStart)
+      .add(lineVec.multiplyScalar(clampedT));
+    return pointV3.distanceTo(closestPoint);
+  }
+
+  /**
+   * 获取模型世界坐标位置
+   * @author LL
+   * @since 2024/09/04
+   * @param {Object3D} obj 模型
    */
   public getWorldPosition(obj: Object3D): Vector3 {
     let position = new Vector3();
@@ -363,13 +368,11 @@ export class Tool {
   }
 
   /**
-   * @description 判断模型是否有2D元素
+   * 判断模型是否有2D标记
    * @author LL
-   * @date 2024/07/04
-   * @param {Object3D} obj
-   * @param domId
-   * @returns {*}  {boolean}
-   * @memberof Tool
+   * @since 2024/07/04
+   * @param {Object3D} obj 模型
+   * @param domId 2D标记id
    */
   public ownMarker(obj: Object3D, domId?: string): boolean {
     let result = false;
@@ -385,14 +388,12 @@ export class Tool {
   }
 
   /**
-   * @description
+   * 判断是否是数组
    * @author LL
-   * @date 08/10/2023
+   * @since 08/10/2023
    * @param {*} value
-   * @returns {*}  {Boolean}
-   * @memberof Tool
    */
-  public isArray(value): Boolean {
+  public isArray(value: any): Boolean {
     return (
       value &&
       typeof value === "object" &&
@@ -403,9 +404,9 @@ export class Tool {
   }
 
   // /**
-  //  * @description 创建属性缓冲区对象
+  //  * 创建属性缓冲区对象
   //  * @author gj
-  //  * @date 2023/11/20
+  //  * @since 2023/11/20
   //  * @param array 属性数组 （例如顶点位置向量，面片索引，法向量，颜色值，UV坐标以及任何自定义 attribute ）
   //  * @param itemSize 表示几个为一组
   //  * @param normalized 指明缓存中的数据如何与GLSL代码中的数据对应
@@ -420,9 +421,9 @@ export class Tool {
   // }
 
   // /**
-  //  * @description 三角面片
+  //  * 三角面片
   //  * @author gj
-  //  * @date 2023/11/20
+  //  * @since 2023/11/20
   //  * @param a 顶点 A 的索引
   //  * @param b 顶点 B 的索引
   //  * @param c 顶点 C 的索引
@@ -443,9 +444,9 @@ export class Tool {
   // }
 
   /**
-   * @description 生成时钟，获取当前时间
+   * 生成时钟，获取当前时间
    * @author gj
-   * @date 2023/11/20
+   * @since 2023/11/20
    * @returns {*}  {Clock}
    */
   public initClock(): Clock {

@@ -1,49 +1,65 @@
-import { Clock, Matrix4, Object3D, Raycaster, Vector2, Vector3 } from "three";
+import { Clock, Matrix4, Raycaster, Vector2, Vector3 } from "three";
 import { DragControls } from "three/examples/jsm/controls/DragControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { PointerLockControls } from "three/examples/jsm/controls/PointerLockControls";
-import {
-  TransformControls,
-  TransformControlsMode,
-} from "three/examples/jsm/controls/TransformControls";
+import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 
 import { ThingOrigin } from "../ThingOrigin";
 
+/**
+ * 控制器
+ */
 export class TControl {
-  TO: ThingOrigin;
+  private TO: ThingOrigin;
+
+  /** 轨道控制器 */
   orbit: OrbitControls;
+  /** 拖拽控制器 */
   drag: DragControls;
+  /** 指针锁定控制器 */
   pointerLock: PointerLockControls;
+  /** 射线投射器 */
   raycaster: Raycaster;
+  /** 变换控制器 */
   transform: TransformControls;
-  transformCallback: any = (e) => {
+  //todo  check
+  private transformCallback: any = (e) => {
     if (this.orbit) {
       // 当设置为false时，控制器将不会响应用户的操作。默认值为true。
       this.orbit.enabled = !e.value;
     }
   };
 
-  unResponseType = [
+  private unResponseType = [
     "BoxHelper",
     "GridHelper",
     "AxesHelper",
     "TransformControlsPlane",
     "Line",
   ];
-  unResponseName = ["sky", "X", "Y", "Z", "E", "XY", "YZ", "XZ", "XYZY"];
+  private unResponseName = [
+    "sky",
+    "X",
+    "Y",
+    "Z",
+    "E",
+    "XY",
+    "YZ",
+    "XZ",
+    "XYZY",
+  ];
 
   constructor(TO: ThingOrigin) {
     this.TO = TO;
-    this.speed = TO.sceneData.controls.pointerLock.speed; //控制器移动速度
+    this.speed = ThingOrigin.sceneData.controls.pointerLock.speed; //控制器移动速度
   }
 
   private dragStartWorldPosition = new Vector3();
   private dragStartParentMatrix = new Matrix4();
 
   /**
-   * @description 鼠标挪动控制器
+   * 鼠标挪动控制器
    * @author LL
-   * @param {Object3D} 可被拖动的物体
    */
   public initDrag() {
     // 创建过滤后的可拖动对象列表
@@ -66,11 +82,10 @@ export class TControl {
   }
 
   /**
-   * @description 更新dragCOntrol可拖拽模型范围
+   * 更新dragControl可拖拽模型范围
    * @author LL
-   * @date 2025/03/21
+   * @since 2025/03/21
    * @param {string[]} [filterTypes=[]]
-   * @memberof TControl
    */
   public updateDragObjects(filterTypes: string[] = []) {
     // 创建过滤后的可拖动对象列表
@@ -85,12 +100,11 @@ export class TControl {
   }
 
   /**
-   * @description 拖拽开始事件监听
+   * 拖拽开始事件监听
    * @author LL
-   * @date 2025/03/21
+   * @since 2025/03/21
    * @private
    * @param {*} event
-   * @memberof TControl
    */
   private dragstartListener = (event) => {
     const movedObject = event.object;
@@ -113,14 +127,13 @@ export class TControl {
     this.orbit.enabled = false;
   };
 
-  public delta;
+  private delta;
   /**
-   * @description 拖拽进行中事件监听
+   * 拖拽进行中事件监听
    * @author LL
-   * @date 2025/03/21
+   * @since 2025/03/21
    * @private
    * @param {*} event
-   * @memberof TControl
    */
   private dragListener = (event) => {
     const movedObject = event.object;
@@ -132,12 +145,11 @@ export class TControl {
   };
 
   /**
-   * @description 拖拽结束事件监听
+   * 拖拽结束事件监听
    * @author LL
-   * @date 2025/03/21
+   * @since 2025/03/21
    * @private
    * @param {*} event
-   * @memberof TControl
    */
   private dragendListener = (event) => {
     this.orbit.enabled = true;
@@ -153,10 +165,9 @@ export class TControl {
   };
 
   /**
-   * @description 销毁drag控制器
+   * 销毁drag控制器
    * @author LL
-   * @date 2025/03/21
-   * @memberof TControl
+   * @since 2025/03/21
    */
   public disposeDrag() {
     if (this.drag) {
@@ -169,7 +180,7 @@ export class TControl {
   }
 
   /**
-   * @description 创建变换控制器
+   * 创建变换控制器
    * @author LL
    */
   public initTransform() {
@@ -185,13 +196,15 @@ export class TControl {
   }
 
   /**
-   * @description 设置变换器模式
+   * 设置变换器模式
    * @author LL
    * @param {string} name 模型名称
-   * @param {string} mode 模式， translate / scale / rotate / ''
-   * @return {*}
+   * @param {string} mode 模式
    */
-  public setTransformMode(name: string, mode: TransformControlsMode) {
+  public setTransformMode(
+    name: string,
+    mode: "translate" | "scale" | "rotate"
+  ) {
     let obj = this.TO.scene.getObjectByProperty("name", name);
 
     if (!obj) {
@@ -204,10 +217,9 @@ export class TControl {
   }
 
   /**
-   * @description 清空变换器
+   * 清空变换器
    * @author LL
-   * @date 2024/07/22
-   * @memberof TControl
+   * @since 2024/07/22
    */
   public clearTransform() {
     if (this.transform) {
@@ -218,7 +230,7 @@ export class TControl {
   }
 
   /**
-   * @description 注销控制器
+   * 注销变换器
    * @author LL
    */
   public disposeTransform() {
@@ -231,25 +243,37 @@ export class TControl {
   }
 
   /**
-   * @description 相机轨道控制器
+   * 创建相机轨道控制器
    * @author LL
    */
-  public initOrbit(params: orbitParams) {
+  public initOrbit() {
     this.orbit = new OrbitControls(this.TO.camera.camera, this.TO.container);
 
-    this.orbit.minDistance = params.minDistance;
-    this.orbit.maxDistance = params.maxDistance;
+    this.orbit.minDistance = ThingOrigin.sceneData.controls.orbit.minDistance;
+    this.orbit.maxDistance = ThingOrigin.sceneData.controls.orbit.maxDistance;
 
-    if (params.autoRotate) {
+    this.orbit.screenSpacePanning = false;
+    this.orbit.maxPolarAngle = Math.PI / 2;
+
+    //自动旋转
+    if (ThingOrigin.sceneData.controls.orbit.autoRotate) {
       this.orbit.autoRotate = true;
-      this.orbit.autoRotateSpeed = params.autoRotateSpeed;
+      this.orbit.autoRotateSpeed =
+        ThingOrigin.sceneData.controls.orbit.autoRotateSpeed;
     }
-    if (params.enableDamping) {
+
+    //阻尼效果
+    if (ThingOrigin.sceneData.controls.orbit.enableDamping) {
       this.orbit.enableDamping = true;
-      this.orbit.dampingFactor = params.dampingFactor;
+      this.orbit.dampingFactor =
+        ThingOrigin.sceneData.controls.orbit.dampingFactor;
     }
   }
 
+  /**
+   * 销毁相机轨道控制器
+   * @author LL
+   */
   public disposeOrbit() {
     if (this.orbit) {
       this.orbit.dispose();
@@ -257,10 +281,10 @@ export class TControl {
     }
   }
 
-  raycasterClick;
-  raycasterMousemove;
+  private raycasterClick;
+  private raycasterMousemove;
   /**
-   * @description 光线投射
+   * 创建射线投射器
    * @author LL
    */
   public initRaycaster(params: raycasterEventParams) {
@@ -332,7 +356,7 @@ export class TControl {
   }
 
   /**
-   * @description 去掉鼠标射线
+   * 销毁射线投射器
    * @author LL
    */
   public disposeRaycaster() {
@@ -346,29 +370,26 @@ export class TControl {
     }
   }
 
-  public measuring: boolean = false;
-  public measureLength() {}
+  private moveForward: boolean = false;
+  private moveBackward: boolean = false;
+  private moveLeft: boolean = false;
+  private moveRight: boolean = false;
 
-  moveForward: boolean = false;
-  moveBackward: boolean = false;
-  moveLeft: boolean = false;
-  moveRight: boolean = false;
+  private moveUp: boolean = false;
+  private moveDown: boolean = false;
 
-  moveUp: boolean = false;
-  moveDown: boolean = false;
+  private clock: Clock = new Clock();
+  private speed: number;
 
-  clock: Clock = new Clock();
-  speed: number;
+  private velocity: Vector3 = new Vector3();
+  private direction: Vector3 = new Vector3();
+  private rotation: Vector3 = new Vector3();
 
-  velocity: Vector3 = new Vector3();
-  direction: Vector3 = new Vector3();
-  rotation: Vector3 = new Vector3();
-
-  pointerKeyDownCallback;
-  pointerKeyUpCallback;
+  private pointerKeyDownCallback;
+  private pointerKeyUpCallback;
 
   /**
-   * @description 漫游控制器
+   * 漫游控制器
    * @author LL
    */
   public initPointerLock() {
@@ -444,6 +465,10 @@ export class TControl {
     this.TO.container.requestPointerLock();
   }
 
+  /**
+   * 更新漫游控制器
+   * @author LL
+   */
   public updatePointerLock() {
     if (this.pointerLock && this.pointerLock.isLocked) {
       //获取刷新时间
@@ -474,6 +499,10 @@ export class TControl {
     }
   }
 
+  /**
+   * 销毁漫游控制器
+   * @author LL
+   */
   public disposePointerLock() {
     if (this.pointerLock) {
       this.pointerLock.disconnect();

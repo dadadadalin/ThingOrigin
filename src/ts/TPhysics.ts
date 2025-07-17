@@ -1,7 +1,6 @@
 import {
   World,
   Vec3,
-  NaiveBroadphase,
   Plane,
   Body,
   Box,
@@ -10,18 +9,21 @@ import {
   Cylinder,
   Sphere,
   Quaternion,
-  ConvexPolyhedron,
   Ray,
   PointToPointConstraint,
   LockConstraint,
-  RaycastResult
+  RaycastResult,
 } from "cannon-es";
 import { Vector3 } from "three";
-import { merge, cloneDeep } from "lodash";
+import { merge } from "lodash-es";
 import { ThingOrigin } from "../ThingOrigin";
 
+/**
+ * 物理世界
+ */
+
 export class TPhysics {
-  TO: ThingOrigin;
+  private TO: ThingOrigin;
   public world: World;
   shape: Box;
 
@@ -30,9 +32,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 初始化物理世界
+   * 初始化物理世界
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    */
   public initWorld(worldInfo?: any): any {
     let defaultParams = {
@@ -52,9 +54,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 创建Vec3向量
+   * 创建Vec3向量
    * @author MY
-   * @date 2025/02/18
+   * @since 2025/02/18
    * @param {number} x
    * @param {number} y
    * @param {number} z
@@ -65,9 +67,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 创建射线
+   * 创建射线
    * @author MY
-   * @date 2025/02/18
+   * @since 2025/02/18
    * @returns {*}  {Ray}
    */
   public initRay(from: any, to: any): Ray {
@@ -75,9 +77,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理平面
+   * 添加物理平面
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    */
   public initPlane(planeInfo: any): Body {
     let defaultParams = {
@@ -111,9 +113,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理立方体
+   * 添加物理立方体
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    * @returns {*}  {Box}
    * @param modelInfo
    */
@@ -128,9 +130,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理立方体Body
+   * 添加物理立方体Body
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    * @returns {*}  {Box}
    * @param boxInfo
    */
@@ -179,11 +181,10 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理球体
+   * 添加物理球体
    * @author MY
-   * @date 2024/05/06
-   * @param {number} radius 半径
-   * @returns {*}  {Sphere}
+   * @since 2024/05/06
+   * @param sphereInfo 球信息
    */
   public initSphere(sphereInfo: any): Body {
     let defaultParams = {
@@ -220,9 +221,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理圆柱体
+   * 添加物理圆柱体
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    * @param {any} modelInfo 圆柱体配置项
    * @returns {*}  {Cylinder}
    */
@@ -269,9 +270,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理模型(通过包围盒)
+   * 添加物理模型(通过包围盒)
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    * @param {any} model 模型配置项
    * @param modelInfo
    * @returns {*}  {Body}
@@ -333,9 +334,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理mesh(通过trimesh)
+   * 添加物理mesh(通过trimesh)
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    * @param {any} model 模型配置项
    * @returns {*}  {Body}
    */
@@ -410,9 +411,9 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加物理body
+   * 添加物理body
    * @author MY
-   * @date 2024/05/06
+   * @since 2024/05/06
    */
   // public initBody(mass: number, shape: any, position: number[], material?: any): any {
   //     return new Body({
@@ -427,32 +428,40 @@ export class TPhysics {
   }
 
   /**
-   * @description 添加约束--点约束
+   * 添加约束--点约束
    * @author MY
-   * @date 2025/03/31
+   * @since 2025/03/31
    */
   public initPointConstraint(constraintInfo: any): any {
     return new PointToPointConstraint(
-            constraintInfo.bodyA,
-            new Vec3(constraintInfo.pivotA.x, constraintInfo.pivotA.y, constraintInfo.pivotA.z),
-            constraintInfo.bodyB,
-            new Vec3(constraintInfo.pivotB.x, constraintInfo.pivotB.y, constraintInfo.pivotB.z)
+      constraintInfo.bodyA,
+      new Vec3(
+        constraintInfo.pivotA.x,
+        constraintInfo.pivotA.y,
+        constraintInfo.pivotA.z
+      ),
+      constraintInfo.bodyB,
+      new Vec3(
+        constraintInfo.pivotB.x,
+        constraintInfo.pivotB.y,
+        constraintInfo.pivotB.z
+      )
     );
   }
 
   /**
-   * @description 添加约束--锁定约束
+   * 添加约束--锁定约束
    * @author MY
-   * @date 2025/04/03
+   * @since 2025/04/03
    */
   public initLockConstraint(bodyA: any, bodyB: any): any {
     return new LockConstraint(bodyA, bodyB);
   }
 
   /**
-   * @description 创建射线检测结果
+   * 创建射线检测结果
    * @author MY
-   * @date 2025/04/03
+   * @since 2025/04/03
    */
   public initRaycastResult(): any {
     return new RaycastResult();

@@ -2,6 +2,7 @@ const path = require("path");
 // const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const webpack = require("webpack");
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   mode: "production",
@@ -18,6 +19,13 @@ module.exports = {
   },
   resolve: {
     extensions: [".ts", ".js"],
+    alias: {
+      three: path.resolve(__dirname, "node_modules/three"),
+    },
+    fallback: {
+      "path": false,
+      "fs": false
+    }
   },
   stats: {
     errorDetails: true,
@@ -50,6 +58,14 @@ module.exports = {
       raw: true, // 如果你的banner是原始字符串，而不是需要被eval的JavaScript，设置为true
       entryOnly: false, // 默认为false，表示在所有输出的chunk中插入banner，如果设为true，则只在入口c
     }),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: 'node_modules/draco3dgltf/*.wasm',
+          to: '[name][ext]' // 保持原文件名
+        },
+      ]
+    })
     // new UglifyJsPlugin(),
   ],
 };

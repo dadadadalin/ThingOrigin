@@ -1,9 +1,23 @@
-import { AxesHelper, BoxHelper, Color, GridHelper } from "three";
+import {
+  AxesHelper,
+  BoxHelper,
+  Color,
+  GridHelper,
+  Object3D,
+  Plane,
+  PlaneHelper,
+  Vector3,
+} from "three";
 import { TScene } from "./TScene";
-import { merge } from "lodash";
+import { merge } from "lodash-es";
+import { setModelConfig } from "../private/privateTool";
+
+/**
+ * 辅助器
+ */
 
 export class THelper {
-  tScene: TScene;
+  private tScene: TScene;
   grid: GridHelper;
   axes: AxesHelper;
   box: BoxHelper;
@@ -14,7 +28,7 @@ export class THelper {
   }
 
   /**
-   * @description 创建坐标轴
+   * 创建坐标轴
    * @author LL
    * @param {number} [len=50]
    */
@@ -25,7 +39,7 @@ export class THelper {
   }
 
   /**
-   * @description 删除坐标轴
+   * 删除坐标轴
    * @author LL
    */
   public removeAxes() {
@@ -36,10 +50,9 @@ export class THelper {
   }
 
   /**
-   * @description 给模型加上包围盒
+   * 给模型加上包围盒
    * @author LL
    * @param {string} uuid
-   * @returns {*}
    */
   public initBox(uuid: string) {
     let obj: any = this.tScene.getObjectByProperty("uuid", uuid);
@@ -56,7 +69,7 @@ export class THelper {
   }
 
   /**
-   * @description 去掉包围盒
+   * 去掉包围盒
    * @author LL
    */
   public removeBox(modelName?: string) {
@@ -82,7 +95,7 @@ export class THelper {
   }
 
   /**
-   * @description 更新包围盒
+   * 更新包围盒
    * @author LL
    */
   public updateBox() {
@@ -96,12 +109,9 @@ export class THelper {
   }
 
   /**
-   * @description 创建grid
+   * 创建grid
    * @author LL
-   * @param {} gridInfo 坐标格参数
-   * @param {number} divisions 坐标格细分次数. 默认为 10.
-   * @param {string} colorCenterLine 中线颜色
-   * @param {string} colorGrid 坐标格网格线颜色
+   * @param {{}} [gridInfo] grid参数
    */
   public initGrid(gridInfo?: {}) {
     let defaultParams = {
@@ -123,15 +133,70 @@ export class THelper {
   }
 
   /**
-   * @description 删除grid
+   * 删除grid
    * @author LL
-   * @date 24/12/2021
-   * @memberof THelper
+   * @since 24/12/2021
    */
   public removeGrid() {
     if (this.grid) {
       this.tScene.remove(this.grid);
       this.grid = null;
     }
+  }
+
+  /**
+   * 创建面板
+   * @author LL
+   * @since 2024/06/03
+   * @param {modelInfoParams} modelInfo 模型参数
+   */
+  public initPlaneHelper(modelInfo?: modelInfoParams): Object3D {
+    let defaultParams = {
+      modelName: "planeHelper-" + new Date().getTime(),
+      position: {
+        x: 0,
+        y: 0,
+        z: 0,
+      },
+      scale: {
+        x: 1,
+        y: 1,
+        z: 1,
+      },
+      rotation: {
+        x: -Math.PI / 2,
+        y: 0,
+        z: 0,
+      },
+      base: {
+        //法向量
+        normal: {
+          x: 1,
+          y: 0,
+          z: 0,
+        },
+        distance: 0, //平面到原点的距离
+        size: 1, //大小
+      },
+      material: {
+        color: "0xffff00",
+      },
+    };
+    let param = merge(defaultParams, modelInfo);
+    const plane = new Plane(
+      new Vector3(
+        param.base.normal.x,
+        param.base.normal.y,
+        param.base.normal.z
+      ),
+      param.base.distance
+    );
+    const helper = new PlaneHelper(
+      plane,
+      param.base.size,
+      new Color(param.material.color).getHex()
+    );
+
+    return setModelConfig(helper, param);
   }
 }

@@ -34,6 +34,13 @@ build/Release
 
 # Dependency directories
 node_modules/
+
+!node_modules/three-dxf/
+
+!node_modules/troika-three-utils/
+
+!node_modules/troika-three-text/
+
 .idea/
 jspm_packages/
 
@@ -69,8 +76,13 @@ typings/
 
 *.zip
 
+typedoc-theme-custom/
+doc
+public/test/
 public/models/
+public/statics/models/
 public/draco/
 public/video/
 public/dxf/
-test/
+test/main.ts
+test/index.html

@@ -1,6 +1,10 @@
 import { Object3D } from "three";
-import { merge, cloneDeep } from "lodash";
+import { merge, cloneDeep } from "lodash-es";
 
+/**
+ * 统一处理模型
+ * @hidden
+ */
 export const setModelConfig = (
   model: Object3D,
   modelInfo: modelInfoParams

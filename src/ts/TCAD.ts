@@ -1,18 +1,20 @@
 //@ts-ignore
-import { Viewer } from "three-dxf";
+import { Viewer } from "../../dependencies/three-dxf";
 import DxfParser from "dxf-parser"; // Note correct capitalization
 import { TFont } from "./TFont";
+
+/**
+ * 用于绘制dxf图纸
+ */
 export class TCAD {
-  public font: TFont = new TFont();
+  private font: TFont = new TFont();
   constructor() {}
 
   /**
-   * @description 解析dxf文件
+   * 解析dxf文件
    * @author LL
-   * @date 2025/05/27
+   * @since 2025/05/27
    * @param {string} url
-   * @returns {*}
-   * @memberof TCAD
    */
   public async getDXF(url: string) {
     console.log("xdf", new Date());
@@ -26,12 +28,11 @@ export class TCAD {
   }
 
   /**
-   * @description 绘制dxf文件
+   * 绘制dxf文件
    * @author LL
-   * @date 2025/05/27
+   * @since 2025/05/27
    * @param {string} url
    * @param {string} domId
-   * @memberof TCAD
    */
   public async drawDXF(url: string, domId?: string) {
     console.log("draw", new Date());

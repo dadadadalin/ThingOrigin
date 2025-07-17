@@ -1,27 +1,31 @@
-import { log } from "three/examples/jsm/nodes/Nodes";
 import {
   Object3D,
   OrthographicCamera,
   PerspectiveCamera,
-  PointLight,
-  SpotLight,
   Vector3,
 } from "three";
 import * as TWEEN from "@tweenjs/tween.js";
-import { Tool } from "./Tool";
-import { TScene } from "./TScene";
 import { ThingOrigin } from "../ThingOrigin";
 
-/** 自定义相机的基类，用于 */
+/**
+ * 相机
+ */
 export class TCamera {
-  TO: ThingOrigin;
+  private TO: ThingOrigin;
+
+  /** 透视相机 */
   PerspectiveCamera: PerspectiveCamera;
+
+  /** 正交相机 */
   OrthographicCamera: OrthographicCamera;
+
+  /** 当前相机类型 */
   type: string;
-  // tool: Tool = new Tool();
 
   /** 当前使用的相机 */
   private _camera: PerspectiveCamera | OrthographicCamera;
+
+  /** 相机视角map */
   private _cameraView: Map<string, any> = new Map<string, any>();
 
   public get camera(): PerspectiveCamera | OrthographicCamera {
@@ -34,51 +38,53 @@ export class TCamera {
 
   constructor(TO: ThingOrigin) {
     this.TO = TO;
+
+    console.log("TCAmera", ThingOrigin.sceneData);
     //透视相机
     this.PerspectiveCamera = this.initPerspectiveCamera(
       this.TO.container,
-      this.TO.sceneData.camera.perspective
+      ThingOrigin.sceneData.camera.perspective
     );
     //正交相机
     let frustumSize = 1000;
     this.OrthographicCamera = this.initOrthographicCamera(
       this.TO.container,
       frustumSize,
-      this.TO.sceneData.camera.perspective
+      ThingOrigin.sceneData.camera.perspective
     );
 
     this.setCamera("PerspectiveCamera");
     //设置位置
     this.camera.position.set(
-      this.TO.sceneData.camera.position.x,
-      this.TO.sceneData.camera.position.y,
-      this.TO.sceneData.camera.position.z
+      ThingOrigin.sceneData.camera.position.x,
+      ThingOrigin.sceneData.camera.position.y,
+      ThingOrigin.sceneData.camera.position.z
     );
     this.camera.lookAt(
-      this.TO.sceneData.camera.lookAt.x,
-      this.TO.sceneData.camera.lookAt.y,
-      this.TO.sceneData.camera.lookAt.z
+      ThingOrigin.sceneData.camera.lookAt.x,
+      ThingOrigin.sceneData.camera.lookAt.y,
+      ThingOrigin.sceneData.camera.lookAt.z
     );
-
-    let views = this.TO.sceneData.views;
-
-    for (let i = 0; i < views.length; ++i) {
-      const view = views[i];
-      const camera = this.initPerspectiveCamera(this.TO.container, view);
-      camera.position.set(view.offset.x, view.offset.y, view.offset.z);
-      view.camera = camera;
-      let detail = Object.assign({}, view);
-      this.cameraView.set(view.name, detail);
-
-      this.TO.scene.add(camera);
-    }
   }
 
+  /**
+   * 创建透视相机
+   * @author LL
+   * @param container 容器
+   * @param params 相机参数
+   */
   public initPerspectiveCamera(container, params) {
     let aspect = container.clientWidth / container.clientHeight;
     return new PerspectiveCamera(params.fov, aspect, params.near, params.far);
   }
 
+  /**
+   * 创建正交相机
+   * @author LL
+   * @param container 容器
+   * @param frustumSize 视锥架大小
+   * @param params 相机参数
+   */
   public initOrthographicCamera(container, frustumSize, params) {
     let aspect = container.clientWidth / container.clientHeight;
     return new OrthographicCamera(
@@ -93,9 +99,11 @@ export class TCamera {
 
   /**
    * 设置渲染相机
-   * @param num
+   * @param type 相机类型
    */
-  public setCamera(type: string = "PerspectiveCamera") {
+  public setCamera(
+    type: "PerspectiveCamera" | "OrthographicCamera" = "PerspectiveCamera"
+  ) {
     this.type = type;
     switch (type) {
       case "PerspectiveCamera":
@@ -108,45 +116,76 @@ export class TCamera {
   }
 
   /**
-   * @description 锁定相机视角
+   * 锁定相机视角
    * @author LL
-   * @date 2021/06/29
-   * @param {string} direction 方向 'top'||'bottom'||'left'||'right'||'front'||'back'
-   * @param ratio 倍数
+   * @since 2021/06/29
+   * @param {string} direction 方向
+   * @param {number} ratio 倍数
+   * @param {Object3D} [model] 锁定模型（不传则锁定场景）
    */
-  public lockCamera(direction: string, ratio: number) {
-    let box = this.TO.tool.getModelSphere(this.TO.scene);
-    // let ratio = 1.1;
+  public lockCamera(
+    direction: "top" | "bottom" | "left" | "right" | "front" | "back",
+    ratio: number = 1.1,
+    model?: Object3D
+  ) {
+    let box = model
+      ? this.TO.tool.getModelSphere(model)
+      : this.TO.tool.getModelSphere(this.TO.scene);
+
     switch (direction) {
       case "top":
-        this.camera.position.set(0, box.radius * ratio, 0);
+        this.camera.position.set(
+          box.center.x,
+          box.radius * ratio,
+          box.center.z
+        );
         break;
       case "bottom":
-        this.camera.position.set(0, -box.radius * ratio, 0);
+        this.camera.position.set(
+          box.center.x,
+          -box.radius * ratio,
+          box.center.z
+        );
         break;
       case "left":
-        this.camera.position.set(-box.radius * ratio, 0, 0);
+        this.camera.position.set(
+          -box.radius * ratio,
+          box.center.y,
+          box.center.z
+        );
         break;
       case "right":
-        this.camera.position.set(box.radius * ratio, 0, 0);
+        this.camera.position.set(
+          box.radius * ratio,
+          box.center.y,
+          box.center.z
+        );
         break;
       case "front":
-        this.camera.position.set(0, 0, box.radius * ratio);
+        this.camera.position.set(
+          box.center.x,
+          box.center.y,
+          box.radius * ratio
+        );
         break;
       case "back":
-        this.camera.position.set(0, 0, -box.radius * ratio);
+        this.camera.position.set(
+          box.center.x,
+          box.center.y,
+          -box.radius * ratio
+        );
         break;
     }
-    this.camera.lookAt(0, 0, 0);
-    this.TO.controls.orbit.target.set(0, 0, 0);
+    this.camera.lookAt(box.center);
+    this.TO.controls.orbit.target.set(box.center.x, box.center.y, box.center.z);
   }
 
   /**
-   * @description 相机观察某物体
+   * 相机观察某物体
    * @author LL
    * @param {string} modelName 模型名称
    * @param {number} time 动画时长
-   * @param {number} [scaleRadius=1] 以半径为单位，让相机距离多远观察
+   * @param {number} [scaleRadius] 以半径为单位，让相机距离多远观察
    */
   public lookAt(modelName: string, time: number, scaleRadius: number = 1) {
     let target = this.TO.scene.getObjectByProperty("name", modelName);
@@ -182,7 +221,12 @@ export class TCamera {
       .start();
   }
 
-  focusOn(model: Object3D) {
+  /**
+   * 聚焦模型
+   * @author LL
+   * @param model 模型
+   */
+  public focusOn(model: Object3D) {
     if (!model) {
       console.warn("相机追踪失败，物体不存在");
       return;
@@ -200,6 +244,5 @@ export class TCamera {
       worldPosition.z + boundSphere.radius * 2
     );
     this.TO.camera.camera.lookAt(boundSphere.center);
-    // this.explode(explodeModel, explodeInfo);
   }
 }

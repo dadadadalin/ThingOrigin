@@ -1,4 +1,4 @@
-import { merge } from "lodash";
+import { merge } from "lodash-es";
 import {
   BufferGeometry,
   DoubleSide,
@@ -14,6 +14,11 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { setModelConfig } from "../private/privateTool";
 import { TIndexedDB } from "./TIndexedDB";
+import {ThingOrigin} from "../ThingOrigin";
+
+/**
+ * 文字
+ */
 
 export class TFont {
   public fontLoader = new FontLoader();
@@ -21,7 +26,7 @@ export class TFont {
 
   public async loadFont(fontInfo?: any) {
     let defaultParams = {
-      fontUrl: "http://124.70.30.193:8084/model2/load/Microsoft.json",
+      fontUrl: ThingOrigin.sceneData.params.resource.font_Microsoft,
       fontName: "Microsoft",
       indexedDB: {
         active: true,
@@ -60,11 +65,10 @@ export class TFont {
   }
 
   /**
-   * @description 添加3d文字
+   * 创建文字
    * @author gj LL
-   * @date 2021/09/16
+   * @since 2021/09/16
    * @param {modelInfoParams} [modelInfo] 模型参数
-   * @returns {*}  {Promise<Object3D>}
    */
   public initText(modelInfo?: any): Promise<Object3D> {
     let defaultParams = {
@@ -87,7 +91,7 @@ export class TFont {
       },
       base: {
         text: "ThingOrigin 3D",
-        fontUrl: "http://124.70.30.193:8084/model2/load/Microsoft.json",
+        fontUrl: ThingOrigin.sceneData.params.resource.font_Microsoft,
         color: "#f00",
         size: 100,
         depth: 10,
@@ -128,11 +132,10 @@ export class TFont {
   }
 
   /**
-   * @description 字体描线文字
+   * 创建形状文字
    * @author LL
-   * @date 2021/09/17
+   * @since 2021/09/17
    * @param {modelInfoParams} [modelInfo] 模型参数
-   * @returns {*}  {Promise<Object3D>}
    */
   public initTextShape(modelInfo?: any): Promise<Object3D> {
     let defaultParams = {
@@ -141,7 +144,7 @@ export class TFont {
       base: {
         text: "ThingOrigin 3D",
         textType: "shapeText",
-        fontUrl: "http://124.70.30.193:8084/model2/load/Microsoft.json",
+        fontUrl: ThingOrigin.sceneData.params.resource.font_Microsoft,
         color: "#f00",
         transparent: true,
         opacity: 0.4,
@@ -183,11 +186,10 @@ export class TFont {
   }
 
   /**
-   * @description 字体描线文字
+   * 创建描线文字
    * @author LL
-   * @date 2021/09/17
+   * @since 2021/09/17
    * @param {modelInfoParams} [modelInfo] 模型参数
-   * @returns {*}  {Promise<Object3D>}
    */
   public initTextLine(modelInfo?: any): Promise<Object3D> {
     let defaultParams = {
@@ -196,7 +198,7 @@ export class TFont {
       base: {
         text: "ThingOrigin 3D",
         textType: "traceText",
-        fontUrl: "http://124.70.30.193:8084/model2/load/Microsoft.json",
+        fontUrl: ThingOrigin.sceneData.params.resource.font_Microsoft,
         color: "#f00",
         size: 100,
         lineWidth: 2,
