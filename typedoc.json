@@ -1,17 +1,30 @@
 {
-  "entryPoints": ["./src"], //指定需要生成文档的入口文件或目录。
-  "entryPointStrategy": "expand", //定义如何处理 entryPoints 中的路径。
-  "excludeExternals": true, //是否排除外部依赖（如 node_modules 中的模块）的文档。
-  "excludeTags": ["@author", "@since", "@since"],
+  "name": "ThingOrigin.js",
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
+  "excludeExternals": true,
+  "excludeTags": ["@author", "@since"],
   "out": "./doc",
-  "exclude": ["**/private/**", "node_modules/**"],
-  "excludePrivate": true, //是否排除标记为 private 的成员（如类的私有属性 / 方法）。
-  "excludeProtected": false, //是否排除标记为 protected 的成员（如类的受保护属性 / 方法）。
-  "excludeInternal": false, //是否排除标记为 “内部” 的成员（非公共 API）。
-  // "plugin": ["typedoc-plugin-markdown"],
+  "exclude": ["**/private/**", "**/workers/**", "node_modules/**"],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeInternal": false,
   "readme": "README.md",
-  "hideGenerator": false, //是否隐藏文档底部的 “由 TypeDoc 生成” 标识。
+  "hideGenerator": true,
   "disableSources": true,
-  "categorizeByGroup": false, //是否按 @group 标签对 API 进行分组。
-  "categoryOrder": ["构造函数", "核心属性", "普通属性", "方法", "*"]
+  "categorizeByGroup": true,
+  "categoryOrder": ["核心属性", "普通属性", "方法", "*"],
+  "groupOrder": ["Interfaces", "Types", "Utils", "*"],
+  "navigation": {
+    "includeGroups": true,
+    "includeCategories": false,
+    "includeFolders": false
+  },
+  "customCss": "./doc-theme/threejs-like.css",
+  "customJs": "./doc-theme/collapse-groups.js",
+  "plugin": [
+    "typedoc-plugin-merge-modules",
+    "./doc-theme/typedoc-hide-constructors.mjs"
+  ],
+  "mergeModulesMergeMode": "module"
 }

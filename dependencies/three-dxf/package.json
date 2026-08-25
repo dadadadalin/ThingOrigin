@@ -4,11 +4,6 @@
   "description": "A dxf viewer for the browser using three.js.",
   "main": "dist/three-dxf.js",
   "module": "src/index.js",
-  "scripts": {
-    "build-dev": "webpack -c webpack.dev.js",
-    "build": "webpack -c webpack.prod.js",
-    "prepublishOnly": "npm run build"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/gdsestimating/three-dxf"

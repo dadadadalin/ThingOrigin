@@ -1,18 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "lib": ["dom", "es2020"],
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "outDir": "./dist",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
     "allowJs": true,
+    "resolveJsonModule": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "three/examples/jsm/*": ["./node_modules/three/examples/jsm/*"]
+    }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["public", "node_modules"]
+  "exclude": ["public", "node_modules", "src/workers"]
 }

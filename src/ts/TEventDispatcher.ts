@@ -1,8 +1,14 @@
-import { EventDispatcher } from "three";
-import { Tool } from "./Tool";
-import { TModel } from "./TModel";
-import { TMaterial } from "./TMaterial";
-import { TLine } from "./TLine";
+/**
+ * @module
+ * @mergeModuleWith <project>
+ */
+
+import { EventDispatcher } from 'three';
+import { Tool } from './Tool';
+import { TModel } from './TModel';
+import { TMaterial } from './TMaterial';
+import { TLine } from './TLine';
+import { ThingOrigin } from '../ThingOrigin';
 
 /**
  * 鼠标事件
@@ -11,11 +17,18 @@ export class TEventDispatcher extends EventDispatcher {
   /** 工具函数 */
   private tool: Tool = new Tool();
   /** 模型 */
-  private model: TModel = new TModel();
+  private model: TModel;
   /** 线条模型 */
-  private line: TLine = new TLine();
+  private line: TLine;
   /** 材质 */
-  private material: TMaterial = new TMaterial();
+  private material: TMaterial;
+
+  constructor(TO: ThingOrigin) {
+    super();
+    this.model = new TModel(TO);
+    this.line = new TLine(TO);
+    this.material = new TMaterial(TO);
+  }
 
   /**
    * 获取face距离最近的点
@@ -46,12 +59,8 @@ export class TEventDispatcher extends EventDispatcher {
     const closestIndex = distances.indexOf(Math.min(...distances));
 
     // 对应到原始顶点索引
-    const originalIndices = [
-      intersect.face.a,
-      intersect.face.b,
-      intersect.face.c,
-    ];
-    const closestVertexIndex = originalIndices[closestIndex];
+    const originalIndices = [intersect.face.a, intersect.face.b, intersect.face.c];
+    originalIndices[closestIndex];
 
     // 获取实际顶点对象（世界坐标系）
     const closestVertex = vertices[closestIndex];
@@ -85,14 +94,10 @@ export class TEventDispatcher extends EventDispatcher {
     // 遍历三个顶点
     indices.forEach((vertexIndex) => {
       // 从几何体属性获取局部坐标
-      const localPosition = this.tool
-        .initVector3()
-        .fromBufferAttribute(geometry.attributes.position, vertexIndex);
+      const localPosition = this.tool.initVector3().fromBufferAttribute(geometry.attributes.position, vertexIndex);
 
       // 转换为世界坐标
-      const worldPosition = localPosition.applyMatrix4(
-        intersect.object.matrixWorld
-      );
+      const worldPosition = localPosition.applyMatrix4(intersect.object.matrixWorld);
       worldPositions.push(worldPosition);
     });
 
@@ -108,14 +113,11 @@ export class TEventDispatcher extends EventDispatcher {
       worldPositions[2].y,
       worldPositions[2].z, // 顶点3的x, y, z坐标
     ]);
-    geometry2.setAttribute(
-      "position",
-      this.model.initBufferAttribute(vertices, 3)
-    );
+    geometry2.setAttribute('position', this.model.initBufferAttribute(vertices, 3));
     geometry2.setIndex([0, 1, 2]); // 设置三角形的顶点索引，形成一个三角形面（面由三个顶点组成）
 
     // 材质
-    var material = this.material.initBasicMaterial({color:"#00ff00"}); // 绿色材质
+    var material = this.material.initBasicMaterial({ color: '#00ff00' }); // 绿色材质
 
     // 网格（几何体和材质的结合）
     let activeFace = this.model.initMesh(geometry2, material);
@@ -137,11 +139,7 @@ export class TEventDispatcher extends EventDispatcher {
     const geometry = mesh.geometry;
     const vertices = geometry.attributes.position.array;
     const getWorldVertex = (index: number) => {
-      const v = this.tool.initVector3(
-        vertices[index * 3],
-        vertices[index * 3 + 1],
-        vertices[index * 3 + 2]
-      );
+      const v = this.tool.initVector3(vertices[index * 3], vertices[index * 3 + 1], vertices[index * 3 + 2]);
       return v.applyMatrix4(mesh.matrixWorld);
     };
 

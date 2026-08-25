@@ -1,15 +1,29 @@
-interface snapFaceParams {
-  model: any;
-  normal: any;
-  face: any;
+/**
+ * @module
+ * @mergeModuleWith <project>
+ */
+
+/**
+ * @group Interfaces
+ */
+export interface snapFaceParams {
+    model: any;
+    normal: any;
+    face: any;
 }
 
-interface snapLineParams {
-  model: any;
-  line: any;
+/**
+ * @group Interfaces
+ */
+export interface snapLineParams {
+    model: any;
+    line: any;
 }
 
-interface snapPointParams {
-  model: any;
-  position: any;
+/**
+ * @group Interfaces
+ */
+export interface snapPointParams {
+    model: any;
+    position: any;
 }

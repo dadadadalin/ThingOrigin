@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "lib": ["es2020", "webworker"],
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": false,
+    "skipLibCheck": true
+  },
+  "include": ["./unzip.worker.ts"]
+}

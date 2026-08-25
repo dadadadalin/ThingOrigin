@@ -1,325 +1,620 @@
-import { merge, cloneDeep } from "lodash-es";
-import { ThingOrigin } from "../ThingOrigin";
+/**
+ * @module
+ * @mergeModuleWith <project>
+ */
+
+import { merge, cloneDeep } from 'lodash-es'
+import { ThingOrigin } from '../ThingOrigin'
+import { indexedDBmodelInfoParams, modelInfoParams, updateInfoParams } from './TModelInterfaces'
+import { accessInsetResult, accessResult } from './TIndexedDBInterfaces'
+import { fetchBlob as fetchBlobUtil } from './fetchUtil'
 
 /**
  * 本地缓存
+ * @remarker 0-10用于存放字体
  */
-
 export class TIndexedDB {
-  public DBs: Map<string, IDBDatabase> = new Map<string, IDBDatabase>();
+    private TO: ThingOrigin
+    public DBs: Map<string, IDBDatabase> = new Map<string, IDBDatabase>()
+    /** 同 URL 进行中的下载，避免批量时重复请求 */
+    private downloadInflight = new Map<string, Promise<Blob>>()
+    /** 批量 loadModel 期间延后 IDB 写入 */
+    private deferDbDepth = 0
+    private pendingDb: { modelInfo: indexedDBmodelInfoParams; blob: Blob }[] = []
 
-  // 0-10 存放字体
-
-  constructor() {
-    // console.log("TINde", ThingOrigin.sceneData);
-  }
-
-  /**
-   * 判断是否已缓存此模型，返回是否存储，若已缓存返回模型参数
-   * @author LL
-   * @since 2022-07-14
-   * @param {modelParams} modelInfo
-   */
-  public accessModel(modelInfo: modelInfoParams): PromiseLike<accessResult> {
-    let request = window.indexedDB.open(
-      ThingOrigin.sceneData.params.indexedDB.dataBaseName,
-      1
-    );
-    let db: IDBDatabase;
-
-    return new Promise((resolve) => {
-      request.onerror = (event) => {
-        console.log("数据库打开失败");
-      };
-
-      request.onsuccess = (event) => {
-        db = request.result;
-
-        if (
-          !this.DBs.get(ThingOrigin.sceneData.params.indexedDB.dataBaseName)
-        ) {
-          this.DBs.set(ThingOrigin.sceneData.params.indexedDB.dataBaseName, db);
-        }
-
-        var transaction = db.transaction(
-          ThingOrigin.sceneData.params.indexedDB.tableName,
-          "readwrite"
-        );
-        var store = transaction.objectStore(
-          ThingOrigin.sceneData.params.indexedDB.tableName
-        );
-
-        var dataRequest = store.index("id").get(modelInfo.id);
-
-        dataRequest.onsuccess = (e: any) => {
-          console.log("缓存结果", e);
-          //@ts-ignore
-          if (e.target.result != undefined) {
-            let result = Object.assign(modelInfo, {
-              saved: true,
-            });
-
-            let blobUrl = URL.createObjectURL(
-              new Blob([e.target.result.model], {
-                type: "application/octet-stream",
-              })
-            );
-
-            resolve({
-              info: result,
-              modelUrl: blobUrl,
-            });
-          } else {
-            resolve({ info: { saved: false } });
-          }
-        };
-      };
-
-      request.onupgradeneeded = (event) => {
-        //@ts-ignore
-        db = event.target.result;
-
-        var objectStore;
-        if (
-          !db.objectStoreNames.contains(
-            ThingOrigin.sceneData.params.indexedDB.tableName
-          )
-        ) {
-          objectStore = db.createObjectStore(
-            ThingOrigin.sceneData.params.indexedDB.tableName,
-            { keyPath: "id" }
-          );
-          // 定义存储对象的数据项
-          objectStore.createIndex("id", "id", { unique: true });
-          objectStore.createIndex("name", "name");
-          objectStore.createIndex("modelName", "modelName");
-          objectStore.createIndex("model", "model");
-          objectStore.createIndex("modelUrl", "modelUrl");
-          objectStore.createIndex("modelSize", "modelSize");
-          objectStore.createIndex("modelType", "modelType");
-          objectStore.createIndex("loadType", "loadType");
-          objectStore.createIndex("position", "position");
-          objectStore.createIndex("scale", "scale");
-          objectStore.createIndex("rotation", "rotation");
-          objectStore.createIndex("dataBaseName", "dataBaseName");
-          objectStore.createIndex("tableName", "tableName");
-          objectStore.createIndex("userData", "userData");
-        }
-        console.log("数据库升级成功");
-      };
-    });
-  }
-
-  /**
-   * 向indexedDB数据表中，存储模型
-   * @author LL
-   * @since 2022-07-14
-   * @param {modelInfoParams} modelInfo
-   */
-  public insertModel(modelInfo: modelInfoParams): Promise<modelInfoParams> {
-    return new Promise((resolve) => {
-      var ajax = new XMLHttpRequest();
-
-      let url =
-        modelInfo.modelType == "text"
-          ? modelInfo.base.fontUrl
-          : modelInfo.base.modelUrl;
-
-      ajax.open("get", url);
-      ajax.responseType = "blob";
-      ajax.send();
-      ajax.onreadystatechange = () => {
-        if (ajax.readyState == 4 && ajax.status == 200) {
-          modelInfo = Object.assign(modelInfo, {
-            // modelSize: ajax.responseText.length,
-            // model: new Blob([ajax.responseText]),
-            modelSize: ajax.response.size,
-            model: new Blob([ajax.response]),
-            dataBaseName: ThingOrigin.sceneData.params.indexedDB.dataBaseName,
-            tableName: ThingOrigin.sceneData.params.indexedDB.tableName,
-          });
-
-          let db = this.DBs.get(
-            ThingOrigin.sceneData.params.indexedDB.dataBaseName
-          );
-
-          let indexedTable = db
-            .transaction(
-              [ThingOrigin.sceneData.params.indexedDB.tableName],
-              "readwrite"
-            ) //新建事务，readwrite, readonly(默认), versionchange
-            .objectStore(ThingOrigin.sceneData.params.indexedDB.tableName); //拿到IDBObjectStore 对象
-
-          let info = cloneDeep(modelInfo);
-          var request1 = indexedTable.add(info);
-          request1.onsuccess = (event) => {
-            console.log("数据写入成功", event);
-
-            // try {
-            let dataRequest2 = indexedTable.index("id").get(modelInfo.id);
-            dataRequest2.onsuccess = (e2: any) => {
-              let result = merge(modelInfo, {
-                saved: true,
-              });
-
-              let blobUrl = window.URL.createObjectURL(e2.target.result.model);
-
-              resolve({
-                info: result,
-                modelUrl: blobUrl,
-              });
-            };
-          };
-          request1.onerror = (event) => {
-            console.log("数据写入失败");
-          };
-        }
-        // else {
-        //   console.warn("写入失败，请检查文件路径");
-        //   resolve({ saved: false, url: undefined });
-        // }
-      };
-    });
-  }
-
-  /**
-   * 删除模型
-   * @author LL
-   * @since 2022-07-15
-   * @param {number} id
-   */
-  public deleteModel(id: number): Promise<boolean> {
-    let db = this.DBs.get(ThingOrigin.sceneData.params.indexedDB.dataBaseName);
-
-    return new Promise((resolve) => {
-      let request = db
-        .transaction(
-          [ThingOrigin.sceneData.params.indexedDB.tableName],
-          "readwrite"
-        ) //新建事务，readwrite, readonly(默认), versionchange
-        .objectStore(ThingOrigin.sceneData.params.indexedDB.tableName) //拿到IDBObjectStore 对象、
-        .delete(id);
-
-      request.onsuccess = (event) => {
-        console.log("数据删除成功");
-        resolve(true);
-      };
-      request.onerror = (event) => {
-        console.log("数据写入失败");
-        resolve(false);
-      };
-    });
-  }
-
-  /**
-   * 更新模型
-   * @author LL
-   * @since 2022-07-15
-   * @param {updateInfoParams} info 更新模型参数
-   */
-  public updateModel(info: updateInfoParams): Promise<void> {
-    if (!info.modelInfo.id) {
-      console.warn("请传入id");
-      return;
+    constructor(TO: ThingOrigin) {
+        this.TO = TO
     }
 
-    return new Promise((resolve, reject) => {
-      const dbName = ThingOrigin.sceneData.params.indexedDB.dataBaseName;
-      const tableName = ThingOrigin.sceneData.params.indexedDB.tableName;
+    private pickUrl(...cands: (string | undefined)[]): string | undefined {
+        for (const u of cands) {
+            if (!u || u.startsWith('blob:') || u.startsWith('data:')) continue
+            return u
+        }
+        return undefined
+    }
 
-      const request = window.indexedDB.open(dbName);
+    private getResUrl(modelInfo: indexedDBmodelInfoParams): string | undefined {
+        if (modelInfo.modelType == 'text') {
+            return this.pickUrl(modelInfo.base?.fontUrl, modelInfo.userData?.base?.fontUrl)
+        }
+        return this.pickUrl(modelInfo.base?.modelUrl, modelInfo.userData?.base?.modelUrl)
+    }
 
-      request.onerror = (event) => {
-        console.error("Database open failed:", event);
-        reject(new Error("Database open failed"));
-      };
+    /** 下载模型文件，同 URL 复用进行中的 Promise */
+    public async downloadBlob(url: string): Promise<Blob> {
+        let pending = this.downloadInflight.get(url)
+        if (!pending) {
+            pending = this.fetchBlob(url).finally(() => this.downloadInflight.delete(url))
+            this.downloadInflight.set(url, pending)
+        }
+        return pending
+    }
 
-      request.onsuccess = (event) => {
-        const db: IDBDatabase = request.result;
+    private async fetchBlob(url: string): Promise<Blob> {
+        return fetchBlobUtil(url)
+    }
 
-        if (!this.DBs.has(dbName)) {
-          this.DBs.set(dbName, db);
+    private async openDb(): Promise<IDBDatabase> {
+        const dbName = this.TO.sceneData.params.indexedDB.dataBaseName
+        const tableName = this.TO.sceneData.params.indexedDB.tableName
+
+        let db = this.DBs.get(dbName)
+        if (db) return db
+
+        db = await new Promise<IDBDatabase>((resolve, reject) => {
+            const request = window.indexedDB.open(dbName, 1)
+
+            request.onerror = () => reject(new Error('数据库打开失败'))
+
+            request.onsuccess = () => {
+                const opened: IDBDatabase = request.result
+                if (!this.DBs.has(dbName)) this.DBs.set(dbName, opened)
+                resolve(opened)
+            }
+
+            request.onupgradeneeded = (event) => {
+                //@ts-ignore
+                this.createObjectStoreIfNotExists(event.target.result, tableName)
+            }
+        })
+
+        return db
+    }
+
+    /** 后台写入 IndexedDB，不阻塞解析 */
+    private scheduleDbSave(modelInfo: indexedDBmodelInfoParams, blob: Blob): void {
+        void this.saveModelToDb(modelInfo, blob).catch((err) =>
+            console.error('insertModel:后台写入失败 id=', modelInfo.id, err)
+        )
+    }
+
+    /** 批量首屏加载开始前调用，缓存写入延后到 flushPendingDbSaves */
+    public beginDeferDbSave(): void {
+        this.deferDbDepth++
+    }
+
+    /** 批量结束后刷入待写队列（主键仍为 id，策略不变） */
+    public async flushPendingDbSaves(): Promise<void> {
+        if (this.deferDbDepth > 0) this.deferDbDepth = 0
+        const queue = this.pendingDb.splice(0)
+        if (!queue.length) return
+
+        const results = await Promise.allSettled(
+            queue.map(({ modelInfo, blob }) => this.saveModelToDb(modelInfo, blob))
+        )
+        const fail = results.filter((r) => r.status === 'rejected')
+        if (fail.length) {
+            console.warn(
+                '批量 IDB 写入部分失败:',
+                fail.map((r) => (r as PromiseRejectedResult).reason)
+            )
+        }
+    }
+
+    private enqueueDbSave(modelInfo: indexedDBmodelInfoParams, blob: Blob): void {
+        if (this.deferDbDepth > 0) {
+            this.pendingDb.push({ modelInfo: cloneDeep(modelInfo), blob })
+            return
+        }
+        this.scheduleDbSave(modelInfo, blob)
+    }
+
+    private async saveModelToDb(modelInfo: indexedDBmodelInfoParams, blob: Blob): Promise<void> {
+        const tableName = this.TO.sceneData.params.indexedDB.tableName
+        const record = Object.assign(cloneDeep(modelInfo), {
+            modelSize: blob.size,
+            model: new Blob([blob]),
+            dataBaseName: this.TO.sceneData.params.indexedDB.dataBaseName,
+            tableName
+        })
+
+        const db = await this.openDb()
+        const transaction = db.transaction([tableName], 'readwrite')
+        const store = transaction.objectStore(tableName)
+
+        await new Promise<void>((resolve, reject) => {
+            const req = store.put(record)
+            req.onsuccess = () => resolve()
+            req.onerror = () => reject(new Error('insertModel:数据写入失败'))
+        })
+    }
+
+    /**
+     * 判断是否已缓存此模型，返回是否存储，若已缓存返回模型参数
+     * @author LL
+     * @since 2022-07-14
+     * @param {modelParams} modelInfo
+     */
+    public async accessModel(modelInfo: indexedDBmodelInfoParams): Promise<accessResult> {
+        const tableName = this.TO.sceneData.params.indexedDB.tableName
+
+        try {
+            const db = await this.openDb()
+            const transaction = db.transaction(tableName, 'readonly')
+            const store = transaction.objectStore(tableName)
+
+            // 查询数据
+            const result = await new Promise<any>((resolve, reject) => {
+                const dataRequest = store.index('id').get(modelInfo.id)
+
+                dataRequest.onsuccess = (e: any) => {
+                    resolve(e.target.result)
+                }
+
+                dataRequest.onerror = () => {
+                    reject(new Error('数据查询失败'))
+                }
+
+                transaction.onerror = () => {
+                    reject(new Error('事务执行失败'))
+                }
+            })
+
+            //@ts-ignore
+            if (result != undefined) {
+                let modelInfoResult = Object.assign(modelInfo, {
+                    saved: true
+                })
+
+                let blobUrl = URL.createObjectURL(
+                    new Blob([result.model], {
+                        type: 'application/octet-stream'
+                    })
+                )
+
+                return {
+                    info: modelInfoResult,
+                    modelUrl: blobUrl
+                }
+            } else {
+                return { info: { saved: false } }
+            }
+        } catch (error) {
+            console.error('accessModel 执行失败:', error)
+            return { info: { saved: false } }
+        }
+    }
+
+    /**
+     * 向indexedDB数据表中，存储模型
+     * @author LL
+     * @since 2022-07-14
+     * @param {indexedDBmodelInfoParams} modelInfo
+     */
+    public async insertModel(modelInfo: indexedDBmodelInfoParams): Promise<indexedDBmodelInfoParams> {
+        const url = this.getResUrl(modelInfo)
+        if (!url) {
+            return {
+                id: -1,
+                info: { saved: false },
+                modelUrl: ''
+            }
         }
 
-        const transaction = db.transaction(tableName, "readwrite");
-        const store = transaction.objectStore(tableName);
-
-        transaction.onerror = (event) => {
-          console.error("Transaction error:", event);
-          reject(new Error("Transaction failed"));
-        };
-
-        const getRequest = store.index("id").get(info.modelInfo.id);
-
-        getRequest.onsuccess = () => {
-          const existingData = getRequest.result;
-          const updatedData = { ...existingData, ...info.modelInfo };
-
-          const putRequest = store.put(updatedData);
-
-          putRequest.onsuccess = () => resolve();
-          putRequest.onerror = (event) => {
-            console.error("Data update failed:", event);
-            reject(new Error("Data update failed"));
-          };
-        };
-
-        getRequest.onerror = (event) => {
-          console.error("Data retrieval failed:", event);
-          reject(new Error("Data retrieval failed"));
-        };
-      };
-    });
-  }
-
-  /**
-   * 查询并缓存模型
-   * @author LL
-   * @since 2025/01/09
-   * @param {modelInfoParams} modelInfo
-   */
-  public async accessInsertModel(
-    modelInfo: modelInfoParams
-  ): Promise<accessInsetResult> {
-    const accessRes = await this.accessModel(modelInfo);
-    return new Promise(async (resolve, reject) => {
-      //如果缓存了   直接导入
-      if (accessRes.info.saved) {
-        resolve({
-          saved: true,
-          inserted: false,
-          modelUrl: accessRes.modelUrl,
-        });
-      } else {
-        const insertRes = await this.insertModel(modelInfo);
-        if (insertRes.info.saved) {
-          resolve({
-            saved: true,
-            inserted: true,
-            modelUrl: insertRes.modelUrl,
-          });
-        } else {
-          resolve({
-            saved: false,
-            inserted: false,
-          });
+        let blob: Blob
+        try {
+            blob = await this.downloadBlob(url)
+        } catch (error) {
+            console.error('insertModel:下载失败:', error)
+            return {
+                id: -1,
+                info: { saved: false },
+                modelUrl: ''
+            }
         }
-      }
-    });
-  }
 
-  /**
-   * 加载indexedDB模型  未缓存的缓存后加载，缓存的直接加载
-   * @author LL
-   * @since 2025/01/07
-   * @param {modelInfoParams} modelInfo
-   */
-  public async getIDBModelInfo(modelInfo: modelInfoParams): Promise<any> {
-    let accessInsetResult = await this.accessInsertModel(modelInfo);
+        return this.cacheBlob(modelInfo, blob)
+    }
 
-    let cloneInfo = cloneDeep(modelInfo);
-    cloneInfo.base.modelUrl = accessInsetResult.modelUrl;
+    /** 用已下载 Blob 生成 blobUrl，IndexedDB 写入（批量模式下延后） */
+    public cacheBlob(modelInfo: indexedDBmodelInfoParams, blob: Blob): indexedDBmodelInfoParams {
+        const blobUrl = window.URL.createObjectURL(blob)
+        this.enqueueDbSave(modelInfo, blob)
+        return {
+            id: modelInfo.id,
+            info: merge(modelInfo, { saved: true }),
+            modelUrl: blobUrl
+        }
+    }
 
-    return cloneInfo;
-  }
+    /**
+     * 解析模型 blobUrl：已缓存直接返回；未缓存则下载后立即返回
+     * 批量 loadModel 期间 IDB 写入延后，由 flushPendingDbSaves 统一刷入
+     */
+    public async resolveModelUrl(
+        modelInfo: indexedDBmodelInfoParams,
+        opts?: { skipAccess?: boolean }
+    ): Promise<accessInsetResult> {
+        if (!opts?.skipAccess) {
+            const accessRes = await this.accessModel(modelInfo)
+            if (accessRes.info.saved && accessRes.modelUrl) {
+                return {
+                    saved: true,
+                    inserted: false,
+                    modelUrl: accessRes.modelUrl
+                }
+            }
+        }
+
+        const url = this.getResUrl(modelInfo)
+        if (!url) {
+            return { saved: false, inserted: false }
+        }
+
+        try {
+            const blob = await this.downloadBlob(url)
+            const res = this.cacheBlob(modelInfo, blob)
+            return {
+                saved: true,
+                inserted: true,
+                modelUrl: res.modelUrl
+            }
+        } catch (error) {
+            console.error('resolveModelUrl:下载失败 id=', modelInfo.id, error)
+            return { saved: false, inserted: false }
+        }
+    }
+
+    /**
+     * 删除模型
+     * @author LL
+     * @since 2022-07-15
+     * @param {number} id
+     */
+    public async deleteModel(id: number): Promise<boolean> {
+        const dbName = this.TO.sceneData.params.indexedDB.dataBaseName
+        const tableName = this.TO.sceneData.params.indexedDB.tableName
+
+        let db = this.DBs.get(dbName)
+
+        // 如果数据库连接不存在，打开数据库
+        if (!db) {
+            db = await new Promise<IDBDatabase>((resolve, reject) => {
+                const request = window.indexedDB.open(dbName, 1)
+
+                request.onerror = () => {
+                    reject(new Error('数据库打开失败'))
+                }
+
+                request.onsuccess = () => {
+                    const db: IDBDatabase = request.result
+                    if (!this.DBs.has(dbName)) {
+                        this.DBs.set(dbName, db)
+                    }
+                    resolve(db)
+                }
+
+                request.onupgradeneeded = (event) => {
+                    //@ts-ignore
+                    const db: IDBDatabase = event.target.result
+                    this.createObjectStoreIfNotExists(db, tableName)
+                }
+            })
+        }
+
+        // 创建事务并删除数据
+        const transaction = db.transaction([tableName], 'readwrite')
+        const store = transaction.objectStore(tableName)
+
+        try {
+            await new Promise<void>((resolve, reject) => {
+                const deleteRequest = store.delete(id)
+
+                deleteRequest.onsuccess = () => {
+                    console.log('数据删除成功')
+                    resolve()
+                }
+
+                deleteRequest.onerror = () => {
+                    reject(new Error('数据删除失败'))
+                }
+            })
+
+            return true
+        } catch (error) {
+            console.error('删除模型失败:', error)
+            return false
+        }
+    }
+
+    /**
+     * 更新模型
+     * @author LL
+     * @since 2022-07-15
+     * @param {modelInfoParams} modelInfo 更新模型参数
+     */
+    public async updateModel(modelInfo: modelInfoParams): Promise<void> {
+        if (!modelInfo.id) {
+            throw new Error('模型ID不能为空')
+        }
+
+        const dbName = this.TO.sceneData.params.indexedDB.dataBaseName
+        const tableName = this.TO.sceneData.params.indexedDB.tableName
+
+        // 打开数据库，如果不存在则创建（通过 onupgradeneeded 创建表）
+        let db = await new Promise<IDBDatabase>((resolve, reject) => {
+            const request = window.indexedDB.open(dbName, 1)
+
+            request.onerror = (event) => {
+                reject(new Error('数据库打开失败'))
+            }
+
+            request.onsuccess = () => {
+                const db: IDBDatabase = request.result
+                if (!this.DBs.has(dbName)) {
+                    this.DBs.set(dbName, db)
+                }
+                resolve(db)
+            }
+
+            // 处理数据库升级，创建表（如果不存在）
+            request.onupgradeneeded = (event) => {
+                //@ts-ignore
+                const db: IDBDatabase = event.target.result
+                this.createObjectStoreIfNotExists(db, tableName)
+                console.log('数据库升级成功')
+            }
+        })
+
+        // 如果表不存在（可能是在 onupgradeneeded 之后才检查），需要重新打开数据库
+        if (!db.objectStoreNames.contains(tableName)) {
+            db.close()
+            this.DBs.delete(dbName)
+
+            // 重新打开数据库，增加版本号以触发升级
+            db = await new Promise<IDBDatabase>((resolve, reject) => {
+                const request = window.indexedDB.open(dbName, 2)
+
+                request.onerror = (event) => {
+                    reject(new Error('数据库打开失败'))
+                }
+
+                request.onsuccess = () => {
+                    const db: IDBDatabase = request.result
+                    if (!this.DBs.has(dbName)) {
+                        this.DBs.set(dbName, db)
+                    }
+                    resolve(db)
+                }
+
+                request.onupgradeneeded = (event) => {
+                    //@ts-ignore
+                    const db: IDBDatabase = event.target.result
+                    this.createObjectStoreIfNotExists(db, tableName)
+                }
+            })
+        }
+
+        // 处理数据更新或插入
+        const transaction = db.transaction(tableName, 'readwrite')
+        const store = transaction.objectStore(tableName)
+
+        // 获取现有数据
+        const existingData = await new Promise<any>((resolve, reject) => {
+            const getRequest = store.index('id').get(modelInfo.id)
+
+            getRequest.onsuccess = () => {
+                resolve(getRequest.result)
+            }
+
+            getRequest.onerror = (event) => {
+                reject(new Error('updateModel:获取数据失败'))
+            }
+        })
+
+        if (!existingData) {
+            //要被更新的数据不存在，调用 insertModel 插入数据
+            await this.insertModel(modelInfo as indexedDBmodelInfoParams)
+            return
+        }
+
+        // 更新数据
+        const updatedData = { ...existingData, ...modelInfo }
+        await new Promise<void>((resolve, reject) => {
+            transaction.onerror = (event) => {
+                reject(new Error('updateModel:事务执行失败'))
+            }
+
+            transaction.oncomplete = () => {
+                resolve()
+            }
+
+            const putRequest = store.put(updatedData)
+
+            putRequest.onerror = (event) => {
+                reject(new Error('updateModel:数据更新失败'))
+            }
+        })
+    }
+
+    /**
+     * 查询并缓存模型
+     * @author LL
+     * @since 2025/01/09
+     * @param {indexedDBmodelInfoParams} modelInfo
+     * @param {object} opts 选项
+     * @param {boolean} opts.skipAccess 是否跳过访问
+     */
+    public async accessInsertModel(
+        modelInfo: indexedDBmodelInfoParams,
+        opts?: { skipAccess?: boolean }
+    ): Promise<accessInsetResult> {
+        return this.resolveModelUrl(modelInfo, opts)
+    }
+
+    /**
+     * 查询并缓存并返回模型
+     * @author LL
+     * @since 2025/11/14
+     * @param {indexedDBmodelInfoParams} modelInfo
+     */
+    public async accessInsertLoadModel(modelInfo: indexedDBmodelInfoParams) {
+        let result = await this.accessInsertModel(modelInfo)
+        modelInfo.base.modelUrl = result.modelUrl
+        let model = await this.TO.model.loadModel(modelInfo)
+        return model
+    }
+
+    /**
+     * 获取缓存模型信息
+     * @author LL
+     * @since 2025/01/07
+     * @param {indexedDBmodelInfoParams} modelInfo
+     */
+    public async getIDBModelInfo(modelInfo: indexedDBmodelInfoParams): Promise<any> {
+        let accessInsetResult = await this.accessInsertModel(modelInfo)
+
+        let cloneInfo = cloneDeep(modelInfo)
+
+        // 验证模型URL是否有效
+        if (!accessInsetResult.modelUrl) {
+            console.log('getIDBModelInfo:获取失败:', modelInfo)
+            return cloneInfo as indexedDBmodelInfoParams
+        }
+
+        cloneInfo.base.modelUrl = accessInsetResult.modelUrl
+
+        return cloneInfo as indexedDBmodelInfoParams
+    }
+
+    /**
+     * 关闭所有 IndexedDB 连接
+     * @author LL
+     * @since 2024/12/19
+     */
+    public closeAllConnections(): void {
+        this.DBs.forEach((db, dbName) => {
+            try {
+                db.close()
+                console.log(`IndexedDB 连接 ${dbName} 已关闭`)
+            } catch (error) {
+                console.error(`关闭 IndexedDB 连接 ${dbName} 失败:`, error)
+            }
+        })
+        this.DBs.clear()
+    }
+
+    /**
+     * 关闭指定数据库连接
+     * @author LL
+     * @since 2024/12/19
+     * @param dbName 数据库名称
+     */
+    public closeConnection(dbName: string): void {
+        if (this.DBs.has(dbName)) {
+            const db = this.DBs.get(dbName)
+            try {
+                db.close()
+                this.DBs.delete(dbName)
+                console.log(`IndexedDB 连接 ${dbName} 已关闭`)
+            } catch (error) {
+                console.error(`关闭 IndexedDB 连接 ${dbName} 失败:`, error)
+            }
+        }
+    }
+
+    /**
+     * 创建对象存储和索引（如果不存在）
+     * @author LL
+     * @since 2025/12/10
+     * @param db 数据库实例
+     * @param tableName 表名
+     */
+    private createObjectStoreIfNotExists(db: IDBDatabase, tableName: string): void {
+        if (!db.objectStoreNames.contains(tableName)) {
+            const objectStore = db.createObjectStore(tableName, { keyPath: 'id' })
+            // 定义存储对象的数据项
+            objectStore.createIndex('id', 'id', { unique: true })
+            objectStore.createIndex('name', 'name')
+            objectStore.createIndex('modelName', 'modelName')
+            objectStore.createIndex('model', 'model')
+            objectStore.createIndex('modelUrl', 'modelUrl')
+            objectStore.createIndex('modelSize', 'modelSize')
+            objectStore.createIndex('modelType', 'modelType')
+            objectStore.createIndex('loadType', 'loadType')
+            objectStore.createIndex('position', 'position')
+            objectStore.createIndex('scale', 'scale')
+            objectStore.createIndex('rotation', 'rotation')
+            objectStore.createIndex('dataBaseName', 'dataBaseName')
+            objectStore.createIndex('tableName', 'tableName')
+            objectStore.createIndex('userData', 'userData')
+            console.log('数据库表创建成功')
+        }
+    }
+
+    /**
+     * 测试并创建数据库结构
+     * @author LL
+     * @since 2025/12/10
+     * @private
+     * @returns {Promise<boolean>} 数据库是否可用
+     */
+    private async testIndexedDB(): Promise<boolean> {
+        const dbName = this.TO.sceneData.params.indexedDB.dataBaseName
+        const tableName = this.TO.sceneData.params.indexedDB.tableName
+
+        // 首先检查内存中是否已有数据库连接
+        let db = this.DBs.get(dbName)
+        if (db && db.objectStoreNames.contains(tableName)) {
+            return true
+        }
+
+        try {
+            // 如果内存中没有或表不存在，打开数据库进行检查/创建
+            db = await new Promise<IDBDatabase>((resolve, reject) => {
+                const request = window.indexedDB.open(dbName, 1)
+
+                request.onerror = () => {
+                    reject(new Error('数据库打开失败'))
+                }
+
+                request.onsuccess = () => {
+                    const db: IDBDatabase = request.result
+                    if (!this.DBs.has(dbName)) {
+                        this.DBs.set(dbName, db)
+                    }
+                    resolve(db)
+                }
+
+                // 当数据库升级时，创建数据库表
+                request.onupgradeneeded = (event) => {
+                    //@ts-ignore
+                    const db: IDBDatabase = event.target.result
+                    this.createObjectStoreIfNotExists(db, tableName)
+                }
+            })
+
+            // 检查表是否存在
+            if (db.objectStoreNames.contains(tableName)) {
+                return true
+            } else {
+                console.warn('indexedDB数据库表不存在')
+                return false
+            }
+        } catch (error) {
+            console.error('testIndexedDB 执行失败:', error)
+            return false
+        }
+    }
 }
